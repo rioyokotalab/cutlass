@@ -65,11 +65,7 @@ CutlassProfiler::CutlassProfiler(
 
   operation_profilers_.emplace_back(new RankKOperationProfiler(options));
 
-  operation_profilers_.emplace_back(new Rank2KOperationProfiler(options));
 
-  operation_profilers_.emplace_back(new TrmmOperationProfiler(options));
-
-  operation_profilers_.emplace_back(new SymmOperationProfiler(options));
 }
 
 CutlassProfiler::~CutlassProfiler() {
