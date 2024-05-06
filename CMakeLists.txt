@@ -634,7 +634,6 @@ target_include_directories(
   $<BUILD_INTERFACE:${CUTLASS_INCLUDE_DIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
   $<BUILD_INTERFACE:${cute_SOURCE_DIR}/include>
-  $<BUILD_INTERFACE:${cute_SOURCE_DIR}/examples>
   )
 
 # Mark CTK headers as system to supress warnings from them
@@ -927,10 +926,6 @@ if (CUTLASS_ENABLE_TOOLS)
   endif()
 endif()
 
-if (CUTLASS_ENABLE_EXAMPLES)
-  add_subdirectory(examples)
-  add_dependencies(test_all test_examples)
-endif()
 
 if (CUTLASS_ENABLE_TESTS)
   add_subdirectory(test)
