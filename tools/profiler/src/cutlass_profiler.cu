@@ -63,7 +63,6 @@ CutlassProfiler::CutlassProfiler(
   operation_profilers_.emplace_back(new SparseGemmOperationProfiler(options));
 
 
-  operation_profilers_.emplace_back(new RankKOperationProfiler(options));
 
 
 }
