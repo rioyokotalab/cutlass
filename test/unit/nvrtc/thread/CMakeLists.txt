@@ -30,7 +30,6 @@ configure_file(nvrtc_config.in nvrtc_config.hpp)
 
 cutlass_test_unit_add_executable(
   cutlass_test_unit_nvrtc_thread
-  nvrtc_gemm.cu
   nvrtc_contraction.cu
   testbed.h
 )
