@@ -42,7 +42,7 @@ namespace profiler {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Converts a cuBLAS status to cutlass::Status
+/*/// Converts a cuBLAS status to cutlass::Status
 Status get_cutlass_status(cublasStatus_t cublas) {
 
   switch (cublas) {
@@ -56,7 +56,7 @@ Status get_cutlass_status(cublasStatus_t cublas) {
   }
   return Status::kErrorInternal;
 }
-
+*/
 /// Converts a cuBLAS status to cutlass::profiler::Disposition
 Disposition get_cutlass_disposition(cublasStatus_t cublas_status) {
 

@@ -53,7 +53,6 @@
 #include "performance_result.h"
 #include "problem_space.h"
 #if CUTLASS_ENABLE_CUDNN
-#include "cudnn_helpers.h"
 #endif //#if CUTLASS_ENABLE_CUDNN
 #include "debug.h"
 

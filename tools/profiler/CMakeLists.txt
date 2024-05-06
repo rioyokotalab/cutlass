@@ -42,7 +42,6 @@ set(CUTLASS_TOOLS_PROFILER_SOURCES
   src/device_allocation.cu
   src/device_context.cu
   src/cublas_helpers.cu             
-  src/cudnn_helpers.cpp                   
   src/problem_space.cpp
   src/operation_profiler.cu
   src/gemm_operation_profiler.cu
@@ -79,7 +78,6 @@ target_link_libraries(
   cutlass_lib
   cutlass_tools_util_includes
   $<$<BOOL:${CUTLASS_ENABLE_CUBLAS}>:nvidia::cublas>
-  $<$<BOOL:${CUTLASS_ENABLE_CUDNN}>:nvidia::cudnn>
   cudart
   cuda_driver
   )
