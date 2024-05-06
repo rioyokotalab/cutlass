@@ -80,9 +80,3 @@ function(cutlass_example_add_executable NAME)
 
 endfunction()
 
-foreach(EXAMPLE
-  )
-
-  add_subdirectory(${EXAMPLE})
-
-endforeach()
