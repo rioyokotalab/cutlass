@@ -659,30 +659,6 @@ install(
 ################################################################################
 
 # Doxygen is available. Generate documentation
-if (DOXYGEN_FOUND)
-    # DOT is available. Enable graph generation in the documentation
-    if (DOXYGEN_DOT_EXECUTABLE)
-        set(CUTLASS_ENABLE_DOXYGEN_DOT ON CACHE BOOL "Use dot to generate graphs in the doxygen documentation.")
-    else()
-        set(CUTLASS_ENABLE_DOXYGEN_DOT OFF CACHE BOOL "Use dot to generate graphs in the doxygen documentation." FORCE)
-    endif()
-
-    if (CUTLASS_ENABLE_DOXYGEN_DOT)
-        set(HAVE_DOT "YES")
-    else()
-        set(HAVE_DOT "NO")
-    endif()
-
-    # Add custom target for Doxygen.
-    add_custom_target(cutlass_docs ${CMAKE_COMMAND} -E env
-        "DOT_PATH=${DOXYGEN_DOT_EXECUTABLE}"
-        "HAVE_DOT=${HAVE_DOT}"
-        ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        VERBATIM
-    )
-endif()
-
 if(NOT WIN32)
   # Add common library search paths so executables and libraries can load and run
   # without LD_LIBRARY_PATH being set.
