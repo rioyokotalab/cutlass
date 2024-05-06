@@ -700,9 +700,6 @@ endif()
 include(CTest)
 enable_testing()
 
-if (CUTLASS_ENABLE_GTEST_UNIT_TESTS)
-  include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/googletest.cmake)
-endif()
 
 if (NOT TARGET test_all)
   add_custom_target(test_all)
