@@ -62,9 +62,6 @@ CutlassProfiler::CutlassProfiler(
 
   operation_profilers_.emplace_back(new SparseGemmOperationProfiler(options));
 
-  operation_profilers_.emplace_back(new Conv2dOperationProfiler(options));
-
-  operation_profilers_.emplace_back(new Conv3dOperationProfiler(options));
 
   operation_profilers_.emplace_back(new RankKOperationProfiler(options));
 
@@ -166,36 +163,6 @@ int CutlassProfiler::profile_() {
 
 /// Prints all options
 void CutlassProfiler::print_usage_(std::ostream &out) {
-  options_.print_usage(out);
-
-  out << "\nOperations:\n\n";
-
-  // For all profilers
-  for (auto & profiler : operation_profilers_) {
-
-
-    std::string kind_str = library::to_string(profiler->kind());
-
-    size_t kAlignment = 40;
-    size_t columns = 0;
-
-    if (kind_str.size() < kAlignment) {
-      columns = kAlignment - kind_str.size();
-    }
-
-    out << "     " << kind_str << std::string(columns, ' ') << profiler->description() << "\n";
-
-  }
-
-  out << "\n\nFor details about a particular function, specify the function name with --help.\n\nExample:\n\n"
-    << "  $ cutlass_profiler --operation=Gemm --help\n\n"
-    << "  $ cutlass_profiler --operation=RankK --help\n\n"
-    << "  $ cutlass_profiler --operation=Trmm --help\n\n"
-    << "  $ cutlass_profiler --operation=Symm --help\n\n"
-    << "  $ cutlass_profiler --operation=Conv3d --help\n\n"
-    << "  $ cutlass_profiler --operation=Conv2d --help\n\n"
-    << "  $ cutlass_profiler --operation=SparseGemm --help\n\n"
-  ;
 }
 
 /// Prints usage
