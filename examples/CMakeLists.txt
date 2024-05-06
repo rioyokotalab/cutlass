@@ -81,16 +81,6 @@ function(cutlass_example_add_executable NAME)
 endfunction()
 
 foreach(EXAMPLE
-  50_hopper_gemm_with_epilogue_swizzle
-  51_hopper_gett
-  52_hopper_gather_scatter_fusion
-  53_hopper_gemm_permute
-  54_hopper_fp8_warp_specialized_gemm
-  55_hopper_mixed_dtype_gemm
-  56_hopper_ptr_array_batched_gemm
-  57_hopper_grouped_gemm
-  58_ada_fp8_gemm
-  59_ampere_gather_scatter_conv
   )
 
   add_subdirectory(${EXAMPLE})
