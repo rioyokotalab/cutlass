@@ -38,13 +38,6 @@
 // Profiler includes
 #include "cutlass/profiler/cutlass_profiler.h"
 #include "cutlass/profiler/gemm_operation_profiler.h"
-#include "cutlass/profiler/rank_k_operation_profiler.h"
-#include "cutlass/profiler/rank_2k_operation_profiler.h"
-#include "cutlass/profiler/trmm_operation_profiler.h"
-#include "cutlass/profiler/symm_operation_profiler.h"
-#include "cutlass/profiler/conv2d_operation_profiler.h"
-#include "cutlass/profiler/conv3d_operation_profiler.h"
-#include "cutlass/profiler/sparse_gemm_operation_profiler.h"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -59,8 +52,6 @@ CutlassProfiler::CutlassProfiler(
   options_(options) {
 
   operation_profilers_.emplace_back(new GemmOperationProfiler(options));
-
-  operation_profilers_.emplace_back(new SparseGemmOperationProfiler(options));
 
 
 
