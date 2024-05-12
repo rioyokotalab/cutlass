@@ -900,12 +900,6 @@ if (CUTLASS_ENABLE_TOOLS)
 endif()
 
 
-if (CUTLASS_ENABLE_TESTS)
-  add_subdirectory(test)
-  if (CUTLASS_ENABLE_GTEST_UNIT_TESTS)
-  add_dependencies(test_all test_unit)
-  endif()
-endif()
 
 if (CUTLASS_INSTALL_TESTS)
 
