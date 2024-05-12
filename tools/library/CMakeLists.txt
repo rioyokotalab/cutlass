@@ -243,8 +243,6 @@ cutlass_add_cutlass_library(
   
   # cutlass conv reference instances in cutlass library
 
-  src/reference/conv2d.cu
-  src/reference/conv3d.cu
 
   )
 

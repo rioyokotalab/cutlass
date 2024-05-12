@@ -58,14 +58,10 @@ void initialize_gemm_reference_operations_fp32out(Manifest &manifest);
 void initialize_gemm_reference_operations_fp_other(Manifest &manifest);
 void initialize_gemm_reference_operations_fp_mixed_input(Manifest &manifest);
 
-void initialize_conv2d_reference_operations(Manifest &manifest);
-void initialize_conv3d_reference_operations(Manifest &manifest);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void initialize_reference_operations(Manifest &manifest) {
-  initialize_conv2d_reference_operations(manifest);
-  initialize_conv3d_reference_operations(manifest);
 
   initialize_gemm_reference_operations_int4(manifest);
 
