@@ -41,7 +41,6 @@ set(CUTLASS_TOOLS_PROFILER_SOURCES
   src/gpu_timer.cpp
   src/device_allocation.cu
   src/device_context.cu
-  src/cublas_helpers.cu             
   src/problem_space.cpp
   src/operation_profiler.cu
   src/gemm_operation_profiler.cu
