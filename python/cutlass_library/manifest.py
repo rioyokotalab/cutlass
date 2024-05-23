@@ -50,7 +50,6 @@ try:
   from cutlass_library.rank_2k_operation import *
   from cutlass_library.trmm_operation import *
   from cutlass_library.symm_operation import *
-  from cutlass_library.conv2d_operation import *
 except ImportError:
   from library import *
   from gemm_operation import *
@@ -58,7 +57,6 @@ except ImportError:
   from rank_2k_operation import *
   from trmm_operation import *
   from symm_operation import *
-  from conv2d_operation import *
 
 ###################################################################################################
 _LOGGER = logging.getLogger(__name__)
@@ -212,7 +210,6 @@ class EmitOperationKindLibrary:
     self.args = args
     self.emitters = {
       OperationKind.Gemm: EmitGemmConfigurationLibrary,
-      OperationKind.Conv2d: EmitConv2dConfigurationLibrary,
       OperationKind.RankK: EmitRankKConfigurationLibrary,
       OperationKind.Rank2K: EmitRank2KConfigurationLibrary,
       OperationKind.Trmm: EmitTrmmConfigurationLibrary,
@@ -529,8 +526,6 @@ class Manifest:
     else:
       operations_list = [
         OperationKind.Gemm
-        , OperationKind.Conv2d
-        , OperationKind.Conv3d
           , OperationKind.RankK
           , OperationKind.Trmm
           , OperationKind.Symm
