@@ -674,80 +674,6 @@ def CreateConv2dFewChannelsOperator(manifest, layout, tile_descriptions, data_ty
   return operations
 
 # Convolution for 3D operations
-def CreateConv3dOperator(manifest, layout, tile_descriptions, data_type, alignment, \
-  conv_kinds = [ConvKind.Fprop, ConvKind.Dgrad, ConvKind.Wgrad], epilogue_functor = EpilogueFunctor.LinearCombination):
-
-  element_a, element_b, element_c, element_epilogue = data_type
-
-  # one exceptional case
-  alignment_c = min(8, alignment)
-
-  # iterator algorithm (analytic and optimized)
-  iterator_algorithms = [IteratorAlgorithm.Analytic, IteratorAlgorithm.Optimized]
-
-  # by default, only generate the largest tile size and optimized iterators
-  if manifest.kernel_filter == '':
-    tile_descriptions = [tile_descriptions[0],]
-    iterator_algorithms = [IteratorAlgorithm.Optimized]
-
-  operations = []
-
-  # All tile sizes for Conv3dFprop and Conv3dWgrad
-  for tile in tile_descriptions:
-    A = TensorDescription(element_a, layout, alignment)
-    B = TensorDescription(element_b, layout, alignment)
-    C = TensorDescription(element_c, layout, alignment_c)
-
-    #
-    # Conv3d Fprop
-    #
-    if ConvKind.Fprop in conv_kinds:
-      # Strided support for Analytic and Optimized Fprop
-      for iterator_algorithm in iterator_algorithms:
-        new_operation = Conv3dOperation(ConvKind.Fprop, iterator_algorithm, tile.minimum_compute_capability, tile,\
-                                        A, B, C, element_epilogue, StrideSupport.Strided)
-        manifest.append(new_operation)
-        operations.append(new_operation)
-    #
-    # Conv3d Wgrad
-    #
-    if ConvKind.Wgrad in conv_kinds:
-
-      # Strided support for Analytic and Optimized Wgrad
-      for iterator_algorithm in iterator_algorithms:
-        new_operation = Conv3dOperation(ConvKind.Wgrad, iterator_algorithm, tile.minimum_compute_capability, tile,\
-          A, B, C, element_epilogue, StrideSupport.Strided, epilogue_functor)
-        manifest.append(new_operation)
-        operations.append(new_operation)
-
-  # All tile sizes for Conv3dDgrad
-  for tile in tile_descriptions:
-
-    A = TensorDescription(element_a, layout, alignment)
-    B = TensorDescription(element_b, layout, alignment)
-    C = TensorDescription(element_c, layout, alignment_c)
-
-    #
-    # Conv3d Dgrad
-    #
-    if ConvKind.Dgrad in conv_kinds:
-      # Unity stride for Optimized Dgrad
-      new_operation = Conv3dOperation(ConvKind.Dgrad, IteratorAlgorithm.Optimized, tile.minimum_compute_capability, tile,\
-        A, B, C, element_epilogue, StrideSupport.Unity, epilogue_functor)
-
-      manifest.append(new_operation)
-      operations.append(new_operation)
-
-      # Strided support for Analytic Dgrad
-      # Conv3dDgrad has a naive strided support which does not cut down redundant MMAs
-      new_operation = Conv3dOperation(ConvKind.Dgrad, IteratorAlgorithm.Analytic, tile.minimum_compute_capability, tile,\
-        A, B, C, element_epilogue, StrideSupport.Strided, epilogue_functor)
-
-      manifest.append(new_operation)
-      operations.append(new_operation)
-
-  return operations
-
 # Convolution for Depthwise 2d conv
 def CreateDepthwiseConv2dOperator(manifest, layout, tile_descriptions, data_type, alignment_constraints, \
   conv_kinds = [ConvKind.Fprop, ConvKind.Dgrad, ConvKind.Wgrad], \
@@ -988,86 +914,7 @@ class ConvOperation3x:
 def convolution_tensor_layout_type_to_operation_kind(layout: LayoutType) -> OperationKind:
   if layout == LayoutType.TensorNHWC or layout == LayoutType.TensorKCSR:
     return OperationKind.Conv2d
-  elif layout == LayoutType.TensorNDHWC or layout == LayoutType.TensorKCSRT:
-    return OperationKind.Conv3d
-  else:
-    raise RuntimeError(f'LayoutType {layout} does not have a corresponding OperationKind')
 
-def CreateConvOperator3x(manifest: Manifest,
-                         dims_and_alignments: Sequence[Tuple[Tuple[int, int], Tuple[int, int], Tuple[int, int]]],
-                         tile_descriptions: Sequence[Sequence[TileDescription]],
-                         data_types,
-                         schedule_pairs: Sequence[Tuple[KernelScheduleType, KernelScheduleType]] = \
-                           [(KernelScheduleType.ScheduleAuto, EpilogueScheduleType.ScheduleAuto)],
-                         complex_transforms: Optional[Sequence[ComplexTransform]] = None,
-                         tile_schedulers: Sequence[TileSchedulerType] = [TileSchedulerType.Persistent],
-                         conv_kind: ConvKind = ConvKind.Fprop,
-                         log_indent_level: int = 1):
-  """
-  Create zero or more CUTLASS 3 two-dimensional convolution operators.
-
-  Create a CUTLASS 3 two-dimensional convolution operator
-  for all feasible combinations of the input parameters.
-  Add the operators to the manifest.
-
-  dims_and_alignments: 3-level list.  Each outer list term is a list [A, B, C].
-    Each inner list (A, B, or C) has the form [num_spatial_dimensions, alignment].
-    Both are integers; the first is the number of spatial dimensions
-    (currently, only 2 or 3 are supported), and the second is the byte alignment.
-    We deduce the operation_kind (either OperationKind.Conv2d or OperationKind.Conv3d)
-    from num_spatial_dimensions.
-
-  This function doesn't take layouts, unlike the GEMM functions.
-  CUTLASS 3 convolutions currently support three input layouts:
-
-  * TensorNWC for 1-D convolutions,
-  * TensorNHWC for 2-D convolutions, and
-  * TensorNDHWC for 3-D convolutions.
-
-  Output (C and D) layouts are the same as input layouts,
-  except for Wgrad convolutions, where the layouts are
-
-  * TensorKCS for 1-D convolutions,
-  * TensorKCSR for 2-D convolutions, and
-  * TensorKCSRT for 3-D convolutions.
-
-  The output layouts are completely constrained by the input layouts
-  and the convolution kind.
-
-  tile_descriptions: 2-level list.
-    Outer level has one list per math instruction.
-    Inner level has one TileDescription for each cluster shape.
-
-  data_types: Either a single data_type dictionary, or a list of them.
-    Keys: 'a_type', 'b_type', 'c_type', 'd_type', 'acc_type', 'epi_type'
-
-  complex_transforms: Optional list of pairs.
-    First element of each pair is the complex transform for A, and
-    second element of each pair is the complex transform for B.
-
-  schedule_pairs: [(kernel_schedule, epilogue_schedule), ...]
-
-  conv_kind: Convolution kind (Fprop, Dgrad, or Wgrad).
-  """
-  log_debug_line('CreateConvOperator3x', log_indent_level)
-  log_indent_level = log_indent_level + 1
-  log_debug_line(f'conv_kind: {conv_kind}', log_indent_level)
-
-  for triple in dims_and_alignments:
-    spatial_dimensionality = None # to be determined by loop below
-    assert(len(triple) == 3)
-    for entry in triple: # [A, B, C]
-      assert(len(entry) == 2)
-      [dim, alignment] = entry
-      assert(type(dim) is int)
-      assert(dim == 2 or dim == 3)
-      assert(type(alignment) is int)
-      assert(alignment > 0)
-      if spatial_dimensionality is None:
-        spatial_dimensionality = dim
-      else:
-        # A, B, and C need to have the same spatial dimensionality
-        assert(spatial_dimensionality == dim)
 
   def input_and_output_layouts(spatial_dim: int, kind: ConvKind) -> Tuple[LayoutType, LayoutType]:
     if spatial_dim == 1:
@@ -2387,7 +2234,6 @@ def GenerateSM80_TensorOp_16816(manifest, cuda_version):
     conv_layout = (LayoutType.TensorNHWC, LayoutType.TensorNHWC, LayoutType.TensorNHWC)
     CreateConv2dOperator(manifest, conv_layout, tile_descriptions, data_type, alignment_constraints)
     CreateConv2dFixedChannelsOperator(manifest, conv_layout, tile_descriptions, data_type, [4, 8])
-    CreateConv3dOperator(manifest, LayoutType.TensorNDHWC, tile_descriptions, data_type, 8)
 
     # Avoid emitting two kernels if the accumulator type does not differ from the input type (e.g. F16 accumulation)
     if math_inst.element_a != math_inst.element_accumulator:
@@ -2404,8 +2250,6 @@ def GenerateSM80_TensorOp_16816(manifest, cuda_version):
 
       CreateConv2dOperator(manifest, conv_layout, tile_descriptions, data_type_mixed, alignment_constraints)
       CreateConv2dFixedChannelsOperator(manifest, conv_layout, tile_descriptions, data_type_mixed, [4, 8])
-      CreateConv3dOperator(manifest, LayoutType.TensorNDHWC, tile_descriptions, data_type_mixed, 8)
-#
 
 #
 def GenerateSM80_SparseTensorOp_16832(manifest, cuda_version):
@@ -6697,19 +6541,6 @@ def GenerateSM90_Conv3x(manifest, cuda_version,
       "epi_type" : math_inst.element_accumulator
     }
 
-    for conv_kind in conv_kinds:
-      epilogue_schedule = EpilogueScheduleType.TmaWarpSpecialized
-      schedule_pairs = [
-        (mainloop_schedule, epilogue_schedule)
-      ]
-      CreateConvOperator3x(manifest,
-                           dims_and_alignments = dims_and_alignments,
-                           tile_descriptions = tile_descriptions,
-                           data_types = data_type,
-                           schedule_pairs = schedule_pairs,
-                           tile_schedulers = [TileSchedulerType.Default], # -> void
-                           conv_kind = conv_kind,
-                           log_indent_level = log_indent_level)
 
 def GenerateSM90(manifest, cuda_version):
   GenerateSM90_TensorOp_16b_WGMMA_gemm(manifest, cuda_version)
