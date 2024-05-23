@@ -47,12 +47,10 @@ try:
   from cutlass_library.library import *
   from cutlass_library.gemm_operation import *
   from cutlass_library.trmm_operation import *
-  from cutlass_library.symm_operation import *
 except ImportError:
   from library import *
   from gemm_operation import *
   from trmm_operation import *
-  from symm_operation import *
 
 ###################################################################################################
 _LOGGER = logging.getLogger(__name__)
@@ -207,7 +205,6 @@ class EmitOperationKindLibrary:
     self.emitters = {
       OperationKind.Gemm: EmitGemmConfigurationLibrary,
       OperationKind.Trmm: EmitTrmmConfigurationLibrary,
-      OperationKind.Symm: EmitSymmConfigurationLibrary
     }
 
     self.header_template ="""
@@ -521,7 +518,6 @@ class Manifest:
       operations_list = [
         OperationKind.Gemm
           , OperationKind.Trmm
-          , OperationKind.Symm
       ]
       self.operations_enabled = [x for x in operations_list if OperationKindNames[x] in args.operations.split(',')]
 
