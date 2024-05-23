@@ -46,15 +46,11 @@ try:
     raise ImportError("Disabling attempt to import cutlass_library")
   from cutlass_library.library import *
   from cutlass_library.gemm_operation import *
-  from cutlass_library.rank_k_operation import *
-  from cutlass_library.rank_2k_operation import *
   from cutlass_library.trmm_operation import *
   from cutlass_library.symm_operation import *
 except ImportError:
   from library import *
   from gemm_operation import *
-  from rank_k_operation import *
-  from rank_2k_operation import *
   from trmm_operation import *
   from symm_operation import *
 
@@ -210,8 +206,6 @@ class EmitOperationKindLibrary:
     self.args = args
     self.emitters = {
       OperationKind.Gemm: EmitGemmConfigurationLibrary,
-      OperationKind.RankK: EmitRankKConfigurationLibrary,
-      OperationKind.Rank2K: EmitRank2KConfigurationLibrary,
       OperationKind.Trmm: EmitTrmmConfigurationLibrary,
       OperationKind.Symm: EmitSymmConfigurationLibrary
     }
@@ -526,7 +520,6 @@ class Manifest:
     else:
       operations_list = [
         OperationKind.Gemm
-          , OperationKind.RankK
           , OperationKind.Trmm
           , OperationKind.Symm
       ]
