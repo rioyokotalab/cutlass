@@ -53,7 +53,7 @@ static char const *end_of_line = "\n                                            
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-Options::Device::Device(cutlass::CommandLine const &cmdline) {
+Options::Device::Device(cutlass::CommandLine const &cmdline) { //used
 
   cmdline.get_cmd_line_argument("device", device, 0);
 
@@ -177,7 +177,7 @@ int Options::Device::compute_capability() const {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-Options::Initialization::Initialization(cutlass::CommandLine const &cmdline) {
+Options::Initialization::Initialization(cutlass::CommandLine const &cmdline) { //used
 
   cmdline.get_cmd_line_argument("initialization-enabled", enabled, true);
 
@@ -198,104 +198,105 @@ Options::Initialization::Initialization(cutlass::CommandLine const &cmdline) {
 
   cmdline.get_cmd_line_argument("seed", seed, 2019);
 
-  if (cmdline.check_cmd_line_flag("dist")) {
-    // user has set the data distribution (fix data distribution once set)
-    fix_data_distribution = true;
-    // set user provided data distribution
-    get_distribution(cmdline, "dist", data_distribution);
-  }
-  else {
-    // profiler chosen data distribution (allowed to change based on numeric types)
-    fix_data_distribution = false;
-    // set uniform data distribution with range [-4, 4] 
-    data_distribution.set_uniform(-4, 4, 0);
-  }
+//  if (cmdline.check_cmd_line_flag("dist")) {
+//    // user has set the data distribution (fix data distribution once set)
+//    fix_data_distribution = true;
+//    // set user provided data distribution
+//    get_distribution(cmdline, "dist", data_distribution);
+//  }
+//  else {
+//    // profiler chosen data distribution (allowed to change based on numeric types)
+//    fix_data_distribution = false;
+//    // set uniform data distribution with range [-4, 4] 
+//    data_distribution.set_uniform(-4, 4, 0);
+//  }
   
 
 }
 
 /// Gets the initial distribution
-void Options::Initialization::get_distribution(
-  cutlass::CommandLine const &args,
-  std::string const &arg,
-  cutlass::Distribution &dist) {
-
-  struct {
-    const char *label;
-    cutlass::Distribution::Kind kind;
-  } distribution_kinds[] = {
-    {"uniform", cutlass::Distribution::Uniform},
-    {"gaussian", cutlass::Distribution::Gaussian},
-    {"identity", cutlass::Distribution::Identity},
-    {"sequential", cutlass::Distribution::Sequential},
-    {0, cutlass::Distribution::Invalid}
-  };
-
-  struct {
-    char const *label;
-    double *member;
-  } members[] = {
-    {"min", &dist.uniform.min},
-    {"max", &dist.uniform.max},
-    {"mean", &dist.gaussian.mean},
-    {"stddev", &dist.gaussian.stddev},
-    {"pnzA", &dist.gaussian.pnzA},
-    {"pnzB", &dist.gaussian.pnzB},
-    {"pnzC", &dist.gaussian.pnzC},
-    {"start", &dist.sequential.start},
-    {"delta", &dist.sequential.delta},
-    {0, 0}
-  };
-
-  // Initalize pnz values to a default value of 100%
-  dist.gaussian.pnz = 100.0;
-  dist.gaussian.pnzA = 100.0;
-  dist.gaussian.pnzB = 100.0;
-  dist.gaussian.pnzC = 100.0;
-
-  using KeyValueVector = std::vector<std::pair<std::string, std::string> >;
-
-  KeyValueVector values;
-  args.get_cmd_line_argument_pairs(arg.c_str(), values);
-
-  // The parser expects the first token to be a string identifying the distribution type.
-  auto it = values.begin();
-  if (it != values.end()) {
-    for (int i = 0; distribution_kinds[i].label; ++i) {
-      if (it->first == distribution_kinds[i].label) {
-        dist.kind = distribution_kinds[i].kind;
-        break;
-      }
-    }
-    ++it;
-  }
-
-  // Subsequent key-value pairs update the named field of the distribution struct.
-  for (; it != values.end(); ++it) {
-    // Integer scaling factor - if < 0, no integer rounding is performed.
-    if ((it->first.compare("scale") == 0) && !it->second.empty()) {
-      std::stringstream ss;
-      ss << it->second;
-      ss >> dist.int_scale;
-      continue;  // next token
-    }
-
-    // Casts as integer without scaling
-    if (it->first.compare("integer") == 0) {
-      dist.int_scale = 0;
-      continue;  // next token
-    }
-
-    // initialize other members
-    for (int m = 0; members[m].label; ++m) {
-      if (it->first == members[m].label && !it->second.empty()) {
-        std::stringstream ss;
-        ss << it->second;
-        ss >> *(members[m].member);
-      }
-    }
-  }
-}
+//void Options::Initialization::get_distribution(
+//
+//  cutlass::CommandLine const &args,
+//  std::string const &arg,
+//  cutlass::Distribution &dist) {
+//
+//  struct {
+//    const char *label;
+//    cutlass::Distribution::Kind kind;
+//  } distribution_kinds[] = {
+//    {"uniform", cutlass::Distribution::Uniform},
+//    {"gaussian", cutlass::Distribution::Gaussian},
+//    {"identity", cutlass::Distribution::Identity},
+//    {"sequential", cutlass::Distribution::Sequential},
+//    {0, cutlass::Distribution::Invalid}
+//  };
+//
+//  struct {
+//    char const *label;
+//    double *member;
+//  } members[] = {
+//    {"min", &dist.uniform.min},
+//    {"max", &dist.uniform.max},
+//    {"mean", &dist.gaussian.mean},
+//    {"stddev", &dist.gaussian.stddev},
+//    {"pnzA", &dist.gaussian.pnzA},
+//    {"pnzB", &dist.gaussian.pnzB},
+//    {"pnzC", &dist.gaussian.pnzC},
+//    {"start", &dist.sequential.start},
+//    {"delta", &dist.sequential.delta},
+//    {0, 0}
+//  };
+//
+//  // Initalize pnz values to a default value of 100%
+//  dist.gaussian.pnz = 100.0;
+//  dist.gaussian.pnzA = 100.0;
+//  dist.gaussian.pnzB = 100.0;
+//  dist.gaussian.pnzC = 100.0;
+//
+//  using KeyValueVector = std::vector<std::pair<std::string, std::string> >;
+//
+//  KeyValueVector values;
+//  args.get_cmd_line_argument_pairs(arg.c_str(), values);
+//
+//  // The parser expects the first token to be a string identifying the distribution type.
+//  auto it = values.begin();
+//  if (it != values.end()) {
+//    for (int i = 0; distribution_kinds[i].label; ++i) {
+//      if (it->first == distribution_kinds[i].label) {
+//        dist.kind = distribution_kinds[i].kind;
+//        break;
+//      }
+//    }
+//    ++it;
+//  }
+//
+//  // Subsequent key-value pairs update the named field of the distribution struct.
+//  for (; it != values.end(); ++it) {
+//    // Integer scaling factor - if < 0, no integer rounding is performed.
+//    if ((it->first.compare("scale") == 0) && !it->second.empty()) {
+//      std::stringstream ss;
+//      ss << it->second;
+//      ss >> dist.int_scale;
+//      continue;  // next token
+//    }
+//
+//    // Casts as integer without scaling
+//    if (it->first.compare("integer") == 0) {
+//      dist.int_scale = 0;
+//      continue;  // next token
+//    }
+//
+//    // initialize other members
+//    for (int m = 0; members[m].label; ++m) {
+//      if (it->first == members[m].label && !it->second.empty()) {
+//        std::stringstream ss;
+//        ss << it->second;
+//        ss >> *(members[m].member);
+//      }
+//    }
+//  }
+//}
 
 //void Options::Initialization::print_usage(std::ostream &out) const {
 //
@@ -327,7 +328,7 @@ void Options::Initialization::get_distribution(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-Options::Library::Library(cutlass::CommandLine const &cmdline) {
+Options::Library::Library(cutlass::CommandLine const &cmdline) { //used
 
   algorithm_mode = AlgorithmMode::kDefault;
 
@@ -394,7 +395,7 @@ Options::Library::Library(cutlass::CommandLine const &cmdline) {
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-Options::Profiling::Profiling(cutlass::CommandLine const &cmdline) {
+Options::Profiling::Profiling(cutlass::CommandLine const &cmdline) { //used
 
   cmdline.get_cmd_line_argument("workspace-count", workspace_count, 0);  
   cmdline.get_cmd_line_argument("warmup-iterations", warmup_iterations, 10);
@@ -461,25 +462,25 @@ Options::Profiling::Profiling(cutlass::CommandLine const &cmdline) {
 //}
 
 /// Returns true if a provider is enabled
-bool Options::Profiling::provider_enabled(library::Provider provider) const {
+bool Options::Profiling::provider_enabled(library::Provider provider) const { //use 4 times
   return std::find(providers.begin(), providers.end(), provider) != providers.end();
 }
 
 /// Returns the index of a provider if its enabled
-size_t Options::Profiling::index(library::Provider provider) const {
-  size_t idx = 0;
-  for (auto const & x : providers) {
-    if (x == provider) {
-      return idx;
-    }
-    ++idx;
-  }
-  return idx;
-}
+//size_t Options::Profiling::index(library::Provider provider) const { //unused
+//  size_t idx = 0;
+//  for (auto const & x : providers) {
+//    if (x == provider) {
+//      return idx;
+//    }
+//    ++idx;
+//  }
+//  return idx;
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-Options::Verification::Verification(cutlass::CommandLine const &cmdline) {
+Options::Verification::Verification(cutlass::CommandLine const &cmdline) { //used
   
   cmdline.get_cmd_line_argument("verification-enabled", enabled, true);
   if (enabled) {
@@ -569,20 +570,20 @@ bool Options::Verification::provider_enabled(library::Provider provider) const {
 }
 
 /// Returns the index of a provider if its enabled
-size_t Options::Verification::index(library::Provider provider) const {
-  size_t idx = 0;
-  for (auto const & x : providers) {
-    if (x == provider) {
-      return idx;
-    }
-    ++idx;
-  }
-  return idx;
-}
+//size_t Options::Verification::index(library::Provider provider) const {
+//  size_t idx = 0;
+//  for (auto const & x : providers) {
+//    if (x == provider) {
+//      return idx;
+//    }
+//    ++idx;
+//  }
+//  return idx;
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-Options::Report::Report(cutlass::CommandLine const &cmdline) {
+Options::Report::Report(cutlass::CommandLine const &cmdline) {//used
   
   cmdline.get_cmd_line_argument("append", append, false);
   cmdline.get_cmd_line_argument("output", output_path);
@@ -654,7 +655,7 @@ Options::Report::Report(cutlass::CommandLine const &cmdline) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-Options::About::About(cutlass::CommandLine const &cmdline) {
+Options::About::About(cutlass::CommandLine const &cmdline) { //used
   help = cmdline.check_cmd_line_flag("help");
   version = cmdline.check_cmd_line_flag("version");
   device_info = cmdline.check_cmd_line_flag("device-info");
@@ -682,7 +683,7 @@ Options::About::About(cutlass::CommandLine const &cmdline) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-Options::Options(cutlass::CommandLine const &cmdline):
+Options::Options(cutlass::CommandLine const &cmdline)://if delete this function, will output nothing
   cmdline(cmdline),
   device(cmdline),
   initialization(cmdline),
