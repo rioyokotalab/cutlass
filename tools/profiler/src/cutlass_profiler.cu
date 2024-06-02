@@ -148,13 +148,13 @@ int CutlassProfiler::profile_() {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Prints all options
-void CutlassProfiler::print_usage_(std::ostream &out) {
-}
+//void CutlassProfiler::print_usage_(std::ostream &out) {
+//}
 
 /// Prints usage
-void CutlassProfiler::print_options_(std::ostream &out) {
-  options_.print_options(out);
-}
+//void CutlassProfiler::print_options_(std::ostream &out) {
+//  options_.print_options(out);
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
