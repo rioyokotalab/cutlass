@@ -96,38 +96,38 @@ void GemmOperationProfiler::print_usage(std::ostream &out) const {
 
 /// Prints examples
 void GemmOperationProfiler::print_examples(std::ostream &out) const {
-
-  out << "\nExamples:\n\n"
-    << "Profile a particular problem size:\n"
-    << "  $ cutlass_profiler --operation=Gemm --m=1024 --n=1024 --k=128\n\n"
-
-    << "Schmoo over problem size and beta:\n"
-    << "  $ cutlass_profiler --operation=Gemm --m=1024:4096:256 --n=1024:4096:256 --k=128:8192:128 --beta=0,1,2.5\n\n"
-
-    << "Schmoo over accumulator types:\n"
-    << "  $ cutlass_profiler --operation=Gemm --accumulator-type=f16,f32\n\n"
-
-    << "Run when A is f16 with column-major and B is any datatype with row-major (For column major, use column, col, or n. For row major use, row or t):\n"
-    << "  $ cutlass_profiler --operation=Gemm --A=f16:column --B=*:row\n\n"
-
-    << "Profile a particular problem size with split K and parallel reduction:\n"
-    << "  $ cutlass_profiler --operation=Gemm --split_k_mode=parallel --split_k_slices=2 --m=1024 --n=1024 --k=128\n\n"
-
-    << "Using various input value distribution:\n"
-    << "  $ cutlass_profiler --operation=Gemm --dist=uniform,min:0,max:3\n"
-    << "  $ cutlass_profiler --operation=Gemm --dist=gaussian,mean:0,stddev:3\n"
-    << "  $ cutlass_profiler --operation=Gemm --dist=sequential,start:0,delta:1\n\n"
-
-    << "Run a kernel with cta tile size of 256x128x32 and save workspace if results are incorrect (note that --cta-tile::k=32 is default cta-tile size):\n"
-    << " $ cutlass_profiler --operation=Gemm --cta_m=256 --cta_n=128  --cta_k=32 --save-workspace=incorrect\n\n"
-
-    << "Test your changes to gemm kernels with a quick functional test and save results in functional-test.csv:\n"
-    << " $ cutlass_profiler  --operation=Gemm \\ \n"
-    << "   --m=8,56,120,136,256,264,512,520,1024,1032,4096,8192,16384 \\ \n"
-    << "   --n=8,56,120,136,256,264,512,520,1024,1032,4096,8192,16384 \\ \n"
-    << "   --k=8,16,32,64,128,256,288,384,504,512,520 \\ \n"
-    << "   --beta=0,1,2 --profiling-iterations=1 \\ \n"
-    << "   --providers=cutlass --output=functional-test.csv\n\n";
+//
+//  out << "\nExamples:\n\n"
+//    << "Profile a particular problem size:\n"
+//    << "  $ cutlass_profiler --operation=Gemm --m=1024 --n=1024 --k=128\n\n"
+//
+//    << "Schmoo over problem size and beta:\n"
+//    << "  $ cutlass_profiler --operation=Gemm --m=1024:4096:256 --n=1024:4096:256 --k=128:8192:128 --beta=0,1,2.5\n\n"
+//
+//    << "Schmoo over accumulator types:\n"
+//    << "  $ cutlass_profiler --operation=Gemm --accumulator-type=f16,f32\n\n"
+//
+//    << "Run when A is f16 with column-major and B is any datatype with row-major (For column major, use column, col, or n. For row major use, row or t):\n"
+//    << "  $ cutlass_profiler --operation=Gemm --A=f16:column --B=*:row\n\n"
+//
+//    << "Profile a particular problem size with split K and parallel reduction:\n"
+//    << "  $ cutlass_profiler --operation=Gemm --split_k_mode=parallel --split_k_slices=2 --m=1024 --n=1024 --k=128\n\n"
+//
+//    << "Using various input value distribution:\n"
+//    << "  $ cutlass_profiler --operation=Gemm --dist=uniform,min:0,max:3\n"
+//    << "  $ cutlass_profiler --operation=Gemm --dist=gaussian,mean:0,stddev:3\n"
+//    << "  $ cutlass_profiler --operation=Gemm --dist=sequential,start:0,delta:1\n\n"
+//
+//    << "Run a kernel with cta tile size of 256x128x32 and save workspace if results are incorrect (note that --cta-tile::k=32 is default cta-tile size):\n"
+//    << " $ cutlass_profiler --operation=Gemm --cta_m=256 --cta_n=128  --cta_k=32 --save-workspace=incorrect\n\n"
+//
+//    << "Test your changes to gemm kernels with a quick functional test and save results in functional-test.csv:\n"
+//    << " $ cutlass_profiler  --operation=Gemm \\ \n"
+//    << "   --m=8,56,120,136,256,264,512,520,1024,1032,4096,8192,16384 \\ \n"
+//    << "   --n=8,56,120,136,256,264,512,520,1024,1032,4096,8192,16384 \\ \n"
+//    << "   --k=8,16,32,64,128,256,288,384,504,512,520 \\ \n"
+//    << "   --beta=0,1,2 --profiling-iterations=1 \\ \n"
+//    << "   --providers=cutlass --output=functional-test.csv\n\n";
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////

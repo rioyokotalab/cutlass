@@ -119,9 +119,9 @@ int CutlassProfiler::operator()() {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Enumerates all operations
-void CutlassProfiler::enumerate_() {
+//void CutlassProfiler::enumerate_() {
 
-}
+//}
 
 /// Profiles all operations
 int CutlassProfiler::profile_() {
