@@ -193,35 +193,35 @@ PerformanceReport::~PerformanceReport() {
   //
   // Output results to stdout if they were not written to a file already.
   //
-  if (options_.report.verbose && !concatenated_results_.empty()) {
+  // if (options_.report.verbose && !concatenated_results_.empty()) {
 
-    if (options_.report.sort_results) {
-      sort_results(concatenated_results_);
-    }
+  //   if (options_.report.sort_results) {
+  //     sort_results(concatenated_results_);
+  //   }
 
-    std::cout << "\n\n";
-    std::cout << "=============================\n\n";
-    std::cout << "CSV Results:\n\n";
+  //   std::cout << "\n\n";
+  //   std::cout << "=============================\n\n";
+  //   std::cout << "CSV Results:\n\n";
 
-    print_csv_header_(std::cout) << std::endl;
+  //   print_csv_header_(std::cout) << std::endl;
 
-    for (auto const &result : concatenated_results_) {
-      print_result_csv_(std::cout, result) << "\n";
-    }
-  }
-  else if (output_file_.is_open() && options_.report.verbose) {
-    std::cout << "\nWrote results to '" << op_file_name_ << "'" << std::endl;
-  }
+  //   for (auto const &result : concatenated_results_) {
+  //     print_result_csv_(std::cout, result) << "\n";
+  //   }
+  // }
+  // else if (output_file_.is_open() && options_.report.verbose) {
+  //   std::cout << "\nWrote results to '" << op_file_name_ << "'" << std::endl;
+  // }
 
-  if (output_file_.is_open()) {
-    output_file_.close();
-  }
+  // if (output_file_.is_open()) {
+  //   output_file_.close();
+  // }
 
-  if (junit_output_file_.is_open()) {
-    print_junit_footer_(junit_output_file_);
-    junit_output_file_.close();
-    std::cout << "\nWrote jUnit results to '" << op_junit_file_name_ << "'" << std::endl;
-  }
+  // if (junit_output_file_.is_open()) {
+  //   print_junit_footer_(junit_output_file_);
+  //   junit_output_file_.close();
+  //   std::cout << "\nWrote jUnit results to '" << op_junit_file_name_ << "'" << std::endl;
+  // }
 }
 
 static const char *disposition_status_color(Disposition disposition) {

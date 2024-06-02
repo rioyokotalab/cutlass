@@ -67,52 +67,52 @@ CutlassProfiler::~CutlassProfiler() {
 /// Execute the program
 int CutlassProfiler::operator()() {
 
-  if (options_.cmdline.num_naked_args() > 0) {
+/*  if (options_.cmdline.num_naked_args() > 0) {
     std::cerr << "Unknown args: \n";
     options_.cmdline.print_naked_args(std::cerr);
     std::cerr << "\n\n\n";
 
-    print_usage_(std::cout);
+   print_usage_(std::cout);
     return 1;
   }
+*/
+  // if (options_.about.help) {
+  //   if (options_.operation_kind == library::OperationKind::kInvalid) {
+  //     print_usage_(std::cout);
+  //   }
+  //   else {
+  //     for (auto & profiler : operation_profilers_) {
+  //       if (profiler->kind() == options_.operation_kind) {
+  //         profiler->print_usage(std::cout);
+  //         profiler->print_examples(std::cout);
+  //         return 0;
+  //       }
+  //     }
+  //   }
+  //   return 0;
+  // }
+  // else if (options_.about.version) {
+  //   options_.about.print_version(std::cout);
 
-  if (options_.about.help) {
-    if (options_.operation_kind == library::OperationKind::kInvalid) {
-      print_usage_(std::cout);
-    }
-    else {
-      for (auto & profiler : operation_profilers_) {
-        if (profiler->kind() == options_.operation_kind) {
-          profiler->print_usage(std::cout);
-          profiler->print_examples(std::cout);
-          return 0;
-        }
-      }
-    }
-    return 0;
-  }
-  else if (options_.about.version) {
-    options_.about.print_version(std::cout);
+  //   std::cout << std::endl;
+  //   return 0;
+  // }
+  // else if (options_.about.device_info) {
+  //   options_.device.print_device_info(std::cout);
+  //   return 0;
+  // }
 
-    std::cout << std::endl;
-    return 0;
-  }
-  else if (options_.about.device_info) {
-    options_.device.print_device_info(std::cout);
-    return 0;
-  }
+   if (options_.execution_mode == ExecutionMode::kProfile ||
+     options_.execution_mode == ExecutionMode::kDryRun ||
+     options_.execution_mode == ExecutionMode::kTrace) {
 
-  if (options_.execution_mode == ExecutionMode::kProfile ||
-    options_.execution_mode == ExecutionMode::kDryRun ||
-    options_.execution_mode == ExecutionMode::kTrace) {
-
-    // Profiles all operations
-    return profile_();
-  }
-  else if (options_.execution_mode == ExecutionMode::kEnumerate) {
-    // Enumerates all operations
-    enumerate_();
-  }
+     // Profiles all operations
+     return profile_();
+   }
+   else if (options_.execution_mode == ExecutionMode::kEnumerate) {
+      //Enumerates all operations
+     enumerate_();
+   }
   return 0;
 }
 

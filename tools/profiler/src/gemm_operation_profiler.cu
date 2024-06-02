@@ -1105,7 +1105,7 @@ bool GemmOperationProfiler::profile(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Method to profile a CUTLASS Operation
-Status GemmOperationProfiler::profile_cutlass_(
+Status GemmOperationProfiler::profile_cutlass_( //not used 
   double &runtime,
   Options const &options,
   library::Operation const *operation,
@@ -1134,9 +1134,9 @@ Status GemmOperationProfiler::profile_cutlass_(
   //
 
   Status status;
-
+  // printf("options.profiling.warmup_iterations:%d\n", options.profiling.warmup_iterations);
   for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
-
+    
     int problem_idx = (iteration % gemm_workspace_.problem_count) * problem_.batch_count;
 
     gemm_workspace_.arguments.A = gemm_workspace_.A->batch_data(problem_idx);
