@@ -120,10 +120,10 @@ public:
   virtual ~ReductionOperationProfiler();
 
   /// Prints usage statement for the math function
-  virtual void print_usage(std::ostream &out) const;
+//  virtual void print_usage(std::ostream &out) const;
 
   /// Prints examples
-  virtual void print_examples(std::ostream &out) const;
+//  virtual void print_examples(std::ostream &out) const;
 
   /// Extracts the problem dimensions
   virtual Status initialize_configuration(

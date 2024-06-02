@@ -74,7 +74,7 @@ public:
 
     Library(CommandLine const &cmdline);
 
-    void print_usage(std::ostream &out) const;
+//    void print_usage(std::ostream &out) const;
     void print_options(std::ostream &out, int indent = 0) const;
   };
 
@@ -96,7 +96,7 @@ public:
 
     Device(CommandLine const &cmdline);
 
-    void print_usage(std::ostream &out) const;
+//    void print_usage(std::ostream &out) const;
     void print_options(std::ostream &out, int indent = 0) const;
     void print_device_info(std::ostream &out) const;
 
@@ -130,7 +130,7 @@ public:
 
     Initialization(CommandLine const &cmdline);
     
-    void print_usage(std::ostream &out) const;
+//    void print_usage(std::ostream &out) const;
     void print_options(std::ostream &out, int indent = 0) const;
 
     /// Helper to parse a Distribution object from the command line parser
@@ -172,7 +172,7 @@ public:
 
     Verification(CommandLine const &cmdline);
   
-    void print_usage(std::ostream &out) const;
+//    void print_usage(std::ostream &out) const;
     void print_options(std::ostream &out, int indent = 0) const;
 
     /// Returns true if a provider is enabled
@@ -212,7 +212,7 @@ public:
 
     Profiling(CommandLine const &cmdline);
 
-    void print_usage(std::ostream &out) const;
+//    void print_usage(std::ostream &out) const;
     void print_options(std::ostream &out, int indent = 0) const;
 
     /// Returns true if a provider is enabled
@@ -257,7 +257,7 @@ public:
 
     Report(CommandLine const &cmdline);
     
-    void print_usage(std::ostream &out) const;
+//    void print_usage(std::ostream &out) const;
     void print_options(std::ostream &out, int indent = 0) const;
   };
 
@@ -279,7 +279,7 @@ public:
 
     About(CommandLine const &cmdline);
     
-    void print_usage(std::ostream &out) const;
+//    void print_usage(std::ostream &out) const;
     void print_options(std::ostream &out, int indent = 0) const;
 
     static void print_version(std::ostream &out);
@@ -322,7 +322,7 @@ public:
 
   Options(CommandLine const &cmdline);
 
-  void print_usage(std::ostream &out) const;
+//  void print_usage(std::ostream &out) const;
   void print_options(std::ostream &out) const;
 
   static std::string indent_str(int indent);

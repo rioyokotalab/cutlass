@@ -89,48 +89,48 @@ Options::Device::Device(cutlass::CommandLine const &cmdline) {
 
 }
 
-void Options::Device::print_usage(std::ostream &out) const {
-
-  out << "Device:\n"
-    << "  --device=<int>                               "
-    << "    CUDA Device ID\n\n";
-
-  int device_count = 0;
-  cudaError_t result = cudaGetDeviceCount(&device_count);
-
-  if (result != cudaSuccess) {
-    out << "      <could not query for CUDA devices>\n";
-  }
-  else {
-
-    for (int idx = 0; idx < device_count; ++idx) {
-      cudaDeviceProp prop;
-      result = cudaGetDeviceProperties(&prop, idx);
-      if (result != cudaSuccess) {
-        out << "      <could not obtain device properties for device " << idx << ">" << std::endl;
-        break;
-      }
-      else {
-        out << "    [" << idx << "] - " 
-          << prop.name << " - SM " << prop.major << "." << prop.minor << ", " 
-          << prop.multiProcessorCount << " SMs @ " << (prop.clockRate / 1000.0) << " MHz, " 
-          << "L2 cache: " << (prop.l2CacheSize >> 20) << " MB, Global Memory: " << (prop.totalGlobalMem >> 30) << " GB"
-          << std::endl; 
-      }
-    }
-    out << "\n";
-  }
-
-  out
-    << "  --compute-capability=<int>                   "
-    << "    Override the compute capability.\n\n"
-
-    << "  --llc-capacity=<capacity in KiB>             "
-    << "    Capacity of last-level cache in kilobytes. If this is non-zero," << end_of_line
-    << "      profiling phases cycle through different input tensors to induce" << end_of_line
-    << "      capacity misses in the L2.\n\n";
-
-}
+//void Options::Device::print_usage(std::ostream &out) const {
+//
+//  out << "Device:\n"
+//    << "  --device=<int>                               "
+//    << "    CUDA Device ID\n\n";
+//
+//  int device_count = 0;
+//  cudaError_t result = cudaGetDeviceCount(&device_count);
+//
+//  if (result != cudaSuccess) {
+//    out << "      <could not query for CUDA devices>\n";
+//  }
+//  else {
+//
+//    for (int idx = 0; idx < device_count; ++idx) {
+//      cudaDeviceProp prop;
+//      result = cudaGetDeviceProperties(&prop, idx);
+//      if (result != cudaSuccess) {
+//        out << "      <could not obtain device properties for device " << idx << ">" << std::endl;
+//        break;
+//      }
+//      else {
+//        out << "    [" << idx << "] - " 
+//          << prop.name << " - SM " << prop.major << "." << prop.minor << ", " 
+//          << prop.multiProcessorCount << " SMs @ " << (prop.clockRate / 1000.0) << " MHz, " 
+//          << "L2 cache: " << (prop.l2CacheSize >> 20) << " MB, Global Memory: " << (prop.totalGlobalMem >> 30) << " GB"
+//          << std::endl; 
+//      }
+//    }
+//    out << "\n";
+//  }
+//
+//  out
+//    << "  --compute-capability=<int>                   "
+//    << "    Override the compute capability.\n\n"
+//
+//    << "  --llc-capacity=<capacity in KiB>             "
+//    << "    Capacity of last-level cache in kilobytes. If this is non-zero," << end_of_line
+//    << "      profiling phases cycle through different input tensors to induce" << end_of_line
+//    << "      capacity misses in the L2.\n\n";
+//
+//}
 
 void Options::Device::print_device_info(std::ostream &out) const {
   int num_devices;
@@ -297,29 +297,29 @@ void Options::Initialization::get_distribution(
   }
 }
 
-void Options::Initialization::print_usage(std::ostream &out) const {
-
-  out << "Initialization:\n"
-
-    << "  --initialization=<bool>                      "
-    << "    Enables initialization (default: true). If false, device memory is" << end_of_line
-    << "      not initialized after allocation.\n\n"
-
-    << "  --initialization-provider=<provider>         "
-    << "    Selects initialization provider {host, device*}. (default: '*')\n\n"
-
-    << "  --dist=<distribution>                        "
-    << "    Data distribution of input tensors {uniform*, gaussian, identity, sequential}"  << end_of_line
-    << "       --dist=uniform,min:<double>,max:<double>,scale:<integer>"  << end_of_line
-    << "       --dist=gaussian,mean:<double>,stddev:<double>,scale:<integer>,pnzA:<double>,pnzB:<double>,pnzC:<double>"  << end_of_line
-    << "       --dist=sequential,start:<double>,delta:<double>,scale:<integer>"  << end_of_line
-    << "       --dist=identity\n\n"
-
-    << "  --seed=<int>                                 "
-    << "    Random number generator seed. Used to enforce deterministic" << end_of_line
-    << "      initialization.\n\n";
-
-}
+//void Options::Initialization::print_usage(std::ostream &out) const {
+//
+//  out << "Initialization:\n"
+//
+//    << "  --initialization=<bool>                      "
+//    << "    Enables initialization (default: true). If false, device memory is" << end_of_line
+//    << "      not initialized after allocation.\n\n"
+//
+//    << "  --initialization-provider=<provider>         "
+//    << "    Selects initialization provider {host, device*}. (default: '*')\n\n"
+//
+//    << "  --dist=<distribution>                        "
+//    << "    Data distribution of input tensors {uniform*, gaussian, identity, sequential}"  << end_of_line
+//    << "       --dist=uniform,min:<double>,max:<double>,scale:<integer>"  << end_of_line
+//    << "       --dist=gaussian,mean:<double>,stddev:<double>,scale:<integer>,pnzA:<double>,pnzB:<double>,pnzC:<double>"  << end_of_line
+//    << "       --dist=sequential,start:<double>,delta:<double>,scale:<integer>"  << end_of_line
+//    << "       --dist=identity\n\n"
+//
+//    << "  --seed=<int>                                 "
+//    << "    Random number generator seed. Used to enforce deterministic" << end_of_line
+//    << "      initialization.\n\n";
+//
+//}
 
 void Options::Initialization::print_options(std::ostream &out, int indent) const {
 
@@ -364,19 +364,19 @@ Options::Library::Library(cutlass::CommandLine const &cmdline) {
   }
 }
 
-void Options::Library::print_usage(std::ostream &out) const {
-
-  out << "Library:\n"
-
-    << "  --library-algo-mode=<mode>                   "
-    << "    Indicates algorithm mode used to call libraries such as cuBLAS and cuDNN.\n"
-    << "                                               "
-    << "    mode={default*,matching,best}\n\n"
-
-    << "  --library-algos=<range-list>                 "
-    << "    If --algorithm-mode=best, permits specifying a selection of algorithms.\n\n";
-
-}
+//void Options::Library::print_usage(std::ostream &out) const {
+//
+//  out << "Library:\n"
+//
+//    << "  --library-algo-mode=<mode>                   "
+//    << "    Indicates algorithm mode used to call libraries such as cuBLAS and cuDNN.\n"
+//    << "                                               "
+//    << "    mode={default*,matching,best}\n\n"
+//
+//    << "  --library-algos=<range-list>                 "
+//    << "    If --algorithm-mode=best, permits specifying a selection of algorithms.\n\n";
+//
+//}
 
 void Options::Library::print_options(std::ostream &out, int indent) const {
 
@@ -420,30 +420,30 @@ Options::Profiling::Profiling(cutlass::CommandLine const &cmdline) {
   }
 }
 
-void Options::Profiling::print_usage(std::ostream &out) const {
-
-  out << "Profiling:\n"
-
-    << "  --workspace-count=<workspace count>          "
-    << "    Number of discrete workspaces maintained to avoid cache-resident " << end_of_line
-    << "    If zero (default), the amount is chosen for each workload based on " << end_of_line
-    << "    capacity of the last-level cache.\n\n"
-
-    << "  --profiling-iterations=<iterations>          "
-    << "    Number of iterations to profile each kernel. If zero, kernels" << end_of_line
-    << "      are launched up to the profiling duration.\n\n"
-
-    << "  --warmup-iterations=<iterations>             "
-    << "    Number of iterations to execute each kernel prior to profiling.\n\n"
-
-    << "  --sleep-duration=<duration>                  "
-    << "    Number of ms to sleep between profiling periods (ms).\n\n"
-
-    << "  --profiling-enabled=<bool>                   "
-    << "    If true, profiling is actually conducted.\n\n"
-
-  ;
-}
+//void Options::Profiling::print_usage(std::ostream &out) const {
+//
+//  out << "Profiling:\n"
+//
+//    << "  --workspace-count=<workspace count>          "
+//    << "    Number of discrete workspaces maintained to avoid cache-resident " << end_of_line
+//    << "    If zero (default), the amount is chosen for each workload based on " << end_of_line
+//    << "    capacity of the last-level cache.\n\n"
+//
+//    << "  --profiling-iterations=<iterations>          "
+//    << "    Number of iterations to profile each kernel. If zero, kernels" << end_of_line
+//    << "      are launched up to the profiling duration.\n\n"
+//
+//    << "  --warmup-iterations=<iterations>             "
+//    << "    Number of iterations to execute each kernel prior to profiling.\n\n"
+//
+//    << "  --sleep-duration=<duration>                  "
+//    << "    Number of ms to sleep between profiling periods (ms).\n\n"
+//
+//    << "  --profiling-enabled=<bool>                   "
+//    << "    If true, profiling is actually conducted.\n\n"
+//
+//  ;
+//}
 
 void Options::Profiling::print_options(std::ostream &out, int indent) const {
 
@@ -520,33 +520,33 @@ Options::Verification::Verification(cutlass::CommandLine const &cmdline) {
   }
 }
 
-void Options::Verification::print_usage(std::ostream &out) const {
-
-  out << "Verification:\n"
-
-    << "  --verification-enabled=<bool>                "
-    << "    Whether to perform verification checks.\n\n"
-
-    << "  --epsilon=<error>                            "
-    << "    Error threshold. Setting to zero (default) requires" << end_of_line
-    << "      bit-level equivalence.\n\n"
-
-    << "  --nonzero-floor=<floor>                      "
-    << "    Results whose absolute value is less than this quantity" << end_of_line
-    << "      are treated as zero for comparisons.\n\n"
-
-    << "  --save-workspace=<string>                    "
-    << "    Specifies when to save the GEMM inputs and results to the filesystem." << end_of_line
-    << "       --save-workspace=never      never save workspace (default)" << end_of_line
-    << "       --save-workspace=incorrect  save workspace for incorrect results" << end_of_line
-    << "       --save-workspace=always     always save workspace\n\n"
-
-    << "  --verification-providers=<providers>         "
-    << "    List of providers used to verify result. (default: '*')" << end_of_line
-    << "      Gemm verification-providers {cublas*}" << end_of_line
-    << "      Conv2d verification-providers {cudnn*, device*, host}"
-    << "\n\n";
-}
+//void Options::Verification::print_usage(std::ostream &out) const {
+//
+//  out << "Verification:\n"
+//
+//    << "  --verification-enabled=<bool>                "
+//    << "    Whether to perform verification checks.\n\n"
+//
+//    << "  --epsilon=<error>                            "
+//    << "    Error threshold. Setting to zero (default) requires" << end_of_line
+//    << "      bit-level equivalence.\n\n"
+//
+//    << "  --nonzero-floor=<floor>                      "
+//    << "    Results whose absolute value is less than this quantity" << end_of_line
+//    << "      are treated as zero for comparisons.\n\n"
+//
+//    << "  --save-workspace=<string>                    "
+//    << "    Specifies when to save the GEMM inputs and results to the filesystem." << end_of_line
+//    << "       --save-workspace=never      never save workspace (default)" << end_of_line
+//    << "       --save-workspace=incorrect  save workspace for incorrect results" << end_of_line
+//    << "       --save-workspace=always     always save workspace\n\n"
+//
+//    << "  --verification-providers=<providers>         "
+//    << "    List of providers used to verify result. (default: '*')" << end_of_line
+//    << "      Gemm verification-providers {cublas*}" << end_of_line
+//    << "      Conv2d verification-providers {cudnn*, device*, host}"
+//    << "\n\n";
+//}
 
 void Options::Verification::print_options(std::ostream &out, int indent) const {
 
@@ -601,38 +601,38 @@ Options::Report::Report(cutlass::CommandLine const &cmdline) {
   cmdline.get_cmd_line_argument("print-kernel-before-running", print_kernel_before_running, false);
 }
 
-void Options::Report::print_usage(std::ostream &out) const {
-
-  out << "Report:\n"
-
-    << "  --append=<bool>                              "
-    << "    If true, result is appended to possibly existing file. Otherwise, " << end_of_line
-    << "      any existing file is overwritten.\n\n"
-
-    << "  --output=<path>                              "
-    << "    Path to output file for machine readable results. Operation kind and '.csv' is appended.\n\n"
-
-    << "  --junit-output=<path>                        "
-    << "    Path to junit output file for result reporting. Operation kind and '.junit.xml' is appended.\n\n"
-
-    << "  --print-kernel-before-running=<bool>                "
-    << "    Prints the name of the kernel being profiled before running the kernel." << end_of_line
-    << "      This is useful for determining which kernel is causing a run of the profiler to hang\n\n"
-
-    << "  --report-not-run=<bool>                      "
-    << "    If true, reports the status of all kernels including those that" << end_of_line
-    << "      do not satisfy the given arguments.\n\n"
-
-    << "  --tags=<column:tag,...>                      "
-    << "    Inserts leading columns in output table and uniform values for each" << end_of_line
-    << "      column. Useful for generating pivot tables.\n\n"
-
-    << "  --verbose=<bool>                             "
-    << "    Prints human-readable text to stdout. If false, nothing is written to stdout.\n\n"
-
-    << "  --sort-results=<bool>                        "
-    << "    Sorts results (by flops-per-byte).\n\n";
-}
+//void Options::Report::print_usage(std::ostream &out) const {
+//
+//  out << "Report:\n"
+//
+//    << "  --append=<bool>                              "
+//    << "    If true, result is appended to possibly existing file. Otherwise, " << end_of_line
+//    << "      any existing file is overwritten.\n\n"
+//
+//    << "  --output=<path>                              "
+//    << "    Path to output file for machine readable results. Operation kind and '.csv' is appended.\n\n"
+//
+//    << "  --junit-output=<path>                        "
+//    << "    Path to junit output file for result reporting. Operation kind and '.junit.xml' is appended.\n\n"
+//
+//    << "  --print-kernel-before-running=<bool>                "
+//    << "    Prints the name of the kernel being profiled before running the kernel." << end_of_line
+//    << "      This is useful for determining which kernel is causing a run of the profiler to hang\n\n"
+//
+//    << "  --report-not-run=<bool>                      "
+//    << "    If true, reports the status of all kernels including those that" << end_of_line
+//    << "      do not satisfy the given arguments.\n\n"
+//
+//    << "  --tags=<column:tag,...>                      "
+//    << "    Inserts leading columns in output table and uniform values for each" << end_of_line
+//    << "      column. Useful for generating pivot tables.\n\n"
+//
+//    << "  --verbose=<bool>                             "
+//    << "    Prints human-readable text to stdout. If false, nothing is written to stdout.\n\n"
+//
+//    << "  --sort-results=<bool>                        "
+//    << "    Sorts results (by flops-per-byte).\n\n";
+//}
 
 void Options::Report::print_options(std::ostream &out, int indent) const {
 
@@ -660,15 +660,15 @@ Options::About::About(cutlass::CommandLine const &cmdline) {
   device_info = cmdline.check_cmd_line_flag("device-info");
 }
 
-void Options::About::print_usage(std::ostream &out) const {
-
-  out << "About:\n"
-    << "  --version                                        ";
-
-  print_version(out);
-
-  out << "\n";
-}
+//void Options::About::print_usage(std::ostream &out) const {
+//
+//  out << "About:\n"
+//    << "  --version                                        ";
+//
+//  print_version(out);
+//
+//  out << "\n";
+//}
 
 void Options::About::print_version(std::ostream &out) {
   out << "CUTLASS " << cutlass::getVersionString()
@@ -742,62 +742,62 @@ Options::Options(cutlass::CommandLine const &cmdline):
   }
 }
 
-void Options::print_usage(std::ostream &out) const {
-
-  out
-    << "CUTLASS Profiler\n"
-    << "usage:\n\n"
-    << "    cutlass_profiler [options]\n\n"
-    << "  --help\n\n"
-
-    << "  --mode=<string>                              "
-    << "    Cutlass profiler execution mode." << end_of_line
-    << "       --mode=profile    regular verification and profiling (default)" << end_of_line
-    << "       --mode=dry_run    no kernels are launched or workspaces allocated" << end_of_line
-    << "       --mode=enumerate  lists all operation kind and operations" << end_of_line
-    << "       --mode=trace      executes a single device-side computation with" << end_of_line
-    << "                          no other kernel launches\n\n"
-
-    << "  --device-info                                "
-    << "    Prints information on all GPUs present in the system\n\n"
-
-    << "  --operation=<operation_kind>                 "
-    << "    CUTLASS operation to profile.\n\n"
-
-    << "  --kernels=<string_list>                      "
-    << "    Filter operations by kernel names. For example, call all kernels with" << end_of_line
-    << "      (\"s1688\" and \"nt\") or (\"s844\" and \"tn\" and \"align8\") in their" << end_of_line
-    << "      operation name using --kernels=\"s1688*nt, s884*tn*align8\"\n\n"
-
-    << "  --ignore-kernels=<string_list>               "
-    << "    Excludes kernels whose names match anything in this list.\n\n"
-    ;
-
-  //
-  // Detailed options
-  //
-
-  device.print_usage(out);
-  out << "\n";
-
-  initialization.print_usage(out);
-  out << "\n";
-
-  library.print_usage(out);
-  out << "\n";
-
-  profiling.print_usage(out);
-  out << "\n";
-
-  verification.print_usage(out);
-  out << "\n";
-
-  report.print_usage(out);
-  out << "\n";
-
-  about.print_usage(out);
-  out << "\n";
-}
+//void Options::print_usage(std::ostream &out) const {
+//
+//  out
+//    << "CUTLASS Profiler\n"
+//    << "usage:\n\n"
+//    << "    cutlass_profiler [options]\n\n"
+//    << "  --help\n\n"
+//
+//    << "  --mode=<string>                              "
+//    << "    Cutlass profiler execution mode." << end_of_line
+//    << "       --mode=profile    regular verification and profiling (default)" << end_of_line
+//    << "       --mode=dry_run    no kernels are launched or workspaces allocated" << end_of_line
+//    << "       --mode=enumerate  lists all operation kind and operations" << end_of_line
+//    << "       --mode=trace      executes a single device-side computation with" << end_of_line
+//    << "                          no other kernel launches\n\n"
+//
+//    << "  --device-info                                "
+//    << "    Prints information on all GPUs present in the system\n\n"
+//
+//    << "  --operation=<operation_kind>                 "
+//    << "    CUTLASS operation to profile.\n\n"
+//
+//    << "  --kernels=<string_list>                      "
+//    << "    Filter operations by kernel names. For example, call all kernels with" << end_of_line
+//    << "      (\"s1688\" and \"nt\") or (\"s844\" and \"tn\" and \"align8\") in their" << end_of_line
+//    << "      operation name using --kernels=\"s1688*nt, s884*tn*align8\"\n\n"
+//
+//    << "  --ignore-kernels=<string_list>               "
+//    << "    Excludes kernels whose names match anything in this list.\n\n"
+//    ;
+//
+//  //
+//  // Detailed options
+//  //
+//
+//  device.print_usage(out);
+//  out << "\n";
+//
+//  initialization.print_usage(out);
+//  out << "\n";
+//
+//  library.print_usage(out);
+//  out << "\n";
+//
+//  profiling.print_usage(out);
+//  out << "\n";
+//
+//  verification.print_usage(out);
+//  out << "\n";
+//
+//  report.print_usage(out);
+//  out << "\n";
+//
+//  about.print_usage(out);
+//  out << "\n";
+//}
 
 void Options::print_options(std::ostream &out) const {
 

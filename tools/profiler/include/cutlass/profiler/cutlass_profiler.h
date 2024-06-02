@@ -65,7 +65,7 @@ private:
 private:
 
   /// Prints usage
-  void print_usage_(std::ostream &);
+//  void print_usage_(std::ostream &);
   
   /// Prints usage
   void print_options_(std::ostream &);

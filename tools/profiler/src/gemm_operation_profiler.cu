@@ -88,11 +88,11 @@ GemmOperationProfiler::~GemmOperationProfiler() {
 }
 
 /// Prints usage statement for the math function
-void GemmOperationProfiler::print_usage(std::ostream &out) const {
-  out << "GEMM" << "\n\n";
-
-  OperationProfiler::print_usage(out);
-}
+//void GemmOperationProfiler::print_usage(std::ostream &out) const {
+//  out << "GEMM" << "\n\n";
+//
+//  OperationProfiler::print_usage(out);
+//}
 
 /// Prints examples
 //void GemmOperationProfiler::print_examples(std::ostream &out) const {

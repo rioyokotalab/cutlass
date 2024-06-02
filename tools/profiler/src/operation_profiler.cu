@@ -114,41 +114,41 @@ std::string const & OperationProfiler::description() const {
 }
 
 /// Prints usage statement for the math function
-void OperationProfiler::print_usage(std::ostream &out) const {
-  for (auto const & desc : arguments_) {
-
-    size_t const kAliasStart = 10;
-
-    size_t columns = 0;
-
-    std::string type_str = to_string(desc.type);
-    columns += type_str.size();
-
-    out << "  [" << type_str << "]";
-
-    if (columns < kAliasStart) {
-      out << std::string(kAliasStart - columns, ' ');
-    }
-
-    columns = 0;
-
-    int j = 0;
-    for (auto const & alias : desc.aliases) {
-      columns += alias.size() + (j ? 1 : 0) + 2;
-
-      out << (j++ ? "," : "") << "--" << alias;
-    }
-
-    size_t const kTotalColumns = 50;
-
-    if (columns < kTotalColumns) {
-      out << std::string(kTotalColumns - columns, ' ');
-    }
-
-    out << desc.description << "\n";
-  }
-}
-
+//void OperationProfiler::print_usage(std::ostream &out) const {
+//  for (auto const & desc : arguments_) {
+//
+//    size_t const kAliasStart = 10;
+//
+//    size_t columns = 0;
+//
+//    std::string type_str = to_string(desc.type);
+//    columns += type_str.size();
+//
+//    out << "  [" << type_str << "]";
+//
+//    if (columns < kAliasStart) {
+//      out << std::string(kAliasStart - columns, ' ');
+//    }
+//
+//    columns = 0;
+//
+//    int j = 0;
+//    for (auto const & alias : desc.aliases) {
+//      columns += alias.size() + (j ? 1 : 0) + 2;
+//
+//      out << (j++ ? "," : "") << "--" << alias;
+//    }
+//
+//    size_t const kTotalColumns = 50;
+//
+//    if (columns < kTotalColumns) {
+//      out << std::string(kTotalColumns - columns, ' ');
+//    }
+//
+//    out << desc.description << "\n";
+//  }
+//}
+//
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Returns true if the current operation description satisfies the problem space
