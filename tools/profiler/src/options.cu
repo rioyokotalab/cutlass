@@ -132,45 +132,45 @@ Options::Device::Device(cutlass::CommandLine const &cmdline) {
 //
 //}
 
-void Options::Device::print_device_info(std::ostream &out) const {
-  int num_devices;
-  cudaDeviceProp props;
+//void Options::Device::print_device_info(std::ostream &out) const {
+//  int num_devices;
+//  cudaDeviceProp props;
+//
+//  cudaError_t result;
+//  result = cudaGetDeviceCount(&num_devices);
+//
+//  if (result != cudaSuccess) {
+//    throw std::runtime_error("cudaGetNumDevices() failed");
+//  }
+//
+//  out << "Device Name,SM,CUDA Device ID,Phy Device ID" << std::endl;
+//
+//  for (int device = 0; device < num_devices; device++) {
+//    result = cudaSetDevice(device);
+//    if (result != cudaSuccess) {
+//      throw std::runtime_error("cudaSetDevice() failed for device");
+//    }
+//
+//    result = cudaGetDeviceProperties(&props, device);
+//    if (result != cudaSuccess) {
+//      throw std::runtime_error("cudaGetDeviceProperties failed for device");
+//    }
+//
+//    out << props.name << "," << props.major << props.minor << ","
+//      << device << "," << props.multiGpuBoardGroupID << std::endl;
+//
+//  }
+//}
 
-  cudaError_t result;
-  result = cudaGetDeviceCount(&num_devices);
-
-  if (result != cudaSuccess) {
-    throw std::runtime_error("cudaGetNumDevices() failed");
-  }
-
-  out << "Device Name,SM,CUDA Device ID,Phy Device ID" << std::endl;
-
-  for (int device = 0; device < num_devices; device++) {
-    result = cudaSetDevice(device);
-    if (result != cudaSuccess) {
-      throw std::runtime_error("cudaSetDevice() failed for device");
-    }
-
-    result = cudaGetDeviceProperties(&props, device);
-    if (result != cudaSuccess) {
-      throw std::runtime_error("cudaGetDeviceProperties failed for device");
-    }
-
-    out << props.name << "," << props.major << props.minor << ","
-      << device << "," << props.multiGpuBoardGroupID << std::endl;
-
-  }
-}
-
-void Options::Device::print_options(std::ostream &out, int indent) const {
-
-  out
-    << indent_str(indent) << "device: " << device << "\n"
-    << indent_str(indent) << "clock: " << int(double(properties.clockRate) / 1000.0) << "\n"
-    << indent_str(indent) << "compute-capability: " << compute_capability() << "\n";
-}
-
-/// Returns the compute capability of the listed device (e.g. 61, 60, 70, 75)
+//void Options::Device::print_options(std::ostream &out, int indent) const {
+//
+//  out
+//    << indent_str(indent) << "device: " << device << "\n"
+//    << indent_str(indent) << "clock: " << int(double(properties.clockRate) / 1000.0) << "\n"
+//    << indent_str(indent) << "compute-capability: " << compute_capability() << "\n";
+//}
+//
+///// Returns the compute capability of the listed device (e.g. 61, 60, 70, 75)
 int Options::Device::compute_capability() const {
   return properties.major * 10 + properties.minor;
 }
@@ -321,10 +321,10 @@ void Options::Initialization::get_distribution(
 //
 //}
 
-void Options::Initialization::print_options(std::ostream &out, int indent) const {
-
-}
-
+//void Options::Initialization::print_options(std::ostream &out, int indent) const {
+//
+//}
+//
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 Options::Library::Library(cutlass::CommandLine const &cmdline) {
@@ -378,20 +378,20 @@ Options::Library::Library(cutlass::CommandLine const &cmdline) {
 //
 //}
 
-void Options::Library::print_options(std::ostream &out, int indent) const {
-
-  out
-    << indent_str(indent) << "library-algo-mode: " << to_string(algorithm_mode) << "\n"
-    << indent_str(indent) << "library-algos: ";
-
-  int j = 0;
-  for (int x : algorithms) {
-    out << (j++ ? "," : "") << x;
-  }
-
-  out << "\n\n";
-}
-
+//void Options::Library::print_options(std::ostream &out, int indent) const {
+//
+//  out
+//    << indent_str(indent) << "library-algo-mode: " << to_string(algorithm_mode) << "\n"
+//    << indent_str(indent) << "library-algos: ";
+//
+//  int j = 0;
+//  for (int x : algorithms) {
+//    out << (j++ ? "," : "") << x;
+//  }
+//
+//  out << "\n\n";
+//}
+//
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 Options::Profiling::Profiling(cutlass::CommandLine const &cmdline) {
@@ -445,20 +445,20 @@ Options::Profiling::Profiling(cutlass::CommandLine const &cmdline) {
 //  ;
 //}
 
-void Options::Profiling::print_options(std::ostream &out, int indent) const {
-
-  out
-    << indent_str(indent) << "profiling_iterations: " << iterations << "\n"
-    << indent_str(indent) << "sleep_duration: " << sleep_duration << "\n"
-    << indent_str(indent) << "profiling_enabled: " << enabled << "\n"
-    << indent_str(indent) << "providers: [";
-
-  int j = 0;
-  for (auto const & provider : providers) {
-    out << (j++ ? ", " : "") << library::to_string(provider);
-  }
-  out << "]\n";
-}
+//void Options::Profiling::print_options(std::ostream &out, int indent) const {
+//
+//  out
+//    << indent_str(indent) << "profiling_iterations: " << iterations << "\n"
+//    << indent_str(indent) << "sleep_duration: " << sleep_duration << "\n"
+//    << indent_str(indent) << "profiling_enabled: " << enabled << "\n"
+//    << indent_str(indent) << "providers: [";
+//
+//  int j = 0;
+//  for (auto const & provider : providers) {
+//    out << (j++ ? ", " : "") << library::to_string(provider);
+//  }
+//  out << "]\n";
+//}
 
 /// Returns true if a provider is enabled
 bool Options::Profiling::provider_enabled(library::Provider provider) const {
@@ -548,21 +548,21 @@ Options::Verification::Verification(cutlass::CommandLine const &cmdline) {
 //    << "\n\n";
 //}
 
-void Options::Verification::print_options(std::ostream &out, int indent) const {
-
-  out
-    << indent_str(indent) << "verification_enabled: " << enabled << "\n"
-    << indent_str(indent) << "epsilon: " << epsilon << "\n"
-    << indent_str(indent) << "save_workspace: " << to_string(save_workspace) << "\n"
-    << indent_str(indent) << "verification_providers: [";
-
-  int j = 0;
-  for (auto const & provider : providers) {
-    out << (j++ ? ", " : "") << library::to_string(provider);
-  }
-  out << "]\n";
-}
-
+//void Options::Verification::print_options(std::ostream &out, int indent) const {
+//
+//  out
+//    << indent_str(indent) << "verification_enabled: " << enabled << "\n"
+//    << indent_str(indent) << "epsilon: " << epsilon << "\n"
+//    << indent_str(indent) << "save_workspace: " << to_string(save_workspace) << "\n"
+//    << indent_str(indent) << "verification_providers: [";
+//
+//  int j = 0;
+//  for (auto const & provider : providers) {
+//    out << (j++ ? ", " : "") << library::to_string(provider);
+//  }
+//  out << "]\n";
+//}
+//
 /// Returns true if a provider is enabled
 bool Options::Verification::provider_enabled(library::Provider provider) const {
   return std::find(providers.begin(), providers.end(), provider) != providers.end();
@@ -634,23 +634,23 @@ Options::Report::Report(cutlass::CommandLine const &cmdline) {
 //    << "    Sorts results (by flops-per-byte).\n\n";
 //}
 
-void Options::Report::print_options(std::ostream &out, int indent) const {
-
-  out
-    << indent_str(indent) << "append: " << append << "\n"
-    << indent_str(indent) << "output: " << output_path << "\n"
-    << indent_str(indent) << "junit-output: " << junit_output_path << "\n"
-    << indent_str(indent) << "print-kernel-before-running: " << print_kernel_before_running << "\n"
-    << indent_str(indent) << "report-not-run: " << report_not_run << "\n"
-    << indent_str(indent) << "tags:\n";
-
-  for (auto const & tag : pivot_tags) {
-    out << indent_str(indent + 1) << tag.first << ": " << tag.second << "\n";
-  }
-
-  out
-    << indent_str(indent) << "verbose: " << verbose << "\n";
-}
+//void Options::Report::print_options(std::ostream &out, int indent) const {
+//
+//  out
+//    << indent_str(indent) << "append: " << append << "\n"
+//    << indent_str(indent) << "output: " << output_path << "\n"
+//    << indent_str(indent) << "junit-output: " << junit_output_path << "\n"
+//    << indent_str(indent) << "print-kernel-before-running: " << print_kernel_before_running << "\n"
+//    << indent_str(indent) << "report-not-run: " << report_not_run << "\n"
+//    << indent_str(indent) << "tags:\n";
+//
+//  for (auto const & tag : pivot_tags) {
+//    out << indent_str(indent + 1) << tag.first << ": " << tag.second << "\n";
+//  }
+//
+//  out
+//    << indent_str(indent) << "verbose: " << verbose << "\n";
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -670,15 +670,15 @@ Options::About::About(cutlass::CommandLine const &cmdline) {
 //  out << "\n";
 //}
 
-void Options::About::print_version(std::ostream &out) {
-  out << "CUTLASS " << cutlass::getVersionString()
-      << " built on " << __DATE__ << " at " << __TIME__;
-  if (!cutlass::getGitRevision().empty()) out << " with commit " << cutlass::getGitRevision() << "";
-}
-
-void Options::About::print_options(std::ostream &out, int indent) const {
-
-}
+//void Options::About::print_version(std::ostream &out) {
+//  out << "CUTLASS " << cutlass::getVersionString()
+//      << " built on " << __DATE__ << " at " << __TIME__;
+//  if (!cutlass::getGitRevision().empty()) out << " with commit " << cutlass::getGitRevision() << "";
+//}
+//
+//void Options::About::print_options(std::ostream &out, int indent) const {
+//
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -799,37 +799,37 @@ Options::Options(cutlass::CommandLine const &cmdline):
 //  out << "\n";
 //}
 
-void Options::print_options(std::ostream &out) const {
-
-  out
-    << "options:\n"
-    << "  help: " << about.help << "\n"
-    << "  mode: " << to_string(execution_mode) << "\n";
-
-  out
-    << "  device:\n";
-  device.print_options(out, 2);
-
-  out
-    << "  initialization:\n";
-  initialization.print_options(out, 2);
-
-  out
-    << "  profiling:\n";
-  profiling.print_options(out, 2);
-
-  out
-    << "  verification:\n";
-  verification.print_options(out, 2);
-
-  out
-    << "  report:\n";
-  report.print_options(out, 2);
-}
-
-std::string Options::indent_str(int indent) {
-  return std::string(indent * 2, ' ');
-}
+//void Options::print_options(std::ostream &out) const {
+//
+//  out
+//    << "options:\n"
+//    << "  help: " << about.help << "\n"
+//    << "  mode: " << to_string(execution_mode) << "\n";
+//
+//  out
+//    << "  device:\n";
+//  device.print_options(out, 2);
+//
+//  out
+//    << "  initialization:\n";
+//  initialization.print_options(out, 2);
+//
+//  out
+//    << "  profiling:\n";
+//  profiling.print_options(out, 2);
+//
+//  out
+//    << "  verification:\n";
+//  verification.print_options(out, 2);
+//
+//  out
+//    << "  report:\n";
+//  report.print_options(out, 2);
+//}
+//
+//std::string Options::indent_str(int indent) {
+//  return std::string(indent * 2, ' ');
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

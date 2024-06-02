@@ -75,7 +75,7 @@ public:
     Library(CommandLine const &cmdline);
 
 //    void print_usage(std::ostream &out) const;
-    void print_options(std::ostream &out, int indent = 0) const;
+//    void print_options(std::ostream &out, int indent = 0) const;
   };
 
   /// Options related to the selected device
@@ -97,8 +97,8 @@ public:
     Device(CommandLine const &cmdline);
 
 //    void print_usage(std::ostream &out) const;
-    void print_options(std::ostream &out, int indent = 0) const;
-    void print_device_info(std::ostream &out) const;
+//    void print_options(std::ostream &out, int indent = 0) const;
+ //   void print_device_info(std::ostream &out) const;
 
     /// Returns the compute capability of the listed device (e.g. 61, 60, 70, 75)
     int compute_capability() const;
@@ -131,7 +131,7 @@ public:
     Initialization(CommandLine const &cmdline);
     
 //    void print_usage(std::ostream &out) const;
-    void print_options(std::ostream &out, int indent = 0) const;
+//    void print_options(std::ostream &out, int indent = 0) const;
 
     /// Helper to parse a Distribution object from the command line parser
     static void get_distribution(
@@ -173,7 +173,7 @@ public:
     Verification(CommandLine const &cmdline);
   
 //    void print_usage(std::ostream &out) const;
-    void print_options(std::ostream &out, int indent = 0) const;
+//    void print_options(std::ostream &out, int indent = 0) const;
 
     /// Returns true if a provider is enabled
     bool provider_enabled(library::Provider provider) const;
@@ -213,7 +213,7 @@ public:
     Profiling(CommandLine const &cmdline);
 
 //    void print_usage(std::ostream &out) const;
-    void print_options(std::ostream &out, int indent = 0) const;
+//    void print_options(std::ostream &out, int indent = 0) const;
 
     /// Returns true if a provider is enabled
     bool provider_enabled(library::Provider provider) const;
@@ -258,7 +258,7 @@ public:
     Report(CommandLine const &cmdline);
     
 //    void print_usage(std::ostream &out) const;
-    void print_options(std::ostream &out, int indent = 0) const;
+//    void print_options(std::ostream &out, int indent = 0) const;
   };
 
   /// Options related to printing usage and version information
@@ -280,7 +280,7 @@ public:
     About(CommandLine const &cmdline);
     
 //    void print_usage(std::ostream &out) const;
-    void print_options(std::ostream &out, int indent = 0) const;
+//    void print_options(std::ostream &out, int indent = 0) const;
 
     static void print_version(std::ostream &out);
   };
@@ -323,7 +323,7 @@ public:
   Options(CommandLine const &cmdline);
 
 //  void print_usage(std::ostream &out) const;
-  void print_options(std::ostream &out) const;
+///  void print_options(std::ostream &out) const;
 
   static std::string indent_str(int indent);
 };
