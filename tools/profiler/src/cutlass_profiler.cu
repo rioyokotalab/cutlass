@@ -109,10 +109,10 @@ int CutlassProfiler::operator()() {
      // Profiles all operations
      return profile_();
    }
-   else if (options_.execution_mode == ExecutionMode::kEnumerate) {
+  // else if (options_.execution_mode == ExecutionMode::kEnumerate) {
       //Enumerates all operations
-     enumerate_();
-   }
+  //   enumerate_();
+  // }
   return 0;
 }
 
