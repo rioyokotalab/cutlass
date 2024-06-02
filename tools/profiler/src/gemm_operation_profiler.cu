@@ -95,7 +95,7 @@ void GemmOperationProfiler::print_usage(std::ostream &out) const {
 }
 
 /// Prints examples
-void GemmOperationProfiler::print_examples(std::ostream &out) const {
+//void GemmOperationProfiler::print_examples(std::ostream &out) const {
 //
 //  out << "\nExamples:\n\n"
 //    << "Profile a particular problem size:\n"
@@ -128,7 +128,7 @@ void GemmOperationProfiler::print_examples(std::ostream &out) const {
 //    << "   --k=8,16,32,64,128,256,288,384,504,512,520 \\ \n"
 //    << "   --beta=0,1,2 --profiling-iterations=1 \\ \n"
 //    << "   --providers=cutlass --output=functional-test.csv\n\n";
-}
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

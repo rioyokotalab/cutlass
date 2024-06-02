@@ -129,7 +129,7 @@ public:
   virtual void print_usage(std::ostream &out) const;
 
   /// Prints examples
-  virtual void print_examples(std::ostream &out) const =0;
+  //virtual void print_examples(std::ostream &out) const =0;
 
   /// Entry point to profile all operations in the manifest
   virtual int profile_all(
