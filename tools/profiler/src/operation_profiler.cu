@@ -152,11 +152,10 @@ std::string const & OperationProfiler::description() const {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Returns true if the current operation description satisfies the problem space
-bool OperationProfiler::satisfies(
+bool OperationProfiler::satisfies( //used
   library::OperationDescription const &op_desc,
   ProblemSpace const &problem_space,
   ProblemSpace::Problem const &problem) {
-
   library::OpcodeClassID opcode_class;
   if (arg_as_OpcodeClassID(opcode_class, "op_class", problem_space, problem)) {
     if (opcode_class != op_desc.tile_description.math_instruction.opcode_class) {
@@ -255,69 +254,69 @@ bool OperationProfiler::satisfies(
 
 #if defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
 
-std::ostream& operator<<(std::ostream& out, library::Provider provider) {
-  if (provider == library::Provider::kNone) {
-    out << "kNone";
-  }
-  else if (provider == library::Provider::kCUTLASS) {
-    out << "kCUTLASS";
-  }
-  else if (provider == library::Provider::kReferenceHost) {
-    out << "kReferenceHost";
-  }
-  else if (provider == library::Provider::kReferenceDevice) {
-    out << "kReferenceDevice";
-  }
-  else if (provider == library::Provider::kCUBLAS) {
-    out << "kCUBLAS";
-  }
-  else if (provider == library::Provider::kCUDNN) {
-    out << "kCUDNN";
-  }
-  else {
-    out << "kInvalid";
-  }
+//std::ostream& operator<<(std::ostream& out, library::Provider provider) {
+//  if (provider == library::Provider::kNone) {
+//    out << "kNone";
+//  }
+//  else if (provider == library::Provider::kCUTLASS) {
+//    out << "kCUTLASS";
+//  }
+//  else if (provider == library::Provider::kReferenceHost) {
+//    out << "kReferenceHost";
+//  }
+//  else if (provider == library::Provider::kReferenceDevice) {
+//    out << "kReferenceDevice";
+//  }
+//  else if (provider == library::Provider::kCUBLAS) {
+//    out << "kCUBLAS";
+//  }
+//  else if (provider == library::Provider::kCUDNN) {
+//    out << "kCUDNN";
+//  }
+//  else {
+//    out << "kInvalid";
+//  }
+//
+//  return out;
+//}
 
-  return out;
-}
-
-std::ostream& operator<<(std::ostream& out, library::OperationKind provider) {
-  if (provider == library::OperationKind::kGemm) {
-    out << "kGemm";
-  }
-  else if (provider == library::OperationKind::kRankK) {
-    out << "kRankK";
-  }
-  else if (provider == library::OperationKind::kRank2K) {
-    out << "kRank2K";
-  }
-  else if (provider == library::OperationKind::kTrmm) {
-    out << "kTrmm";
-  }
-  else if (provider == library::OperationKind::kSymm) {
-    out << "kSymm";
-  }
-  else if (provider == library::OperationKind::kConv2d) {
-    out << "kConv2d";
-  }
-  else if (provider == library::OperationKind::kConv3d) {
-    out << "kConv3d";
-  }
-  else if (provider == library::OperationKind::kEqGemm) {
-    out << "kEqGemm";
-  }
-  else if (provider == library::OperationKind::kSparseGemm) {
-    out << "kSparseGemm";
-  }
-  else if (provider == library::OperationKind::kReduction) {
-    out << "kReduction";
-  }
-  else {
-    out << "kInvalid";
-  }
-
-  return out;
-}
+//std::ostream& operator<<(std::ostream& out, library::OperationKind provider) {
+//  if (provider == library::OperationKind::kGemm) {
+//    out << "kGemm";
+//  }
+//  else if (provider == library::OperationKind::kRankK) {
+//    out << "kRankK";
+//  }
+//  else if (provider == library::OperationKind::kRank2K) {
+//    out << "kRank2K";
+//  }
+//  else if (provider == library::OperationKind::kTrmm) {
+//    out << "kTrmm";
+//  }
+//  else if (provider == library::OperationKind::kSymm) {
+//    out << "kSymm";
+//  }
+//  else if (provider == library::OperationKind::kConv2d) {
+//    out << "kConv2d";
+//  }
+//  else if (provider == library::OperationKind::kConv3d) {
+//    out << "kConv3d";
+//  }
+//  else if (provider == library::OperationKind::kEqGemm) {
+//    out << "kEqGemm";
+//  }
+//  else if (provider == library::OperationKind::kSparseGemm) {
+//    out << "kSparseGemm";
+//  }
+//  else if (provider == library::OperationKind::kReduction) {
+//    out << "kReduction";
+//  }
+//  else {
+//    out << "kInvalid";
+//  }
+//
+//  return out;
+//}
 
 #endif // defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
 
@@ -548,7 +547,7 @@ int OperationProfiler::profile_all(
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Sleep for a given duration in ms
-void OperationProfiler::sleep(int sleep_duration) {
+void OperationProfiler::sleep(int sleep_duration) { //used
   if (sleep_duration) {
     #ifdef __unix__
     usleep(sleep_duration * 1000);
@@ -562,7 +561,7 @@ void OperationProfiler::sleep(int sleep_duration) {
 
 
 /// Compares tensors for equality
-Disposition OperationProfiler::compare_tensors(
+Disposition OperationProfiler::compare_tensors( //used
   Options const &options,
   DeviceAllocation &experimental,
   DeviceAllocation &reference,
@@ -603,120 +602,120 @@ Disposition OperationProfiler::compare_tensors(
 }
 
 /// Saves the workspace
-void OperationProfiler::save_workspace(
+void OperationProfiler::save_workspace( //no output but called
   DeviceContext &device_context,
   Options const &options,
   library::OperationDescription const &desc,
   library::Provider provider,
   library::Provider verification_provider) {
 
-  for (auto const & named_allocation : device_context) {
-
-    DeviceAllocation *allocation = named_allocation.second;
-
-    std::stringstream filename;
-
-    filename << desc.name << "_" << library::to_string(provider) << "_";
-
-    if (verification_provider != library::Provider::kInvalid) {
-      filename << "verified_by_" << library::to_string(verification_provider) << "_";
-    }
-
-    filename << named_allocation.first + ".mat";
-
-    std::ofstream out(filename.str());
-
-    allocation->write_tensor_csv(out);
-    out << "\n";
-
-    if (options.report.verbose) {
-      std::cout << "wrote '" << filename.str() << "'" << std::endl;
-    }
-  }
+//  for (auto const & named_allocation : device_context) {
+//
+//    DeviceAllocation *allocation = named_allocation.second;
+//
+//    std::stringstream filename;
+//
+//    filename << desc.name << "_" << library::to_string(provider) << "_";
+//
+//    if (verification_provider != library::Provider::kInvalid) {
+//      filename << "verified_by_" << library::to_string(verification_provider) << "_";
+//    }
+//
+//    filename << named_allocation.first + ".mat";
+//
+//    std::ofstream out(filename.str());
+//
+//    allocation->write_tensor_csv(out);
+//    out << "\n";
+//
+//    if (options.report.verbose) {
+//      std::cout << "wrote '" << filename.str() << "'" << std::endl;
+//    }
+//  }
 }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Method to profile a CUTLASS Operation
-Status OperationProfiler::profile_cutlass_(
-  double &runtime,
-  Options const &options,
-  library::Operation const *operation,
-  void *arguments,
-  void *host_workspace,
-  void *device_workspace) {
+//Status OperationProfiler::profile_cutlass_(//no output but called
+//  double &runtime,
+//  Options const &options,
+//  library::Operation const *operation,
+//  void *arguments,
+//  void *host_workspace,
+//  void *device_workspace) {
 
-  GpuTimer timer;
-
-  //
-  // Optional sleep to limit power consumption and thermals
-  //
-
-  sleep(options.profiling.sleep_duration);
-
-  //
-  // Warmup loop
-  //
-
-  Status status;
-
-  for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
-
-    status = operation->run(
-      arguments,
-      host_workspace,
-      device_workspace);
-
-    if (status != Status::kSuccess) {
-      return status;
-    }
-  }
-
-  //
-  // Initialize GPU timer
-  //
-
-  timer.start();
-
-  //
-  // Profiling loop
-  //
-
-  int Iterations = options.profiling.iterations;
-
-  int iteration = 0;
-  for (; iteration < Iterations; ++iteration) {
-
-    status = operation->run(
-      arguments,
-      host_workspace,
-      device_workspace);
-
-    if (status != Status::kSuccess) {
-      return status;
-    }
-  }
-
-  //
-  // Wait for completion
-  //
-
-  timer.stop_and_wait();
-
-  //
-  // Update performance result
-  //
-
-  runtime = timer.duration(iteration);
-
-  return status;
-}
+//  GpuTimer timer;
+//
+//  //
+//  // Optional sleep to limit power consumption and thermals
+//  //
+//
+//  sleep(options.profiling.sleep_duration);
+//
+//  //
+//  // Warmup loop
+//  //
+//
+//  Status status;
+//
+//  for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
+//
+//    status = operation->run(
+//      arguments,
+//      host_workspace,
+//      device_workspace);
+//
+//    if (status != Status::kSuccess) {
+//      return status;
+//    }
+//  }
+//
+//  //
+//  // Initialize GPU timer
+//  //
+//
+//  timer.start();
+//
+//  //
+//  // Profiling loop
+//  //
+//
+//  int Iterations = options.profiling.iterations;
+//
+//  int iteration = 0;
+//  for (; iteration < Iterations; ++iteration) {
+//
+//    status = operation->run(
+//      arguments,
+//      host_workspace,
+//      device_workspace);
+//
+//    if (status != Status::kSuccess) {
+//      return status;
+//    }
+//  }
+//
+//  //
+//  // Wait for completion
+//  //
+//
+//  timer.stop_and_wait();
+//
+//  //
+//  // Update performance result
+//  //
+//
+//  runtime = timer.duration(iteration);
+//
+//  return status;
+//}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Sets operation description
-void OperationProfiler::initialize_result_(
+void OperationProfiler::initialize_result_( //used
   PerformanceResult &result,
   library::OperationDescription const &operation_desc,
   ProblemSpace const &problem_space) {
@@ -751,6 +750,7 @@ void OperationProfiler::set_argument(
   ProblemSpace const &problem_space,
   std::string const &value) {
 
+   printf("---------------------use this function------------------------\n");
   result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
 }
 

@@ -231,14 +231,14 @@ protected:
     ProblemSpace const &problem_space);
 
   /// Method to profile an initialized CUTLASS operation
-  virtual Status profile_cutlass_(
-    double &runtime,
-    Options const &options,
-    library::Operation const *operation,
-    void *arguments,
-    void *host_workspace,
-    void *device_workspace);
-
+//  virtual Status profile_cutlass_(
+//    double &runtime,
+//    Options const &options,
+//    library::Operation const *operation,
+//    void *arguments,
+//    void *host_workspace,
+//    void *device_workspace);
+//
 private:
   /// finds string matches filter_string in operation_name
   bool find_string_matches_(

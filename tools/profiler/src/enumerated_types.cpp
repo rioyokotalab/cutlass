@@ -39,18 +39,18 @@ namespace profiler {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-static struct {
-  char const *text;
-  char const *pretty;
-  ExecutionMode enumerant;
-}
-ExecutionMode_enumerants[] = {
-  {"profile", "Profile", ExecutionMode::kProfile},
-  {"dry_run", "Dry run", ExecutionMode::kDryRun},
-  {"dry", "dry run", ExecutionMode::kDryRun},
-  {"trace", "Trace", ExecutionMode::kTrace},
-  {"enumerate", "Enumerate", ExecutionMode::kEnumerate}
-};
+//static struct {
+//  char const *text;
+//  char const *pretty;
+//  ExecutionMode enumerant;
+//}
+//ExecutionMode_enumerants[] = {
+//  {"profile", "Profile", ExecutionMode::kProfile},
+//  {"dry_run", "Dry run", ExecutionMode::kDryRun},
+//  {"dry", "dry run", ExecutionMode::kDryRun},
+//  {"trace", "Trace", ExecutionMode::kTrace},
+//  {"enumerate", "Enumerate", ExecutionMode::kEnumerate}
+//};
 
 /// Converts a ExecutionMode enumerant to a string
 //char const *to_string(ExecutionMode mode, bool pretty) {
