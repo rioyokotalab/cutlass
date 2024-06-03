@@ -39,40 +39,23 @@ namespace profiler {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-//static struct {
-//  char const *text;
-//  char const *pretty;
-//  ExecutionMode enumerant;
-//}
-//ExecutionMode_enumerants[] = {
-//  {"profile", "Profile", ExecutionMode::kProfile},
-//  {"dry_run", "Dry run", ExecutionMode::kDryRun},
-//  {"dry", "dry run", ExecutionMode::kDryRun},
-//  {"trace", "Trace", ExecutionMode::kTrace},
-//  {"enumerate", "Enumerate", ExecutionMode::kEnumerate}
-//};
-
-/// Converts a ExecutionMode enumerant to a string
-//char const *to_string(ExecutionMode mode, bool pretty) {
-//
-//  for (auto const & possible : ExecutionMode_enumerants) {
-//    if (mode == possible.enumerant) {
-//      if (pretty) {
-//        return possible.pretty;
-//      }
-//      else {
-//        return possible.text;
-//      }
-//    }
-//  }
-//
-//  return pretty ? "Invalid" : "invalid";
-//}
+static struct {
+  char const *text;
+  char const *pretty;
+  ExecutionMode enumerant;
+}
+ExecutionMode_enumerants[] = {
+  {"profile", "Profile", ExecutionMode::kProfile},
+  {"dry_run", "Dry run", ExecutionMode::kDryRun},
+  {"dry", "dry run", ExecutionMode::kDryRun},
+  {"trace", "Trace", ExecutionMode::kTrace},
+  {"enumerate", "Enumerate", ExecutionMode::kEnumerate}
+};
 
 /// Parses a ExecutionMode enumerant from a string
-template <>
-ExecutionMode from_string<ExecutionMode>(std::string const &str) {
-
+//template <>
+//ExecutionMode from_string<ExecutionMode>(std::string const &str) {
+//
 //  for (auto const & possible : ExecutionMode_enumerants) {
 //    if ((str.compare(possible.text) == 0) ||
 //        (str.compare(possible.pretty) == 0)) {
@@ -81,8 +64,8 @@ ExecutionMode from_string<ExecutionMode>(std::string const &str) {
 //  }
 //
 //  return ExecutionMode::kInvalid;
-}
-
+//}
+//
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 static struct {
@@ -115,8 +98,8 @@ AlgorithmMode_enumerants[] = {
 //}
 
 /// Parses a ExecutionMode enumerant from a string
-template <>
-AlgorithmMode from_string<AlgorithmMode>(std::string const &str) {
+//template <>
+//AlgorithmMode from_string<AlgorithmMode>(std::string const &str) {
 
 //  for (auto const & possible : AlgorithmMode_enumerants) {
 //    if ((str.compare(possible.text) == 0) ||
@@ -126,7 +109,7 @@ AlgorithmMode from_string<AlgorithmMode>(std::string const &str) {
 //  }
 //
 //  return AlgorithmMode::kInvalid;
-}
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -163,8 +146,8 @@ char const *to_string(Disposition disposition, bool pretty) {
 }
 
 /// Parses a Disposition enumerant from a string
-template <>
-Disposition from_string<Disposition>(std::string const &str) {
+//template <>
+//Disposition from_string<Disposition>(std::string const &str) {
 
 //  for (auto const & possible : Disposition_enumerants) {
 //    if ((str.compare(possible.text) == 0) ||
@@ -174,7 +157,7 @@ Disposition from_string<Disposition>(std::string const &str) {
 //  }
 //
 //  return Disposition::kInvalid;
-}
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -207,8 +190,8 @@ SaveWorkspace_enumerants[] = {
 //}
 
 /// Parses a SaveWorkspace enumerant from a string
-template <>
-SaveWorkspace from_string<SaveWorkspace>(std::string const &str) {
+//template <>
+//SaveWorkspace from_string<SaveWorkspace>(std::string const &str) {
 
 //  for (auto const & possible : SaveWorkspace_enumerants) {
 //    if ((str.compare(possible.text) == 0) ||
@@ -218,7 +201,7 @@ SaveWorkspace from_string<SaveWorkspace>(std::string const &str) {
 //  }
 //
 //  return SaveWorkspace::kInvalid;
-}
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -254,8 +237,8 @@ char const *to_string(ArgumentTypeID type, bool pretty) {
 }
 //
 /// Parses a ArgumentTypeID enumerant from a string
-template <>
-ArgumentTypeID from_string<ArgumentTypeID>(std::string const &str) {
+//template <>
+//ArgumentTypeID from_string<ArgumentTypeID>(std::string const &str) {
 //
 //  for (auto const & possible : ArgumentTypeID_enumerants) {
 //    if ((str.compare(possible.text) == 0) ||
@@ -265,7 +248,7 @@ ArgumentTypeID from_string<ArgumentTypeID>(std::string const &str) {
 //  }
 //
 //  return ArgumentTypeID::kInvalid;
-}
+//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

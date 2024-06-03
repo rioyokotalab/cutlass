@@ -665,12 +665,12 @@ void ProblemSpace::parse_(KernelArgument *arg, CommandLine const &cmdline) {
           if (!tensor_tokens.empty()) {
             TensorArgument::TensorDescription tensor_desc;
 
-            tensor_desc.element = cutlass::library::from_string<library::NumericTypeID>(tensor_tokens.front());
-
-            // Layout
-            if (tensor_tokens.size() > 1) {
-              tensor_desc.layout = cutlass::library::from_string<library::LayoutTypeID>(tensor_tokens.at(1));
-            }
+//            tensor_desc.element = cutlass::library::from_string<library::NumericTypeID>(tensor_tokens.front());
+//
+//            // Layout
+//            if (tensor_tokens.size() > 1) {
+//              tensor_desc.layout = cutlass::library::from_string<library::LayoutTypeID>(tensor_tokens.at(1));
+//            }
 
             // Stride
             for (size_t i = 2; i < tensor_tokens.size(); ++i) {
@@ -812,13 +812,13 @@ bool arg_as_NumericTypeID(
   if (value_ptr->not_null) {
     if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
 
-      numeric_type = library::from_string<library::NumericTypeID>(
-        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
+//      numeric_type = library::from_string<library::NumericTypeID>(
+//        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
 
-      if (numeric_type == library::NumericTypeID::kInvalid) {
-        throw std::runtime_error(
-          "arg_as_NumericTypeID() - illegal cast.");
-      }
+//      if (numeric_type == library::NumericTypeID::kInvalid) {
+//        throw std::runtime_error(
+//          "arg_as_NumericTypeID() - illegal cast.");
+//      }
     }
     else {
 
@@ -853,13 +853,13 @@ bool arg_as_RasterOrder(
   if (value_ptr->not_null) {
     if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
 
-      raster_order = library::from_string<library::RasterOrder>(
-        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
+ //     raster_order = library::from_string<library::RasterOrder>(
+ //       static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
 
-      if (raster_order == library::RasterOrder::kInvalid) {
-        throw std::runtime_error(
-          "arg_as_RasterOrder() - illegal cast.");
-      }
+//      if (raster_order == library::RasterOrder::kInvalid) {
+//        throw std::runtime_error(
+//          "arg_as_RasterOrder() - illegal cast.");
+//      }
     }
     else {
       throw std::runtime_error(
@@ -893,13 +893,13 @@ bool arg_as_LayoutTypeID(
   if (value_ptr->not_null) {
     if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
 
-      layout_type = library::from_string<library::LayoutTypeID>(
-        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
+//      layout_type = library::from_string<library::LayoutTypeID>(
+//        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
 
-      if (layout_type == library::LayoutTypeID::kInvalid) {
-        throw std::runtime_error(
-          "arg_as_LayoutTypeID() - illegal cast.");
-      }
+//      if (layout_type == library::LayoutTypeID::kInvalid) {
+//        throw std::runtime_error(
+//          "arg_as_LayoutTypeID() - illegal cast.");
+//      }
     }
     else {
 
@@ -934,13 +934,13 @@ bool arg_as_OpcodeClassID(
   if (value_ptr->not_null) {
     if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
 
-      opcode_class = library::from_string<library::OpcodeClassID>(
-        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
+//      opcode_class = library::from_string<library::OpcodeClassID>(
+//        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
 
-      if (opcode_class == library::OpcodeClassID::kInvalid) {
-        throw std::runtime_error(
-          "arg_as_OpcodeClassID() - illegal cast.");
-      }
+//      if (opcode_class == library::OpcodeClassID::kInvalid) {
+//        throw std::runtime_error(
+//          "arg_as_OpcodeClassID() - illegal cast.");
+//      }
     }
     else {
 
@@ -974,13 +974,13 @@ bool arg_as_SplitKModeID(
   if (value_ptr->not_null) {
     if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
 
-      split_k_mode = library::from_string<library::SplitKMode>(
-        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
+//      split_k_mode = library::from_string<library::SplitKMode>(
+//        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
 
-      if (split_k_mode == library::SplitKMode::kInvalid) {
-        throw std::runtime_error(
-          "arg_as_SplitKModeID() - illegal cast.");
-      }
+//      if (split_k_mode == library::SplitKMode::kInvalid) {
+//        throw std::runtime_error(
+//          "arg_as_SplitKModeID() - illegal cast.");
+//      }
     }
     else {
 
@@ -1015,13 +1015,13 @@ bool arg_as_ConvModeID(
   if (value_ptr->not_null) {
     if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
 
-      conv_mode = library::from_string<library::ConvModeID>(
-        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
+//      conv_mode = library::from_string<library::ConvModeID>(
+//        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
 
-      if (conv_mode == library::ConvModeID::kInvalid) {
-        throw std::runtime_error(
-          "arg_as_ConvModeID() - illegal cast.");
-      }
+//      if (conv_mode == library::ConvModeID::kInvalid) {
+//        throw std::runtime_error(
+//          "arg_as_ConvModeID() - illegal cast.");
+//      }
     }
     else {
 
@@ -1054,13 +1054,13 @@ bool arg_as_ProviderID(
   if (value_ptr->not_null) {
     if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
 
-      provider = library::from_string<library::Provider>(
-        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
+//      provider = library::from_string<library::Provider>(
+//        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
 
-      if (provider == library::Provider::kInvalid) {
-        throw std::runtime_error(
-          "arg_as_ProviderID() - illegal cast.");
-      }
+//      if (provider == library::Provider::kInvalid) {
+//        throw std::runtime_error(
+//          "arg_as_ProviderID() - illegal cast.");
+//      }
     }
     else {
 
@@ -1182,14 +1182,14 @@ bool conv_kind_satisfies(
   EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr) {
 
   if (value_ptr->not_null) {
-    library::ConvKind conv_kind_cmd_line = 
-      library::from_string<library::ConvKind>(value_ptr->element);
+//    library::ConvKind conv_kind_cmd_line = 
+//      library::from_string<library::ConvKind>(value_ptr->element);
 
-    if (conv_kind_cmd_line != library::ConvKind::kUnknown && 
-      conv_kind_cmd_line != conv_kind) {
-
-      return false;
-    }
+//    if (conv_kind_cmd_line != library::ConvKind::kUnknown && 
+//      conv_kind_cmd_line != conv_kind) {
+//
+//      return false;
+//    }
   }
 
   return true;
@@ -1225,14 +1225,14 @@ bool iterator_algorithm_satisfies(
   EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr) {
 
   if (value_ptr->not_null) {
-    library::IteratorAlgorithmID iterator_algorithm_cmd_line = 
-      library::from_string<library::IteratorAlgorithmID>(value_ptr->element);
+//    library::IteratorAlgorithmID iterator_algorithm_cmd_line = 
+//      library::from_string<library::IteratorAlgorithmID>(value_ptr->element);
 
-    if (iterator_algorithm_cmd_line != library::IteratorAlgorithmID::kNone && 
-      iterator_algorithm_cmd_line != iterator_algorithm) {
-
-      return false;
-    }
+//    if (iterator_algorithm_cmd_line != library::IteratorAlgorithmID::kNone && 
+//      iterator_algorithm_cmd_line != iterator_algorithm) {
+//
+//      return false;
+//    }
   }
 
   return true;

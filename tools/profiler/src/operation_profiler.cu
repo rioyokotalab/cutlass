@@ -114,41 +114,7 @@ std::string const & OperationProfiler::description() const {
 }
 
 /// Prints usage statement for the math function
-//void OperationProfiler::print_usage(std::ostream &out) const {
-//  for (auto const & desc : arguments_) {
-//
-//    size_t const kAliasStart = 10;
-//
-//    size_t columns = 0;
-//
-//    std::string type_str = to_string(desc.type);
-//    columns += type_str.size();
-//
-//    out << "  [" << type_str << "]";
-//
-//    if (columns < kAliasStart) {
-//      out << std::string(kAliasStart - columns, ' ');
-//    }
-//
-//    columns = 0;
-//
-//    int j = 0;
-//    for (auto const & alias : desc.aliases) {
-//      columns += alias.size() + (j ? 1 : 0) + 2;
-//
-//      out << (j++ ? "," : "") << "--" << alias;
-//    }
-//
-//    size_t const kTotalColumns = 50;
-//
-//    if (columns < kTotalColumns) {
-//      out << std::string(kTotalColumns - columns, ' ');
-//    }
-//
-//    out << desc.description << "\n";
-//  }
-//}
-//
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Returns true if the current operation description satisfies the problem space
@@ -253,71 +219,6 @@ bool OperationProfiler::satisfies( //used
 }
 
 #if defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
-
-//std::ostream& operator<<(std::ostream& out, library::Provider provider) {
-//  if (provider == library::Provider::kNone) {
-//    out << "kNone";
-//  }
-//  else if (provider == library::Provider::kCUTLASS) {
-//    out << "kCUTLASS";
-//  }
-//  else if (provider == library::Provider::kReferenceHost) {
-//    out << "kReferenceHost";
-//  }
-//  else if (provider == library::Provider::kReferenceDevice) {
-//    out << "kReferenceDevice";
-//  }
-//  else if (provider == library::Provider::kCUBLAS) {
-//    out << "kCUBLAS";
-//  }
-//  else if (provider == library::Provider::kCUDNN) {
-//    out << "kCUDNN";
-//  }
-//  else {
-//    out << "kInvalid";
-//  }
-//
-//  return out;
-//}
-
-//std::ostream& operator<<(std::ostream& out, library::OperationKind provider) {
-//  if (provider == library::OperationKind::kGemm) {
-//    out << "kGemm";
-//  }
-//  else if (provider == library::OperationKind::kRankK) {
-//    out << "kRankK";
-//  }
-//  else if (provider == library::OperationKind::kRank2K) {
-//    out << "kRank2K";
-//  }
-//  else if (provider == library::OperationKind::kTrmm) {
-//    out << "kTrmm";
-//  }
-//  else if (provider == library::OperationKind::kSymm) {
-//    out << "kSymm";
-//  }
-//  else if (provider == library::OperationKind::kConv2d) {
-//    out << "kConv2d";
-//  }
-//  else if (provider == library::OperationKind::kConv3d) {
-//    out << "kConv3d";
-//  }
-//  else if (provider == library::OperationKind::kEqGemm) {
-//    out << "kEqGemm";
-//  }
-//  else if (provider == library::OperationKind::kSparseGemm) {
-//    out << "kSparseGemm";
-//  }
-//  else if (provider == library::OperationKind::kReduction) {
-//    out << "kReduction";
-//  }
-//  else {
-//    out << "kInvalid";
-//  }
-//
-//  return out;
-//}
-
 #endif // defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
 
 /// Entry point to profile all operations in the manifest
@@ -638,79 +539,6 @@ void OperationProfiler::save_workspace( //no output but called
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Method to profile a CUTLASS Operation
-//Status OperationProfiler::profile_cutlass_(//no output but called
-//  double &runtime,
-//  Options const &options,
-//  library::Operation const *operation,
-//  void *arguments,
-//  void *host_workspace,
-//  void *device_workspace) {
-
-//  GpuTimer timer;
-//
-//  //
-//  // Optional sleep to limit power consumption and thermals
-//  //
-//
-//  sleep(options.profiling.sleep_duration);
-//
-//  //
-//  // Warmup loop
-//  //
-//
-//  Status status;
-//
-//  for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
-//
-//    status = operation->run(
-//      arguments,
-//      host_workspace,
-//      device_workspace);
-//
-//    if (status != Status::kSuccess) {
-//      return status;
-//    }
-//  }
-//
-//  //
-//  // Initialize GPU timer
-//  //
-//
-//  timer.start();
-//
-//  //
-//  // Profiling loop
-//  //
-//
-//  int Iterations = options.profiling.iterations;
-//
-//  int iteration = 0;
-//  for (; iteration < Iterations; ++iteration) {
-//
-//    status = operation->run(
-//      arguments,
-//      host_workspace,
-//      device_workspace);
-//
-//    if (status != Status::kSuccess) {
-//      return status;
-//    }
-//  }
-//
-//  //
-//  // Wait for completion
-//  //
-//
-//  timer.stop_and_wait();
-//
-//  //
-//  // Update performance result
-//  //
-//
-//  runtime = timer.duration(iteration);
-//
-//  return status;
-//}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

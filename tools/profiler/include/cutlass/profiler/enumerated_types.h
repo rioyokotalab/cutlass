@@ -47,8 +47,8 @@ namespace profiler {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename T>
-T from_string(std::string const &);
+//template <typename T>
+//T from_string(std::string const &);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -62,11 +62,11 @@ enum class ExecutionMode {
 };
 
 /// Converts a ExecutionMode enumerant to a string
-char const *to_string(ExecutionMode mode, bool pretty = false);
+//char const *to_string(ExecutionMode mode, bool pretty = false);
 
 /// Parses a ExecutionMode enumerant from a string
-template <>
-ExecutionMode from_string<ExecutionMode>(std::string const &str);
+//template <>
+//ExecutionMode from_string<ExecutionMode>(std::string const &str);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -82,8 +82,8 @@ enum class AlgorithmMode {
 char const *to_string(AlgorithmMode mode, bool pretty = false);
 
 /// Parses a ExecutionMode enumerant from a string
-template <>
-AlgorithmMode from_string<AlgorithmMode>(std::string const &str);
+//template <>
+//AlgorithmMode from_string<AlgorithmMode>(std::string const &str);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -103,8 +103,8 @@ enum class Disposition {
 char const *to_string(Disposition disposition, bool pretty = false);
 
 /// Parses a Disposition enumerant from a string
-template <>
-Disposition from_string<Disposition>(std::string const &str);
+//template <>
+//Disposition from_string<Disposition>(std::string const &str);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -120,8 +120,8 @@ enum class SaveWorkspace {
 char const *to_string(SaveWorkspace save_option, bool pretty = false);
 
 /// Parses a SaveWorkspace enumerant from a string
-template <>
-SaveWorkspace from_string<SaveWorkspace>(std::string const &str);
+//template <>
+//SaveWorkspace from_string<SaveWorkspace>(std::string const &str);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -145,8 +145,8 @@ enum class ArgumentTypeID {
 char const *to_string(ArgumentTypeID type, bool pretty = false);
 
 /// Parses a ArgumentTypeID enumerant from a string
-template <>
-ArgumentTypeID from_string<ArgumentTypeID>(std::string const &str);
+//template <>
+//ArgumentTypeID from_string<ArgumentTypeID>(std::string const &str);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // Profiler typedefs
