@@ -67,40 +67,6 @@ CutlassProfiler::~CutlassProfiler() {
 /// Execute the program
 int CutlassProfiler::operator()() {
 
-/*  if (options_.cmdline.num_naked_args() > 0) {
-    std::cerr << "Unknown args: \n";
-    options_.cmdline.print_naked_args(std::cerr);
-    std::cerr << "\n\n\n";
-
-   print_usage_(std::cout);
-    return 1;
-  }
-*/
-  // if (options_.about.help) {
-  //   if (options_.operation_kind == library::OperationKind::kInvalid) {
-  //     print_usage_(std::cout);
-  //   }
-  //   else {
-  //     for (auto & profiler : operation_profilers_) {
-  //       if (profiler->kind() == options_.operation_kind) {
-  //         profiler->print_usage(std::cout);
-  //         profiler->print_examples(std::cout);
-  //         return 0;
-  //       }
-  //     }
-  //   }
-  //   return 0;
-  // }
-  // else if (options_.about.version) {
-  //   options_.about.print_version(std::cout);
-
-  //   std::cout << std::endl;
-  //   return 0;
-  // }
-  // else if (options_.about.device_info) {
-  //   options_.device.print_device_info(std::cout);
-  //   return 0;
-  // }
 
    if (options_.execution_mode == ExecutionMode::kProfile ||
      options_.execution_mode == ExecutionMode::kDryRun ||
@@ -109,19 +75,11 @@ int CutlassProfiler::operator()() {
      // Profiles all operations
      return profile_();
    }
-  // else if (options_.execution_mode == ExecutionMode::kEnumerate) {
-      //Enumerates all operations
-  //   enumerate_();
-  // }
   return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Enumerates all operations
-//void CutlassProfiler::enumerate_() {
-
-//}
 
 /// Profiles all operations
 int CutlassProfiler::profile_() {
@@ -145,18 +103,6 @@ int CutlassProfiler::profile_() {
   return result;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Prints all options
-//void CutlassProfiler::print_usage_(std::ostream &out) {
-//}
-
-/// Prints usage
-//void CutlassProfiler::print_options_(std::ostream &out) {
-//  options_.print_options(out);
-//}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Initializes the CUDA device
 void CutlassProfiler::initialize_device_() {

@@ -52,21 +52,6 @@ ExecutionMode_enumerants[] = {
   {"enumerate", "Enumerate", ExecutionMode::kEnumerate}
 };
 
-/// Parses a ExecutionMode enumerant from a string
-//template <>
-//ExecutionMode from_string<ExecutionMode>(std::string const &str) {
-//
-//  for (auto const & possible : ExecutionMode_enumerants) {
-//    if ((str.compare(possible.text) == 0) ||
-//        (str.compare(possible.pretty) == 0)) {
-//      return possible.enumerant;
-//    }
-//  }
-//
-//  return ExecutionMode::kInvalid;
-//}
-//
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 static struct {
   char const *text;
@@ -79,37 +64,6 @@ AlgorithmMode_enumerants[] = {
   {"default", "Default", AlgorithmMode::kDefault}
 };
 
-/// Converts a ExecutionMode enumerant to a string
-//char const *to_string(AlgorithmMode mode, bool pretty) {
-//
-//     printf("---------------------use this function------------------------\n");
-//  for (auto const & possible : AlgorithmMode_enumerants) {
-//    if (mode == possible.enumerant) {
-//      if (pretty) {
-//        return possible.pretty;
-//      }
-//      else {
-//        return possible.text;
-//      }
-//    }
-//  }
-//
-//  return pretty ? "Invalid" : "invalid";
-//}
-
-/// Parses a ExecutionMode enumerant from a string
-//template <>
-//AlgorithmMode from_string<AlgorithmMode>(std::string const &str) {
-
-//  for (auto const & possible : AlgorithmMode_enumerants) {
-//    if ((str.compare(possible.text) == 0) ||
-//        (str.compare(possible.pretty) == 0)) {
-//      return possible.enumerant;
-//    }
-//  }
-//
-//  return AlgorithmMode::kInvalid;
-//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -145,20 +99,6 @@ char const *to_string(Disposition disposition, bool pretty) {
   return pretty ? "Invalid" : "invalid";
 }
 
-/// Parses a Disposition enumerant from a string
-//template <>
-//Disposition from_string<Disposition>(std::string const &str) {
-
-//  for (auto const & possible : Disposition_enumerants) {
-//    if ((str.compare(possible.text) == 0) ||
-//        (str.compare(possible.pretty) == 0)) {
-//      return possible.enumerant;
-//    }
-//  }
-//
-//  return Disposition::kInvalid;
-//}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 static struct {
@@ -171,37 +111,6 @@ SaveWorkspace_enumerants[] = {
   {"incorrect", "Incorrect", SaveWorkspace::kIncorrect},
   {"always", "Always", SaveWorkspace::kAlways}
 };
-
-/// Converts a SaveWorkspace enumerant to a string
-//char const *to_string(SaveWorkspace save_option, bool pretty) {
-//
-//  for (auto const & possible : SaveWorkspace_enumerants) {
-//    if (save_option == possible.enumerant) {
-//      if (pretty) {
-//        return possible.pretty;
-//      }
-//      else {
-//        return possible.text;
-//      }
-//    }
-//  }
-//  
-//  return pretty ? "Invalid" : "invalid";
-//}
-
-/// Parses a SaveWorkspace enumerant from a string
-//template <>
-//SaveWorkspace from_string<SaveWorkspace>(std::string const &str) {
-
-//  for (auto const & possible : SaveWorkspace_enumerants) {
-//    if ((str.compare(possible.text) == 0) ||
-//        (str.compare(possible.pretty) == 0)) {
-//      return possible.enumerant;
-//    }
-//  }
-//
-//  return SaveWorkspace::kInvalid;
-//}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -236,20 +145,6 @@ char const *to_string(ArgumentTypeID type, bool pretty) {
   return pretty ? "Invalid" : "invalid";
 }
 //
-/// Parses a ArgumentTypeID enumerant from a string
-//template <>
-//ArgumentTypeID from_string<ArgumentTypeID>(std::string const &str) {
-//
-//  for (auto const & possible : ArgumentTypeID_enumerants) {
-//    if ((str.compare(possible.text) == 0) ||
-//        (str.compare(possible.pretty) == 0)) {
-//      return possible.enumerant;
-//    }
-//  }
-//
-//  return ArgumentTypeID::kInvalid;
-//}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace profiler
