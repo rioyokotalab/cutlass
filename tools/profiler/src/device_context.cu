@@ -157,9 +157,9 @@ DeviceAllocation *DeviceContext::allocate_tensor(
           data_distribution);
       }
       else {
-        allocation->initialize_random_host(
-          options.initialization.seed + seed_shift, 
-          data_distribution);
+        // allocation->initialize_random_host(
+        //   options.initialization.seed + seed_shift, 
+        //   data_distribution);
       }
     }
   }

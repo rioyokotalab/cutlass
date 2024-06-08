@@ -192,7 +192,7 @@ public:
   void initialize_random_device(int seed, Distribution dist);
 
   /// Initializes a host allocation to a random distribution using std::cout
-  void initialize_random_host(int seed, Distribution dist);
+  // void initialize_random_host(int seed, Distribution dist);
 
   /// Initializes a device allocation to a sequential distribution
   void initialize_sequential_device(Distribution dist);
