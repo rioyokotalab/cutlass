@@ -572,17 +572,16 @@ void OperationProfiler::initialize_result_( //used
 }
 
 /// Helper
-void OperationProfiler::set_argument(
+void OperationProfiler::set_argument( //used
   PerformanceResult &result,
   char const *name,
   ProblemSpace const &problem_space,
   std::string const &value) {
 
-   printf("---------------------use this function------------------------\n");
   result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
 }
 
-void OperationProfiler::set_argument(
+void OperationProfiler::set_argument( //used
   PerformanceResult &result,
   char const *name,
   ProblemSpace const &problem_space,
@@ -593,7 +592,7 @@ void OperationProfiler::set_argument(
 
 
 /// finds string matches filter_string in operation_name
-bool OperationProfiler::find_string_matches_(
+bool OperationProfiler::find_string_matches_( //used
   std::string const &filter_string,
   std::string const &operation_name) {
   // Returns true if all substrings appear in the operation_name in order

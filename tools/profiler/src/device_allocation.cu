@@ -53,14 +53,14 @@ namespace profiler {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-size_t DeviceAllocation::bytes(library::NumericTypeID type, size_t capacity) {
+size_t DeviceAllocation::bytes(library::NumericTypeID type, size_t capacity) { //used
   return size_t(cutlass::library::sizeof_bits(type)) * capacity / 8;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename Layout>
-static std::vector<int64_t> get_packed_layout_stride(std::vector<int> const &extent) {
+static std::vector<int64_t> get_packed_layout_stride(std::vector<int> const &extent) {//used
 
   typename Layout::TensorCoord extent_coord;
   typename Layout::Stride stride_coord;
@@ -87,7 +87,7 @@ static std::vector<int64_t> get_packed_layout_stride(std::vector<int> const &ext
 }
 
 /// Returns the stride of a packed layout
-std::vector<int64_t> DeviceAllocation::get_packed_layout(
+std::vector<int64_t> DeviceAllocation::get_packed_layout( //used
   library::LayoutTypeID layout_id, 
   std::vector<int> const &extent) {
 
@@ -161,7 +161,7 @@ std::vector<int64_t> DeviceAllocation::get_packed_layout(
 
 /// Template to use CUTLASS Layout functions to 
 template <typename Layout>
-static size_t construct_layout_(
+static size_t construct_layout_(//used
   void *bytes,
   library::LayoutTypeID layout_id,
   std::vector<int> const &extent,
@@ -212,12 +212,11 @@ static size_t construct_layout_(
 }
 
 /// returns the capacity needed
-size_t DeviceAllocation::construct_layout(
+size_t DeviceAllocation::construct_layout( //used
   void *bytes,
   library::LayoutTypeID layout_id,
   std::vector<int> const &extent,
   std::vector<int64_t> &stride) {
-
   switch (layout_id) {
     case library::LayoutTypeID::kColumnMajor: 
       return construct_layout_<cutlass::layout::ColumnMajor>(bytes, layout_id, extent, stride);
@@ -329,7 +328,7 @@ DeviceAllocation::~DeviceAllocation() {
   }
 }
 
-DeviceAllocation &DeviceAllocation::reset() {
+DeviceAllocation &DeviceAllocation::reset() { //used
   if (pointer_) {
     cudaFree(pointer_);
   }
@@ -347,7 +346,7 @@ DeviceAllocation &DeviceAllocation::reset() {
   return *this;
 }
 
-DeviceAllocation &DeviceAllocation::reset(library::NumericTypeID type, size_t capacity) {
+DeviceAllocation &DeviceAllocation::reset(library::NumericTypeID type, size_t capacity) { //used
 
   reset();
 
@@ -372,7 +371,7 @@ DeviceAllocation &DeviceAllocation::reset(library::NumericTypeID type, size_t ca
 }
 
 /// Allocates memory for a given layout and tensor
-DeviceAllocation &DeviceAllocation::reset(
+DeviceAllocation &DeviceAllocation::reset( //used
   library::NumericTypeID type, 
   library::LayoutTypeID layout_id, 
   std::vector<int> const &extent, 
@@ -408,27 +407,28 @@ DeviceAllocation &DeviceAllocation::reset(
   return *this;
 }
 
-bool DeviceAllocation::good() const {
-  return (capacity_ && pointer_);
-}
+// bool DeviceAllocation::good() const {//unused
+//   return (capacity_ && pointer_);
+// }
 
-library::NumericTypeID DeviceAllocation::type() const {
+library::NumericTypeID DeviceAllocation::type() const { //used
   return type_;
 }
 
-void *DeviceAllocation::data() const {
+void *DeviceAllocation::data() const { //used
   return pointer_;
 }
 
-void *DeviceAllocation::batch_data(int batch_idx) const {
+void *DeviceAllocation::batch_data(int batch_idx) const { //used many times
     return static_cast<char *>(data()) + batch_stride_bytes() * batch_idx; 
 }
 
-library::LayoutTypeID DeviceAllocation::layout() const {
-  return layout_;
-}
+library::LayoutTypeID DeviceAllocation::layout() const { //calling 
+   return layout_;
+ }
 
 std::vector<int64_t> const & DeviceAllocation::stride() const {
+   printf("---------------------use this function------------------------\n");
   return stride_;
 }
 
