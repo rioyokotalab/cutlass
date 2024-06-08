@@ -427,56 +427,55 @@ library::LayoutTypeID DeviceAllocation::layout() const { //calling
    return layout_;
  }
 
-std::vector<int64_t> const & DeviceAllocation::stride() const {
-   printf("---------------------use this function------------------------\n");
+std::vector<int64_t> const & DeviceAllocation::stride() const {//calling
   return stride_;
 }
 
 /// Gets the extent vector
-std::vector<int> const & DeviceAllocation::extent() const {
+std::vector<int> const & DeviceAllocation::extent() const {//calling
   return extent_;
 }
 
 /// Gets the number of adjacent tensors in memory
-int DeviceAllocation::batch_count() const {
-  return batch_count_;
-}
+// int DeviceAllocation::batch_count() const {
+//   return batch_count_;
+// }
 
 /// Gets the stride (in units of elements) between items
-int64_t DeviceAllocation::batch_stride() const {
+int64_t DeviceAllocation::batch_stride() const { //used
   return batch_stride_;
 }
 
 /// Gets the stride (in units of bytes) between items
-int64_t DeviceAllocation::batch_stride_bytes() const {
+int64_t DeviceAllocation::batch_stride_bytes() const {//used
   return bytes(type_, batch_stride_);
 }
 
-size_t DeviceAllocation::capacity() const {
+size_t DeviceAllocation::capacity() const {//calling
   return capacity_;
 }
 
-size_t DeviceAllocation::bytes() const {
+size_t DeviceAllocation::bytes() const {//used
   return bytes(type_, capacity_);
 }
 
 /// Copies from an equivalent-sized tensor in device memory
-void DeviceAllocation::copy_from_device(void const *ptr) {
-  if (!bytes()) {
-#ifndef NDEBUG
-    std::cout << "Skipping copy of size 0 allocation\n";
-#endif
-    return;
-  }
+// void DeviceAllocation::copy_from_device(void const *ptr) {
+//   if (!bytes()) {
+// #ifndef NDEBUG
+//     std::cout << "Skipping copy of size 0 allocation\n";
+// #endif
+//     return;
+//   }
+//
+//   cudaError_t result = cudaMemcpy(data(), ptr, bytes(), cudaMemcpyDeviceToDevice);
+//   if (result != cudaSuccess) {
+//     throw std::runtime_error("Failed device-to-device copy");
+//   }
+// }
 
-  cudaError_t result = cudaMemcpy(data(), ptr, bytes(), cudaMemcpyDeviceToDevice);
-  if (result != cudaSuccess) {
-    throw std::runtime_error("Failed device-to-device copy");
-  }
-}
-
-/// Copies from an equivalent-sized tensor in device memory
-void DeviceAllocation::copy_from_host(void const *ptr) {
+void DeviceAllocation::copy_from_host(void const *ptr) {//calling
+// Copies from an equivalent-sized tensor in device memory
   if (!bytes()) {
 #ifndef NDEBUG
     std::cout << "Skipping copy of size 0 allocation\n";
@@ -489,23 +488,24 @@ void DeviceAllocation::copy_from_host(void const *ptr) {
     throw std::runtime_error("Failed host-to-device copy");
   }
 }
-
+//
 /// Copies from an equivalent-sized tensor in device memory
-void DeviceAllocation::copy_to_host(void *ptr) {
-  if (!bytes()) {
-#ifndef NDEBUG
-    std::cout << "Skipping copy of size 0 allocation\n";
-#endif
-    return;
-  }
-
-  cudaError_t result = cudaMemcpy(ptr, data(), bytes(), cudaMemcpyDeviceToHost);
-  if (result != cudaSuccess) {
-    throw std::runtime_error("Failed device-to-host copy");
-  }
+void DeviceAllocation::copy_to_host(void *ptr) { //calling
+//   if (!bytes()) {
+// #ifndef NDEBUG
+//     std::cout << "Skipping copy of size 0 allocation\n";
+// #endif
+//     return;
+//   }
+//
+//   cudaError_t result = cudaMemcpy(ptr, data(), bytes(), cudaMemcpyDeviceToHost);
+//   if (result != cudaSuccess) {
+//     throw std::runtime_error("Failed device-to-host copy");
+//   }
 }
 
-void DeviceAllocation::initialize_random_device(int seed, Distribution dist) {
+void DeviceAllocation::initialize_random_device(int seed, Distribution dist) {//used
+   printf("---------------------use this function------------------------\n");
   if (!bytes()) {
 #ifndef NDEBUG
     std::cout << "Skipping initialization of size 0 allocation\n";
