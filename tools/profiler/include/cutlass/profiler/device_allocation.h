@@ -210,7 +210,7 @@ public:
   void fill_device(double value);
 
   /// Uniformly fills a host allocation with a value when provided o.w. zero
-  void fill_host(double value);
+  // void fill_host(double value);
 
   /// Copies from an equivalent-sized tensor in device memory
   void copy_from_device(void const *ptr);
