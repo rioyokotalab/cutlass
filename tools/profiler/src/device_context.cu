@@ -182,22 +182,22 @@ DeviceAllocation *DeviceContext::allocate_sparsemeta_tensor(
   DeviceAllocation *allocation = 
     allocate_tensor(name, type, layout_id, extent, stride, batch_count);
 
-  if (options.initialization.enabled) {
-    // TF32 has 4bit meta data.  The rest has 2bit.
-    int MetaSizeInBits = (cutlass::library::sizeof_bits(type_a) == 32) ? 4 : 2;
-
-    if (options.initialization.provider == library::Provider::kReferenceDevice) {
-      // allocation->initialize_random_sparsemeta_device(
-      //   options.initialization.seed + seed_shift, 
-      //   MetaSizeInBits);
-    }
-    else if (options.initialization.provider == library::Provider::kReferenceHost) {
-      allocation->initialize_random_sparsemeta_host(
-        options.initialization.seed + seed_shift, 
-        MetaSizeInBits);
-    }
-  }
-
+  // if (options.initialization.enabled) {
+  //   // TF32 has 4bit meta data.  The rest has 2bit.
+  //   int MetaSizeInBits = (cutlass::library::sizeof_bits(type_a) == 32) ? 4 : 2;
+  //
+  //   if (options.initialization.provider == library::Provider::kReferenceDevice) {
+  //     // allocation->initialize_random_sparsemeta_device(
+  //     //   options.initialization.seed + seed_shift, 
+  //     //   MetaSizeInBits);
+  //   }
+  //   else if (options.initialization.provider == library::Provider::kReferenceHost) {
+  //     allocation->initialize_random_sparsemeta_host(
+  //       options.initialization.seed + seed_shift, 
+  //       MetaSizeInBits);
+  //   }
+  // }
+  //
   return allocation;
 }
 /// Clears named allocations (but does not necessarily free memory)

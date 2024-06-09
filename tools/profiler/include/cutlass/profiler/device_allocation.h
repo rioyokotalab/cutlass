@@ -204,7 +204,7 @@ public:
   // void initialize_random_sparsemeta_device(int seed, int MetaSizeInBits);
 
   /// Initializes a host allocation to a random distribution using std::cout
-  void initialize_random_sparsemeta_host(int seed, int MetaSizeInBits);
+  // void initialize_random_sparsemeta_host(int seed, int MetaSizeInBits);
   
   /// Uniformly fills a tensor with a value when provided o.w. zero
   void fill_device(double value);

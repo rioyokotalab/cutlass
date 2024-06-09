@@ -718,43 +718,6 @@ void DeviceAllocation::initialize_random_device(int seed, Distribution dist) {//
 
 
 
-void DeviceAllocation::initialize_random_sparsemeta_host(int seed, int MetaSizeInBits) {
-  if (!bytes()) {
-#ifndef NDEBUG
-    std::cout << "Skipping initialization of size 0 allocation\n";
-#endif
-    return;
-  }
-
-  if (!data()) {
-    throw std::runtime_error("Attempting to initialize invalid allocation.");
-  }
-
-  std::vector<uint8_t> host_data(bytes());
-
-  switch (type_) {
-  case library::NumericTypeID::kS16:
-    cutlass::reference::host::BlockFillRandomSparseMeta<uint16_t>(
-      reinterpret_cast<uint16_t *>(host_data.data()),
-      capacity_,
-      seed,
-      MetaSizeInBits
-    );
-    break;
-  case library::NumericTypeID::kS32:
-    cutlass::reference::host::BlockFillRandomSparseMeta<uint32_t>(
-      reinterpret_cast<uint32_t *>(host_data.data()),
-      capacity_,
-      seed,
-      MetaSizeInBits
-    );
-    break;
-  default:
-    break;
-  }
-
-  copy_from_host(host_data.data());
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
