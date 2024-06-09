@@ -216,7 +216,7 @@ public:
   void copy_from_device(void const *ptr);
 
   /// Copies from an equivalent-sized tensor in device memory
-  void copy_from_host(void const *ptr);
+  // void copy_from_host(void const *ptr);
 
   /// Copies from an equivalent-sized tensor in device memory
   // void copy_to_host(void *ptr);

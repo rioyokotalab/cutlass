@@ -1020,9 +1020,9 @@ bool GemmOperationProfiler::verify_with_reference_(
     }
     results_.back().status = status;
 
-    if (provider == library::Provider::kReferenceHost) {
-      gemm_workspace_.Reference->copy_from_host(ptr_D);
-    }
+    // if (provider == library::Provider::kReferenceHost) {
+    //   gemm_workspace_.Reference->copy_from_host(ptr_D);
+    // }
 
     //
     // Verify results
