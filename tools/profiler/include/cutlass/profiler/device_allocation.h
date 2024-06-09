@@ -102,11 +102,11 @@ public:
     std::vector<int64_t> &stride);
 
   /// Returns true if two blocks have exactly the same value
-  static bool block_compare_equal(
-    library::NumericTypeID numeric_type, 
-    void const *ptr_A, 
-    void const *ptr_B, 
-    size_t capacity);
+  // static bool block_compare_equal(
+  //   library::NumericTypeID numeric_type, 
+  //   void const *ptr_A, 
+  //   void const *ptr_B, 
+  //   size_t capacity);
 
   /// Returns true if two blocks have approximately the same value
   static bool block_compare_relatively_equal(
