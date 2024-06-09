@@ -131,7 +131,7 @@ PerformanceReport::PerformanceReport( //used
       good_ = false;
     }
 
-    print_junit_header_(junit_output_file_);
+    // print_junit_header_(junit_output_file_);
   }
 }
 
@@ -149,11 +149,11 @@ void PerformanceReport::append_result(PerformanceResult result) { //used
   }
 
   if (junit_output_file_.is_open()) {
-    print_junit_result_(junit_output_file_, result);
+    // print_junit_result_(junit_output_file_, result);
   }
 
   if (output_file_.is_open()) {
-    print_result_csv_(output_file_, result) << std::endl;
+    // print_result_csv_(output_file_, result) << std::endl;
   }
   else {
     concatenated_results_.push_back(result);
@@ -346,61 +346,60 @@ std::ostream & PerformanceReport::print_result_pretty_( //used
 // }
 
 /// Print the result in CSV output
-std::ostream & PerformanceReport::print_result_csv_(
-  std::ostream &out, 
-  PerformanceResult const &result) {
+// std::ostream & PerformanceReport::print_result_csv_(
+//   std::ostream &out, 
+//   PerformanceResult const &result) {
+//
+//   int column_idx = 0;
+//
+//   // Pivot tags
+//   for (auto const & tag : options_.report.pivot_tags) {
+//     out << (column_idx++ ? "," : "") << tag.second;
+//   }
+//
+//   out 
+//     << (column_idx ? "," : "") 
+//     << result.problem_index
+//     << "," << to_string(result.provider, true)
+//     << "," << to_string(result.op_kind)
+//     << "," << result.operation_name
+//     << "," << to_string(result.disposition)
+//     << "," << library::to_string(result.status);
+//
+//   for (auto const & arg : result.arguments) {
+//     out << "," << arg.second;
+//   }
+//
+//   out 
+//     << "," << result.bytes
+//     << "," << result.flops
+//     << "," << result.flops / result.bytes
+//     << "," << result.runtime;
+//
+//   if (result.good()) {
+//
+//     out
+//       << "," << result.gbytes_per_sec()
+//       << "," << result.gflops_per_sec()
+//       ;
+//
+//   }
+//   else {
+//     out << std::string(2
+//       , ','
+//     ); 
+//   }
+//
+//   return out;
+// }
 
-       printf("---------------------use this function------------------------\n");
-  int column_idx = 0;
-
-  // Pivot tags
-  for (auto const & tag : options_.report.pivot_tags) {
-    out << (column_idx++ ? "," : "") << tag.second;
-  }
-
-  out 
-    << (column_idx ? "," : "") 
-    << result.problem_index
-    << "," << to_string(result.provider, true)
-    << "," << to_string(result.op_kind)
-    << "," << result.operation_name
-    << "," << to_string(result.disposition)
-    << "," << library::to_string(result.status);
-
-  for (auto const & arg : result.arguments) {
-    out << "," << arg.second;
-  }
-
-  out 
-    << "," << result.bytes
-    << "," << result.flops
-    << "," << result.flops / result.bytes
-    << "," << result.runtime;
-
-  if (result.good()) {
-
-    out
-      << "," << result.gbytes_per_sec()
-      << "," << result.gflops_per_sec()
-      ;
-
-  }
-  else {
-    out << std::string(2
-      , ','
-    ); 
-  }
-
-  return out;
-}
-
-std::ostream & PerformanceReport::print_junit_header_(std::ostream &out) {
-
-  out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
-  out << "<testsuite name=\"cutlass_profiler\">" << std::endl;
-  return out;
-
-}
+// std::ostream & PerformanceReport::print_junit_header_(std::ostream &out) {
+//
+//   out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+//   out << "<testsuite name=\"cutlass_profiler\">" << std::endl;
+//   return out;
+//
+// }
 
 namespace {
 
@@ -425,80 +424,80 @@ namespace {
   }
 }
 
-std::ostream & PerformanceReport::print_junit_result_(std::ostream &out, PerformanceResult const &result) {
+// std::ostream & PerformanceReport::print_junit_result_(std::ostream &out, PerformanceResult const &result) {
+//
+//   out << "  " << "<testcase name=\"";
+//
+//   std::string delim = "";
+//
+//   // Pivot tags
+//   for (auto const & tag : options_.report.pivot_tags) {
+//     out << delim << tag.second; delim = "_";
+//   }
+//
+//   out << delim << to_string(result.op_kind); delim = "_";
+//   out << delim << result.operation_name;
+//
+//   for (auto const & arg : result.arguments) {
+//     out << delim << arg.second;
+//   }
+//
+//   out << "\" ";
+//
+//   bool skipped = false, failed = false, error = false;
+//
+//   switch (result.disposition) {
+//   case Disposition::kNotRun:
+//   case Disposition::kNotSupported:
+//     skipped = true;
+//     break;
+//   case Disposition::kPassed: 
+//   case Disposition::kNotVerified:
+//     break;
+//   case Disposition::kFailed: 
+//   case Disposition::kIncorrect:
+//     failed = true; 
+//     break;
+//   case Disposition::kInvalidProblem:
+//   case Disposition::kInvalid:
+//     error = true;
+//     break;
+//   };
+//   
+//   if (skipped) {
+//     out << "status=\"notrun\"";
+//   } else {
+//     out << "status=\"run\"";
+//   }
+//     
+//   out << ">" << std::endl;
+//
+//   if (failed) {
+//     out << "    <failure message=\"" << to_string(result.disposition) << "\" />" << std::endl;
+//   }
+//
+//   if (error) {
+//     out << "    <error message=\"" << to_string(result.disposition) << "\" />" << std::endl;
+//   }
+//
+//   out << "    <system-out><![CDATA[" << std::endl;
+//   std::stringstream ss;
+//   print_result_pretty_(ss, result, false);
+//   out << escape_xml_special_chars(ss.str()) << std::endl;
+//   out << "    ]]></system-out>" << std::endl;
+//
+//   out << "  </testcase>" << std::endl;
+//
+//   return out;  
+//
+// }
 
-  out << "  " << "<testcase name=\"";
-
-  std::string delim = "";
-
-  // Pivot tags
-  for (auto const & tag : options_.report.pivot_tags) {
-    out << delim << tag.second; delim = "_";
-  }
-
-  out << delim << to_string(result.op_kind); delim = "_";
-  out << delim << result.operation_name;
-
-  for (auto const & arg : result.arguments) {
-    out << delim << arg.second;
-  }
-
-  out << "\" ";
-
-  bool skipped = false, failed = false, error = false;
-
-  switch (result.disposition) {
-  case Disposition::kNotRun:
-  case Disposition::kNotSupported:
-    skipped = true;
-    break;
-  case Disposition::kPassed: 
-  case Disposition::kNotVerified:
-    break;
-  case Disposition::kFailed: 
-  case Disposition::kIncorrect:
-    failed = true; 
-    break;
-  case Disposition::kInvalidProblem:
-  case Disposition::kInvalid:
-    error = true;
-    break;
-  };
-  
-  if (skipped) {
-    out << "status=\"notrun\"";
-  } else {
-    out << "status=\"run\"";
-  }
-    
-  out << ">" << std::endl;
-
-  if (failed) {
-    out << "    <failure message=\"" << to_string(result.disposition) << "\" />" << std::endl;
-  }
-
-  if (error) {
-    out << "    <error message=\"" << to_string(result.disposition) << "\" />" << std::endl;
-  }
-
-  out << "    <system-out><![CDATA[" << std::endl;
-  std::stringstream ss;
-  print_result_pretty_(ss, result, false);
-  out << escape_xml_special_chars(ss.str()) << std::endl;
-  out << "    ]]></system-out>" << std::endl;
-
-  out << "  </testcase>" << std::endl;
-
-  return out;  
-
-}
-
-std::ostream & PerformanceReport::print_junit_footer_(std::ostream &out) {
-
-  out << "</testsuite>" << std::endl;
-  return out;
-
-}
+// std::ostream & PerformanceReport::print_junit_footer_(std::ostream &out) {
+//
+//   out << "</testsuite>" << std::endl;
+//   return out;
+//
+// }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
