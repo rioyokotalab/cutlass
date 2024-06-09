@@ -114,9 +114,9 @@ PerformanceReport::PerformanceReport( //used
       good_ = false;
     }
 
-    if (print_header) {
-      print_csv_header_(output_file_) << std::endl;
-    }
+    // if (print_header) {
+    //   print_csv_header_(output_file_) << std::endl;
+    // }
   }
 
   if (!options_.report.junit_output_path.empty()) {
@@ -176,7 +176,7 @@ void PerformanceReport::append_result(PerformanceResult result) { //used
 //   std::stable_sort(results.begin(), results.end(), FlopsPerByteCompare());
 // }
 
-void PerformanceReport::append_results(PerformanceResultVector const &results) {
+void PerformanceReport::append_results(PerformanceResultVector const &results) {//used important part of output
 
   if (options_.report.verbose) {
     std::cout << "\n\n";
@@ -224,8 +224,7 @@ PerformanceReport::~PerformanceReport() {
   // }
 }
 
-static const char *disposition_status_color(Disposition disposition) {
-       printf("---------------------use this function------------------------\n");
+static const char *disposition_status_color(Disposition disposition) {//used
   switch (disposition) {
     case Disposition::kPassed: return SHELL_COLOR_GREEN();
     case Disposition::kIncorrect: return SHELL_COLOR_RED();
@@ -237,7 +236,7 @@ static const char *disposition_status_color(Disposition disposition) {
 }
 
 /// Prints the result in human readable form
-std::ostream & PerformanceReport::print_result_pretty_(
+std::ostream & PerformanceReport::print_result_pretty_( //used
   std::ostream &out, 
   PerformanceResult const &result,
   bool use_shell_coloring) {
@@ -316,41 +315,42 @@ std::ostream & PerformanceReport::print_result_pretty_(
 }
 
 /// Prints the CSV header
-std::ostream & PerformanceReport::print_csv_header_(
-  std::ostream &out) {
-
-  int column_idx = 0;
-
-  // Pivot tags
-  for (auto const & tag : options_.report.pivot_tags) {
-    out << (column_idx++ ? "," : "") << tag.first;
-  }
-
-  out 
-    << (column_idx ? "," : "") << "Problem,Provider"
-    << ",OperationKind,Operation,Disposition,Status";
-
-  for (auto const &arg_name : argument_names_) {
-    out << "," << arg_name;
-  }
-
-  out 
-    << ",Bytes"
-    << ",Flops"
-    << ",Flops/Byte"
-    << ",Runtime"
-    << ",GB/s"
-    << ",GFLOPs"
-    ;
-
-  return out;
-}
+// std::ostream & PerformanceReport::print_csv_header_(
+//   std::ostream &out) {
+//
+//   int column_idx = 0;
+//
+//   // Pivot tags
+//   for (auto const & tag : options_.report.pivot_tags) {
+//     out << (column_idx++ ? "," : "") << tag.first;
+//   }
+//
+//   out 
+//     << (column_idx ? "," : "") << "Problem,Provider"
+//     << ",OperationKind,Operation,Disposition,Status";
+//
+//   for (auto const &arg_name : argument_names_) {
+//     out << "," << arg_name;
+//   }
+//
+//   out 
+//     << ",Bytes"
+//     << ",Flops"
+//     << ",Flops/Byte"
+//     << ",Runtime"
+//     << ",GB/s"
+//     << ",GFLOPs"
+//     ;
+//
+//   return out;
+// }
 
 /// Print the result in CSV output
 std::ostream & PerformanceReport::print_result_csv_(
   std::ostream &out, 
   PerformanceResult const &result) {
 
+       printf("---------------------use this function------------------------\n");
   int column_idx = 0;
 
   // Pivot tags
