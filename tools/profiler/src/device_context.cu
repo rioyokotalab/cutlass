@@ -40,20 +40,20 @@ namespace profiler {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Allocates memory of a given type, capacity (elements), and name
-DeviceAllocation *DeviceContext::allocate_block(
-  std::string const &name,
-  library::NumericTypeID type, 
-  size_t capacity) {
-
-  device_memory_.emplace_back(type, capacity);
-  DeviceAllocation *allocation = &device_memory_.back();
-  
-  allocations_[name] = allocation;
-  return allocation;
-}
+// DeviceAllocation *DeviceContext::allocate_block(
+//   std::string const &name,
+//   library::NumericTypeID type, 
+//   size_t capacity) {
+//
+//   device_memory_.emplace_back(type, capacity);
+//   DeviceAllocation *allocation = &device_memory_.back();
+//   
+//   allocations_[name] = allocation;
+//   return allocation;
+// }
 
 /// Allocates memory of a given type, capacity (elements), and name
-DeviceAllocation *DeviceContext::allocate_tensor(
+DeviceAllocation *DeviceContext::allocate_tensor(//used
   std::string const &name,
   library::NumericTypeID type, 
   library::LayoutTypeID layout_id, 
@@ -69,7 +69,7 @@ DeviceAllocation *DeviceContext::allocate_tensor(
 }
 
 /// Allocates memory of a given type, capacity (elements), and name
-DeviceAllocation *DeviceContext::allocate_tensor(
+DeviceAllocation *DeviceContext::allocate_tensor( //used
   Options const &options,
   std::string const &name,
   library::NumericTypeID type, 
@@ -201,32 +201,32 @@ DeviceAllocation *DeviceContext::allocate_sparsemeta_tensor(
   return allocation;
 }
 /// Clears named allocations (but does not necessarily free memory)
-void DeviceContext::clear() {
-  allocations_.clear();
-}
+// void DeviceContext::clear() {
+//   allocations_.clear();
+// }
 
 /// Frees all device memory allocations
-void DeviceContext::free() {
+void DeviceContext::free() { //used
   allocations_.clear();
   device_memory_.clear();
 }
 
 /// Gets the allocation by name
-DeviceAllocation &DeviceContext::at(std::string const &name) {
-  return *allocations_.at(name);
-}
+// DeviceAllocation &DeviceContext::at(std::string const &name) {
+//   return *allocations_.at(name);
+// }
 
-size_t DeviceContext::size() const {
-  return allocations_.size();
-}
+// size_t DeviceContext::size() const {
+//   return allocations_.size();
+// }
 
-DeviceContext::AllocationMap::iterator DeviceContext::begin() {
-  return allocations_.begin();
-}
+// DeviceContext::AllocationMap::iterator DeviceContext::begin() {
+//   return allocations_.begin();
+// }
 
-DeviceContext::AllocationMap::iterator DeviceContext::end() {
-  return allocations_.end();
-}
+// DeviceContext::AllocationMap::iterator DeviceContext::end() {
+//   return allocations_.end();
+// }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

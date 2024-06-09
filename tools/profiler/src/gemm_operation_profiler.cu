@@ -132,22 +132,22 @@ GemmOperationProfiler::~GemmOperationProfiler() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-#if 0
-// used this for debugging
-static std::string byte_string(std::vector<uint8_t> const &bytes) {
-  std::stringstream ss;
-
-  ss << "0x";
-
-  for (size_t idx = bytes.size(); idx > 0; --idx) {
-    ss << std::hex << std::setw(2) << std::setfill('0') << uint32_t(bytes.at(idx - 1));
-  }
-
-  return ss.str();
-}
-#endif
-
-Status GemmOperationProfiler::GemmProblem::parse(
+// #if 0
+// // used this for debugging
+// static std::string byte_string(std::vector<uint8_t> const &bytes) {
+//   std::stringstream ss;
+//
+//   ss << "0x";
+//
+//   for (size_t idx = bytes.size(); idx > 0; --idx) {
+//     ss << std::hex << std::setw(2) << std::setfill('0') << uint32_t(bytes.at(idx - 1));
+//   }
+//
+//   return ss.str();
+// }
+// #endif
+//
+Status GemmOperationProfiler::GemmProblem::parse(//used
   library::GemmDescription const &operation_desc,
   ProblemSpace const &problem_space,
   ProblemSpace::Problem const &problem) {
@@ -254,7 +254,7 @@ Status GemmOperationProfiler::GemmProblem::parse(
 }
 
 /// Total number of bytes loaded
-int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {
+int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {//used
   // Input bytes read and Output bytes written for the gemm problem
   int64_t bytes =
     int64_t(library::sizeof_bits(operation_desc.A.element) * m / 8) * k +
@@ -275,7 +275,7 @@ int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const
 }
 
 /// Total number of flops computed
-int64_t GemmOperationProfiler::GemmProblem::flops(library::GemmDescription const &operation_desc) const {
+int64_t GemmOperationProfiler::GemmProblem::flops(library::GemmDescription const &operation_desc) const {//used
   int64_t flops_ = (int64_t(m) * n * k + m * n) * 2 * batch_count;
 
   // complex-valued support
@@ -300,7 +300,7 @@ int64_t GemmOperationProfiler::GemmProblem::flops(library::GemmDescription const
 
 
 /// Initializes a performance result
-void GemmOperationProfiler::GemmProblem::initialize_result(
+void GemmOperationProfiler::GemmProblem::initialize_result(//used
   PerformanceResult &result,
   library::GemmDescription const &operation_desc,
   ProblemSpace const &problem_space) {
@@ -339,7 +339,7 @@ void GemmOperationProfiler::GemmProblem::initialize_result(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Extracts the problem dimensions
-Status GemmOperationProfiler::initialize_configuration(
+Status GemmOperationProfiler::initialize_configuration(//used
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -385,11 +385,11 @@ Status GemmOperationProfiler::initialize_configuration(
   gemm_workspace_.arguments.pointer_mode = library::ScalarPointerMode::kHost;
   gemm_workspace_.arguments.raster_order = problem_.raster_order;
   // initialize reduction operation for parallel splitKMode
-  if (problem_.split_k_mode == library::SplitKMode::kParallel) {
-    if (!initialize_reduction_configuration_(operation, problem)) {
-      return Status::kErrorInternal;
-    }
-  }
+  // if (problem_.split_k_mode == library::SplitKMode::kParallel) {
+  //   if (!initialize_reduction_configuration_(operation, problem)) {
+  //     return Status::kErrorInternal;
+  //   }
+  // }
 
   initialize_result_(this->model_result_, options, operation_desc, problem_space);
 
@@ -397,7 +397,7 @@ Status GemmOperationProfiler::initialize_configuration(
 }
 
 /// Initializes the performance result
-void GemmOperationProfiler::initialize_result_(
+void GemmOperationProfiler::initialize_result_(//used
   PerformanceResult &result,
   Options const &options,
   library::GemmDescription const &operation_desc,
@@ -418,54 +418,9 @@ void GemmOperationProfiler::initialize_result_(
 
 }
 
-/// Initialize reduction problem dimensions and library::Operation
-bool GemmOperationProfiler::initialize_reduction_configuration_(
-  library::Operation const *operation,
-  ProblemSpace::Problem const &problem) {
-
-  library::GemmDescription const &gemm_desc =
-    static_cast<library::GemmDescription const&>(operation->description());
-
-  if (!cast_from_double(problem_.alpha_one, gemm_desc.element_epilogue, 1)) {
-    return false;
-  }
-
-  if (!cast_from_double(problem_.beta_zero, gemm_desc.element_epilogue, 0)) {
-    return false;
-  }
-
-  /// initialize library::ReductionConfiguration
-  gemm_workspace_.reduction_configuration.problem_size      = gemm::GemmCoord(int(problem_.n), int(problem_.m), int(problem_.k)).mn();
-  gemm_workspace_.reduction_configuration.partitions        = int(problem_.split_k_slices);
-  gemm_workspace_.reduction_configuration.partition_stride  = gemm::GemmCoord(int(problem_.n), int(problem_.m), int(problem_.k)).mn().product();
-  gemm_workspace_.reduction_configuration.ldw               = problem_.ldc;
-  gemm_workspace_.reduction_configuration.lds               = problem_.ldc;
-  gemm_workspace_.reduction_configuration.ldd               = problem_.ldc;
-
-  // find reduction operation
-  library::ReductionFunctionalKey reduction_key(
-    library::Provider::kCUTLASS,
-    gemm_desc.tile_description.math_instruction.element_accumulator,    // element workspace
-    gemm_desc.tile_description.math_instruction.element_accumulator,    // element accumulator
-    gemm_desc.D.element,                                                // element output
-    gemm_desc.element_epilogue                                          // element compute
-  );
-
-  auto reduction_it = library::Singleton::get().operation_table.reduction_operations.find(reduction_key);
-
-  if (reduction_it == library::Singleton::get().operation_table.reduction_operations.end()) {
-    return false;
-  }
-
-  // initialize reduction operation required for parallel split-k operator
-  reduction_op_ = reduction_it->second;
-
-  // reduction operation found and initialized
-  return true;
-}
 
 /// Initializes workspace
-Status GemmOperationProfiler::initialize_workspace(
+Status GemmOperationProfiler::initialize_workspace(//used
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -635,6 +590,7 @@ bool GemmOperationProfiler::verify_cutlass(
   ProblemSpace const &problem_space,
   ProblemSpace::Problem const &problem) {
 
+     printf("---------------------use this function------------------------\n");
   if (!options.profiling.provider_enabled(library::Provider::kCUTLASS)) {
     return true;
   }
