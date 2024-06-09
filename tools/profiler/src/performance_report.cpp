@@ -160,21 +160,7 @@ void PerformanceReport::append_result(PerformanceResult result) { //used
   }
 }
 
-// void PerformanceReport::sort_results(PerformanceResultVector &results) {
-//
-//   struct FlopsPerByteCompare
-//   {
-//     bool operator()(const PerformanceResult &a, const PerformanceResult &b)
-//     {
-//       double a_flops_per_byte = double(a.flops) / double(a.bytes);
-//       double b_flops_per_byte = double(b.flops) / double(b.bytes);
-//
-//       return (a_flops_per_byte < b_flops_per_byte);
-//     }
-//   };
-//
-//   std::stable_sort(results.begin(), results.end(), FlopsPerByteCompare());
-// }
+
 
 void PerformanceReport::append_results(PerformanceResultVector const &results) {//used important part of output
 
@@ -314,92 +300,6 @@ std::ostream & PerformanceReport::print_result_pretty_( //used
   return out;
 }
 
-/// Prints the CSV header
-// std::ostream & PerformanceReport::print_csv_header_(
-//   std::ostream &out) {
-//
-//   int column_idx = 0;
-//
-//   // Pivot tags
-//   for (auto const & tag : options_.report.pivot_tags) {
-//     out << (column_idx++ ? "," : "") << tag.first;
-//   }
-//
-//   out 
-//     << (column_idx ? "," : "") << "Problem,Provider"
-//     << ",OperationKind,Operation,Disposition,Status";
-//
-//   for (auto const &arg_name : argument_names_) {
-//     out << "," << arg_name;
-//   }
-//
-//   out 
-//     << ",Bytes"
-//     << ",Flops"
-//     << ",Flops/Byte"
-//     << ",Runtime"
-//     << ",GB/s"
-//     << ",GFLOPs"
-//     ;
-//
-//   return out;
-// }
-
-/// Print the result in CSV output
-// std::ostream & PerformanceReport::print_result_csv_(
-//   std::ostream &out, 
-//   PerformanceResult const &result) {
-//
-//   int column_idx = 0;
-//
-//   // Pivot tags
-//   for (auto const & tag : options_.report.pivot_tags) {
-//     out << (column_idx++ ? "," : "") << tag.second;
-//   }
-//
-//   out 
-//     << (column_idx ? "," : "") 
-//     << result.problem_index
-//     << "," << to_string(result.provider, true)
-//     << "," << to_string(result.op_kind)
-//     << "," << result.operation_name
-//     << "," << to_string(result.disposition)
-//     << "," << library::to_string(result.status);
-//
-//   for (auto const & arg : result.arguments) {
-//     out << "," << arg.second;
-//   }
-//
-//   out 
-//     << "," << result.bytes
-//     << "," << result.flops
-//     << "," << result.flops / result.bytes
-//     << "," << result.runtime;
-//
-//   if (result.good()) {
-//
-//     out
-//       << "," << result.gbytes_per_sec()
-//       << "," << result.gflops_per_sec()
-//       ;
-//
-//   }
-//   else {
-//     out << std::string(2
-//       , ','
-//     ); 
-//   }
-//
-//   return out;
-// }
-
-// std::ostream & PerformanceReport::print_junit_header_(std::ostream &out) {
-//
-//   out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
-//   out << "<testsuite name=\"cutlass_profiler\">" << std::endl;
-//   return out;
-//
-// }
 
 namespace {
 
@@ -423,81 +323,6 @@ namespace {
     return os << "    <property name=\"" << name << "\" value=\"" << property << "\" />" << std::endl;
   }
 }
-
-// std::ostream & PerformanceReport::print_junit_result_(std::ostream &out, PerformanceResult const &result) {
-//
-//   out << "  " << "<testcase name=\"";
-//
-//   std::string delim = "";
-//
-//   // Pivot tags
-//   for (auto const & tag : options_.report.pivot_tags) {
-//     out << delim << tag.second; delim = "_";
-//   }
-//
-//   out << delim << to_string(result.op_kind); delim = "_";
-//   out << delim << result.operation_name;
-//
-//   for (auto const & arg : result.arguments) {
-//     out << delim << arg.second;
-//   }
-//
-//   out << "\" ";
-//
-//   bool skipped = false, failed = false, error = false;
-//
-//   switch (result.disposition) {
-//   case Disposition::kNotRun:
-//   case Disposition::kNotSupported:
-//     skipped = true;
-//     break;
-//   case Disposition::kPassed: 
-//   case Disposition::kNotVerified:
-//     break;
-//   case Disposition::kFailed: 
-//   case Disposition::kIncorrect:
-//     failed = true; 
-//     break;
-//   case Disposition::kInvalidProblem:
-//   case Disposition::kInvalid:
-//     error = true;
-//     break;
-//   };
-//   
-//   if (skipped) {
-//     out << "status=\"notrun\"";
-//   } else {
-//     out << "status=\"run\"";
-//   }
-//     
-//   out << ">" << std::endl;
-//
-//   if (failed) {
-//     out << "    <failure message=\"" << to_string(result.disposition) << "\" />" << std::endl;
-//   }
-//
-//   if (error) {
-//     out << "    <error message=\"" << to_string(result.disposition) << "\" />" << std::endl;
-//   }
-//
-//   out << "    <system-out><![CDATA[" << std::endl;
-//   std::stringstream ss;
-//   print_result_pretty_(ss, result, false);
-//   out << escape_xml_special_chars(ss.str()) << std::endl;
-//   out << "    ]]></system-out>" << std::endl;
-//
-//   out << "  </testcase>" << std::endl;
-//
-//   return out;  
-//
-// }
-
-// std::ostream & PerformanceReport::print_junit_footer_(std::ostream &out) {
-//
-//   out << "</testsuite>" << std::endl;
-//   return out;
-//
-// }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
