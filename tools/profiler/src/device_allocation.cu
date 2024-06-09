@@ -970,15 +970,11 @@ struct vector_to_coord<TensorCoord, 0> {
   }
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-// template <typename Element, typename Layout>
-// static void write_tensor_csv_static_tensor_view(
-//   std::ostream &out, 
-//   DeviceAllocation &allocation) {
 //
+// template <typename Element, typename Layout>
+// static void tensor_fill_tensor_view(DeviceAllocation &allocation, Element val = Element()) {
 //   Coord<Layout::kRank> extent;
-//   Coord<Layout::kStrideRank, typename Layout::Stride::Index> stride;
+//   Coord<Layout::kStrideRank, typename Layout::LongIndex> stride;
 //
 //   if (allocation.extent().size() != Layout::kRank) {
 //     throw std::runtime_error("Allocation extent has invalid rank");
@@ -989,366 +985,159 @@ struct vector_to_coord<TensorCoord, 0> {
 //   }
 //
 //   vector_to_coord<Coord<Layout::kRank>, Layout::kRank>(extent, allocation.extent());
-//   vector_to_coord<Coord<Layout::kStrideRank, typename Layout::Stride::Index>, 
+//   vector_to_coord<Coord<Layout::kStrideRank, typename Layout::LongIndex>, 
 //                         Layout::kStrideRank>(stride, allocation.stride());
 //
-//   Layout layout(stride);
-//   HostTensor<Element, Layout> host_tensor(extent, layout, false);
+//   TensorView<Element, Layout> view(
+//     static_cast<Element *>(allocation.data()),
+//     Layout(stride),
+//     extent
+//   );
 //
-//   if (host_tensor.capacity() != allocation.batch_stride()) {
-//     throw std::runtime_error("Unexpected capacity to equal.");
-//   }
 //
-//   host_tensor.copy_in_device_to_host(
-//     static_cast<Element const *>(allocation.data()), 
-//     allocation.batch_stride());
-//
-//   TensorViewWrite(out, host_tensor.host_view());
-//
-//   out << "\n\n";
+//   cutlass::reference::device::TensorFill<Element, Layout>(
+//     view,
+//     val
+//   );
 // }
 //
-// /////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// template <typename T>
-// static void write_tensor_csv_static_type(
-//   std::ostream &out, 
-//   DeviceAllocation &allocation) {
-//
+// template <typename Element>
+// static void tensor_fill(DeviceAllocation &allocation, Element val = Element()) {
 //   switch (allocation.layout()) {
 //     case library::LayoutTypeID::kRowMajor:
-//       write_tensor_csv_static_tensor_view<T, layout::RowMajor>(out, allocation);
+//       tensor_fill_tensor_view<Element, layout::RowMajor>(allocation, val);
 //       break;
 //     case library::LayoutTypeID::kColumnMajor:
-//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajor>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kRowMajorInterleavedK2:
-//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<2>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kColumnMajorInterleavedK2:
-//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<2>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kRowMajorInterleavedK4:
-//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<4>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kColumnMajorInterleavedK4:
-//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<4>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kRowMajorInterleavedK16:
-//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<16>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kColumnMajorInterleavedK16:
-//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<16>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kRowMajorInterleavedK32:
-//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<32>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kColumnMajorInterleavedK32:
-//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<32>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kRowMajorInterleavedK64:
-//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<64>>(out, allocation);
-//       break;
-//     case library::LayoutTypeID::kColumnMajorInterleavedK64:
-//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<64>>(out, allocation);
+//       tensor_fill_tensor_view<Element, layout::ColumnMajor>(allocation, val);
 //       break;
 //     case library::LayoutTypeID::kTensorNHWC:
-//       write_tensor_csv_static_tensor_view<T, layout::TensorNHWC>(out, allocation);
+//       tensor_fill_tensor_view<Element, layout::TensorNHWC>(allocation, val);
 //       break;
 //     case library::LayoutTypeID::kTensorNDHWC:
-//       write_tensor_csv_static_tensor_view<T, layout::TensorNDHWC>(out, allocation);
+//       tensor_fill_tensor_view<Element, layout::TensorNDHWC>(allocation, val);
 //       break;
 //     case library::LayoutTypeID::kTensorNC32HW32:
-//       write_tensor_csv_static_tensor_view<T, layout::TensorNCxHWx<32>>(out, allocation);
+//       tensor_fill_tensor_view<Element, layout::TensorNCxHWx<32>>(allocation, val);
 //       break;
 //     case library::LayoutTypeID::kTensorNC64HW64:
-//       write_tensor_csv_static_tensor_view<T, layout::TensorNCxHWx<64>>(out, allocation);
+//       tensor_fill_tensor_view<Element, layout::TensorNCxHWx<64>>(allocation, val);
 //       break;
 //     case library::LayoutTypeID::kTensorC32RSK32:
-//       write_tensor_csv_static_tensor_view<T, layout::TensorCxRSKx<32>>(out, allocation);
+//       tensor_fill_tensor_view<Element, layout::TensorCxRSKx<32>>(allocation, val);
 //       break;
 //     case library::LayoutTypeID::kTensorC64RSK64:
-//       write_tensor_csv_static_tensor_view<T, layout::TensorCxRSKx<64>>(out, allocation);
+//       tensor_fill_tensor_view<Element, layout::TensorCxRSKx<64>>(allocation, val);
 //       break;
 //     default:
-//       throw std::runtime_error("Unhandled layout");
+//     throw std::runtime_error("Unsupported layout");
+//       break;
 //   }
 // }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Writes a tensor to csv 
-// void DeviceAllocation::write_tensor_csv(
-//   std::ostream &out) {
+/// Fills a tensor uniformly with a value (most frequently used to clear the tensor)
+// void DeviceAllocation::fill_device(double val = 0.0) {
 //
-//    printf("---------------------use this function------------------------\n");
 //   switch (this->type()) {
 //   case library::NumericTypeID::kFE4M3:
-//     write_tensor_csv_static_type<float_e4m3_t>(out, *this);
+//     tensor_fill<float_e4m3_t>(*this, static_cast<float_e4m3_t>(val));
 //     break;
-//   
+//
 //   case library::NumericTypeID::kFE5M2:
-//     write_tensor_csv_static_type<float_e5m2_t>(out, *this);
+//     tensor_fill<float_e5m2_t>(*this, static_cast<float_e5m2_t>(val));
 //     break;
 //   case library::NumericTypeID::kF16:
-//     write_tensor_csv_static_type<half_t>(out, *this);
+//     tensor_fill<half_t>(*this, static_cast<half_t>(val));
 //     break;
-//     
+//
 //   case library::NumericTypeID::kBF16:
-//     write_tensor_csv_static_type<bfloat16_t>(out, *this);
+//     tensor_fill<bfloat16_t>(*this, static_cast<bfloat16_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kTF32:
-//     write_tensor_csv_static_type<tfloat32_t>(out, *this);
+//     tensor_fill<tfloat32_t>(*this, static_cast<tfloat32_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kF32:
-//     write_tensor_csv_static_type<float>(out, *this);
+//     tensor_fill<float>(*this, static_cast<float>(val));
 //     break;
 //
 //   case library::NumericTypeID::kF64:
-//     write_tensor_csv_static_type<double>(out, *this);
+//     tensor_fill<double>(*this, static_cast<double>(val));
 //     break;
-//   
+//
 //   case library::NumericTypeID::kS2:
-//     write_tensor_csv_static_type<int2b_t>(out, *this);
+//     tensor_fill<int2b_t>(*this, static_cast<int2b_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kS4:
-//     write_tensor_csv_static_type<int4b_t>(out, *this);
+//     tensor_fill<int4b_t>(*this, static_cast<int4b_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kS8:
-//     write_tensor_csv_static_type<int8_t>(out, *this);
+//     tensor_fill<int8_t>(*this, static_cast<int8_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kS16:
-//     write_tensor_csv_static_type<int16_t>(out, *this);
+//     tensor_fill<int16_t>(*this, static_cast<int16_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kS32:
-//     write_tensor_csv_static_type<int32_t>(out, *this);
+//     tensor_fill<int32_t>(*this, static_cast<int32_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kS64:
-//     write_tensor_csv_static_type<int64_t>(out, *this);
+//     tensor_fill<int64_t>(*this, static_cast<int64_t>(val));
 //     break;
-//   
+//
 //   case library::NumericTypeID::kB1:
-//     write_tensor_csv_static_type<uint1b_t>(out, *this);
+//     tensor_fill<uint1b_t>(*this, static_cast<uint1b_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kU2:
-//     write_tensor_csv_static_type<uint2b_t>(out, *this);
+//     tensor_fill<uint2b_t>(*this, static_cast<uint2b_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kU4:
-//     write_tensor_csv_static_type<uint4b_t>(out, *this);
+//     tensor_fill<uint4b_t>(*this, static_cast<uint4b_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kU8:
-//     write_tensor_csv_static_type<uint8_t>(out, *this);
+//     tensor_fill<uint8_t>(*this, static_cast<uint8_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kU16:
-//     write_tensor_csv_static_type<uint16_t>(out, *this);
+//     tensor_fill<uint16_t>(*this, static_cast<uint16_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kU32:
-//     write_tensor_csv_static_type<uint32_t>(out, *this);
+//     tensor_fill<uint32_t>(*this, static_cast<uint32_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kU64:
-//     write_tensor_csv_static_type<uint64_t>(out, *this);
+//     tensor_fill<uint64_t>(*this, static_cast<uint64_t>(val));
 //     break;
-//   
+//
 //   case library::NumericTypeID::kCF16:
-//     write_tensor_csv_static_type<cutlass::complex<half_t> >(out, *this);
+//     tensor_fill<cutlass::complex<half_t> >(*this, from_real<half_t>(val));
 //     break;
 //
 //   case library::NumericTypeID::kCF32:
-//     write_tensor_csv_static_type<cutlass::complex<float> >(out, *this);
+//     tensor_fill<cutlass::complex<float> >(*this, from_real<float>(val));
 //     break;
 //
 //   case library::NumericTypeID::kCF64:
-//     write_tensor_csv_static_type<cutlass::complex<double> >(out, *this);
-//     break;
-//
-//   case library::NumericTypeID::kVoid:
-//     // Not dump anything as it is a empty tensor.
+//     tensor_fill<cutlass::complex<double> >(*this, from_real<double>(val));
 //     break;
 //
 //   default:
-//     throw std::runtime_error(std::string("Unsupported numeric type: ") + to_string(this->type()) ) ;
+//     throw std::runtime_error(std::string("Unsupported numeric type: ") + to_string(this->type()));
 //   }
 // }
-
-template <typename Element, typename Layout>
-static void tensor_fill_tensor_view(DeviceAllocation &allocation, Element val = Element()) {
-  Coord<Layout::kRank> extent;
-  Coord<Layout::kStrideRank, typename Layout::LongIndex> stride;
-
-  if (allocation.extent().size() != Layout::kRank) {
-    throw std::runtime_error("Allocation extent has invalid rank");
-  }
-
-  if (allocation.stride().size() != Layout::kStrideRank) {
-    throw std::runtime_error("Allocation stride has invalid rank");
-  }
-
-  vector_to_coord<Coord<Layout::kRank>, Layout::kRank>(extent, allocation.extent());
-  vector_to_coord<Coord<Layout::kStrideRank, typename Layout::LongIndex>, 
-                        Layout::kStrideRank>(stride, allocation.stride());
-
-  TensorView<Element, Layout> view(
-    static_cast<Element *>(allocation.data()),
-    Layout(stride),
-    extent
-  );
-
-
-  cutlass::reference::device::TensorFill<Element, Layout>(
-    view,
-    val
-  );
-}
-
-template <typename Element>
-static void tensor_fill(DeviceAllocation &allocation, Element val = Element()) {
-  switch (allocation.layout()) {
-    case library::LayoutTypeID::kRowMajor:
-      tensor_fill_tensor_view<Element, layout::RowMajor>(allocation, val);
-      break;
-    case library::LayoutTypeID::kColumnMajor:
-      tensor_fill_tensor_view<Element, layout::ColumnMajor>(allocation, val);
-      break;
-    case library::LayoutTypeID::kTensorNHWC:
-      tensor_fill_tensor_view<Element, layout::TensorNHWC>(allocation, val);
-      break;
-    case library::LayoutTypeID::kTensorNDHWC:
-      tensor_fill_tensor_view<Element, layout::TensorNDHWC>(allocation, val);
-      break;
-    case library::LayoutTypeID::kTensorNC32HW32:
-      tensor_fill_tensor_view<Element, layout::TensorNCxHWx<32>>(allocation, val);
-      break;
-    case library::LayoutTypeID::kTensorNC64HW64:
-      tensor_fill_tensor_view<Element, layout::TensorNCxHWx<64>>(allocation, val);
-      break;
-    case library::LayoutTypeID::kTensorC32RSK32:
-      tensor_fill_tensor_view<Element, layout::TensorCxRSKx<32>>(allocation, val);
-      break;
-    case library::LayoutTypeID::kTensorC64RSK64:
-      tensor_fill_tensor_view<Element, layout::TensorCxRSKx<64>>(allocation, val);
-      break;
-    default:
-    throw std::runtime_error("Unsupported layout");
-      break;
-  }
-}
-
-/// Fills a tensor uniformly with a value (most frequently used to clear the tensor)
-void DeviceAllocation::fill_device(double val = 0.0) {
-
-  switch (this->type()) {
-  case library::NumericTypeID::kFE4M3:
-    tensor_fill<float_e4m3_t>(*this, static_cast<float_e4m3_t>(val));
-    break;
-
-  case library::NumericTypeID::kFE5M2:
-    tensor_fill<float_e5m2_t>(*this, static_cast<float_e5m2_t>(val));
-    break;
-  case library::NumericTypeID::kF16:
-    tensor_fill<half_t>(*this, static_cast<half_t>(val));
-    break;
-
-  case library::NumericTypeID::kBF16:
-    tensor_fill<bfloat16_t>(*this, static_cast<bfloat16_t>(val));
-    break;
-
-  case library::NumericTypeID::kTF32:
-    tensor_fill<tfloat32_t>(*this, static_cast<tfloat32_t>(val));
-    break;
-
-  case library::NumericTypeID::kF32:
-    tensor_fill<float>(*this, static_cast<float>(val));
-    break;
-
-  case library::NumericTypeID::kF64:
-    tensor_fill<double>(*this, static_cast<double>(val));
-    break;
-
-  case library::NumericTypeID::kS2:
-    tensor_fill<int2b_t>(*this, static_cast<int2b_t>(val));
-    break;
-
-  case library::NumericTypeID::kS4:
-    tensor_fill<int4b_t>(*this, static_cast<int4b_t>(val));
-    break;
-
-  case library::NumericTypeID::kS8:
-    tensor_fill<int8_t>(*this, static_cast<int8_t>(val));
-    break;
-
-  case library::NumericTypeID::kS16:
-    tensor_fill<int16_t>(*this, static_cast<int16_t>(val));
-    break;
-
-  case library::NumericTypeID::kS32:
-    tensor_fill<int32_t>(*this, static_cast<int32_t>(val));
-    break;
-
-  case library::NumericTypeID::kS64:
-    tensor_fill<int64_t>(*this, static_cast<int64_t>(val));
-    break;
-
-  case library::NumericTypeID::kB1:
-    tensor_fill<uint1b_t>(*this, static_cast<uint1b_t>(val));
-    break;
-
-  case library::NumericTypeID::kU2:
-    tensor_fill<uint2b_t>(*this, static_cast<uint2b_t>(val));
-    break;
-
-  case library::NumericTypeID::kU4:
-    tensor_fill<uint4b_t>(*this, static_cast<uint4b_t>(val));
-    break;
-
-  case library::NumericTypeID::kU8:
-    tensor_fill<uint8_t>(*this, static_cast<uint8_t>(val));
-    break;
-
-  case library::NumericTypeID::kU16:
-    tensor_fill<uint16_t>(*this, static_cast<uint16_t>(val));
-    break;
-
-  case library::NumericTypeID::kU32:
-    tensor_fill<uint32_t>(*this, static_cast<uint32_t>(val));
-    break;
-
-  case library::NumericTypeID::kU64:
-    tensor_fill<uint64_t>(*this, static_cast<uint64_t>(val));
-    break;
-
-  case library::NumericTypeID::kCF16:
-    tensor_fill<cutlass::complex<half_t> >(*this, from_real<half_t>(val));
-    break;
-
-  case library::NumericTypeID::kCF32:
-    tensor_fill<cutlass::complex<float> >(*this, from_real<float>(val));
-    break;
-
-  case library::NumericTypeID::kCF64:
-    tensor_fill<cutlass::complex<double> >(*this, from_real<double>(val));
-    break;
-
-  default:
-    throw std::runtime_error(std::string("Unsupported numeric type: ") + to_string(this->type()));
-  }
-}
 
 /// Fills a tensor uniformly with a value (most frequently used to clear the tensor)
 void DeviceAllocation::fill_host(double val = 0.0) {
 
+   printf("---------------------use this function------------------------\n");
   std::vector<uint8_t> host_data(bytes());
 
   switch (this->type()) {
