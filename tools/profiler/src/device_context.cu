@@ -187,9 +187,9 @@ DeviceAllocation *DeviceContext::allocate_sparsemeta_tensor(
     int MetaSizeInBits = (cutlass::library::sizeof_bits(type_a) == 32) ? 4 : 2;
 
     if (options.initialization.provider == library::Provider::kReferenceDevice) {
-      allocation->initialize_random_sparsemeta_device(
-        options.initialization.seed + seed_shift, 
-        MetaSizeInBits);
+      // allocation->initialize_random_sparsemeta_device(
+      //   options.initialization.seed + seed_shift, 
+      //   MetaSizeInBits);
     }
     else if (options.initialization.provider == library::Provider::kReferenceHost) {
       allocation->initialize_random_sparsemeta_host(

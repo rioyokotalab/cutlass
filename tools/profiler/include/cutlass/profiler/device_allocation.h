@@ -201,7 +201,7 @@ public:
   // void initialize_sequential_host(Distribution dist);
 
   /// Initializes a device allocation to a random distribution using cuRAND
-  void initialize_random_sparsemeta_device(int seed, int MetaSizeInBits);
+  // void initialize_random_sparsemeta_device(int seed, int MetaSizeInBits);
 
   /// Initializes a host allocation to a random distribution using std::cout
   void initialize_random_sparsemeta_host(int seed, int MetaSizeInBits);
