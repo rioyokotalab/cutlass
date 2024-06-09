@@ -723,7 +723,7 @@ void DeviceAllocation::initialize_random_device(int seed, Distribution dist) {//
 
 
 /// Returns true if two blocks have approximately the same value
-bool DeviceAllocation::block_compare_relatively_equal(
+bool DeviceAllocation::block_compare_relatively_equal(//disposition incorrect
   library::NumericTypeID numeric_type, 
   void const *ptr_A, 
   void const *ptr_B, 
@@ -972,216 +972,216 @@ struct vector_to_coord<TensorCoord, 0> {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-template <typename Element, typename Layout>
-static void write_tensor_csv_static_tensor_view(
-  std::ostream &out, 
-  DeviceAllocation &allocation) {
-
-   printf("---------------------use this function------------------------\n");
-  Coord<Layout::kRank> extent;
-  Coord<Layout::kStrideRank, typename Layout::Stride::Index> stride;
-
-  if (allocation.extent().size() != Layout::kRank) {
-    throw std::runtime_error("Allocation extent has invalid rank");
-  }
-
-  if (allocation.stride().size() != Layout::kStrideRank) {
-    throw std::runtime_error("Allocation stride has invalid rank");
-  }
-
-  vector_to_coord<Coord<Layout::kRank>, Layout::kRank>(extent, allocation.extent());
-  vector_to_coord<Coord<Layout::kStrideRank, typename Layout::Stride::Index>, 
-                        Layout::kStrideRank>(stride, allocation.stride());
-
-  Layout layout(stride);
-  HostTensor<Element, Layout> host_tensor(extent, layout, false);
-
-  if (host_tensor.capacity() != allocation.batch_stride()) {
-    throw std::runtime_error("Unexpected capacity to equal.");
-  }
-
-  host_tensor.copy_in_device_to_host(
-    static_cast<Element const *>(allocation.data()), 
-    allocation.batch_stride());
-
-  TensorViewWrite(out, host_tensor.host_view());
-
-  out << "\n\n";
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-template <typename T>
-static void write_tensor_csv_static_type(
-  std::ostream &out, 
-  DeviceAllocation &allocation) {
-
-  switch (allocation.layout()) {
-    case library::LayoutTypeID::kRowMajor:
-      write_tensor_csv_static_tensor_view<T, layout::RowMajor>(out, allocation);
-      break;
-    case library::LayoutTypeID::kColumnMajor:
-      write_tensor_csv_static_tensor_view<T, layout::ColumnMajor>(out, allocation);
-      break;
-    case library::LayoutTypeID::kRowMajorInterleavedK2:
-      write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<2>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kColumnMajorInterleavedK2:
-      write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<2>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kRowMajorInterleavedK4:
-      write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<4>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kColumnMajorInterleavedK4:
-      write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<4>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kRowMajorInterleavedK16:
-      write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<16>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kColumnMajorInterleavedK16:
-      write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<16>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kRowMajorInterleavedK32:
-      write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<32>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kColumnMajorInterleavedK32:
-      write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<32>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kRowMajorInterleavedK64:
-      write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<64>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kColumnMajorInterleavedK64:
-      write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<64>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kTensorNHWC:
-      write_tensor_csv_static_tensor_view<T, layout::TensorNHWC>(out, allocation);
-      break;
-    case library::LayoutTypeID::kTensorNDHWC:
-      write_tensor_csv_static_tensor_view<T, layout::TensorNDHWC>(out, allocation);
-      break;
-    case library::LayoutTypeID::kTensorNC32HW32:
-      write_tensor_csv_static_tensor_view<T, layout::TensorNCxHWx<32>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kTensorNC64HW64:
-      write_tensor_csv_static_tensor_view<T, layout::TensorNCxHWx<64>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kTensorC32RSK32:
-      write_tensor_csv_static_tensor_view<T, layout::TensorCxRSKx<32>>(out, allocation);
-      break;
-    case library::LayoutTypeID::kTensorC64RSK64:
-      write_tensor_csv_static_tensor_view<T, layout::TensorCxRSKx<64>>(out, allocation);
-      break;
-    default:
-      throw std::runtime_error("Unhandled layout");
-  }
-}
+// template <typename Element, typename Layout>
+// static void write_tensor_csv_static_tensor_view(
+//   std::ostream &out, 
+//   DeviceAllocation &allocation) {
+//
+//   Coord<Layout::kRank> extent;
+//   Coord<Layout::kStrideRank, typename Layout::Stride::Index> stride;
+//
+//   if (allocation.extent().size() != Layout::kRank) {
+//     throw std::runtime_error("Allocation extent has invalid rank");
+//   }
+//
+//   if (allocation.stride().size() != Layout::kStrideRank) {
+//     throw std::runtime_error("Allocation stride has invalid rank");
+//   }
+//
+//   vector_to_coord<Coord<Layout::kRank>, Layout::kRank>(extent, allocation.extent());
+//   vector_to_coord<Coord<Layout::kStrideRank, typename Layout::Stride::Index>, 
+//                         Layout::kStrideRank>(stride, allocation.stride());
+//
+//   Layout layout(stride);
+//   HostTensor<Element, Layout> host_tensor(extent, layout, false);
+//
+//   if (host_tensor.capacity() != allocation.batch_stride()) {
+//     throw std::runtime_error("Unexpected capacity to equal.");
+//   }
+//
+//   host_tensor.copy_in_device_to_host(
+//     static_cast<Element const *>(allocation.data()), 
+//     allocation.batch_stride());
+//
+//   TensorViewWrite(out, host_tensor.host_view());
+//
+//   out << "\n\n";
+// }
+//
+// /////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// template <typename T>
+// static void write_tensor_csv_static_type(
+//   std::ostream &out, 
+//   DeviceAllocation &allocation) {
+//
+//   switch (allocation.layout()) {
+//     case library::LayoutTypeID::kRowMajor:
+//       write_tensor_csv_static_tensor_view<T, layout::RowMajor>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kColumnMajor:
+//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajor>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kRowMajorInterleavedK2:
+//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<2>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kColumnMajorInterleavedK2:
+//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<2>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kRowMajorInterleavedK4:
+//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<4>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kColumnMajorInterleavedK4:
+//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<4>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kRowMajorInterleavedK16:
+//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<16>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kColumnMajorInterleavedK16:
+//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<16>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kRowMajorInterleavedK32:
+//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<32>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kColumnMajorInterleavedK32:
+//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<32>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kRowMajorInterleavedK64:
+//       write_tensor_csv_static_tensor_view<T, layout::RowMajorInterleaved<64>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kColumnMajorInterleavedK64:
+//       write_tensor_csv_static_tensor_view<T, layout::ColumnMajorInterleaved<64>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kTensorNHWC:
+//       write_tensor_csv_static_tensor_view<T, layout::TensorNHWC>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kTensorNDHWC:
+//       write_tensor_csv_static_tensor_view<T, layout::TensorNDHWC>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kTensorNC32HW32:
+//       write_tensor_csv_static_tensor_view<T, layout::TensorNCxHWx<32>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kTensorNC64HW64:
+//       write_tensor_csv_static_tensor_view<T, layout::TensorNCxHWx<64>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kTensorC32RSK32:
+//       write_tensor_csv_static_tensor_view<T, layout::TensorCxRSKx<32>>(out, allocation);
+//       break;
+//     case library::LayoutTypeID::kTensorC64RSK64:
+//       write_tensor_csv_static_tensor_view<T, layout::TensorCxRSKx<64>>(out, allocation);
+//       break;
+//     default:
+//       throw std::runtime_error("Unhandled layout");
+//   }
+// }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Writes a tensor to csv 
-void DeviceAllocation::write_tensor_csv(
-  std::ostream &out) {
-
-  switch (this->type()) {
-  case library::NumericTypeID::kFE4M3:
-    write_tensor_csv_static_type<float_e4m3_t>(out, *this);
-    break;
-  
-  case library::NumericTypeID::kFE5M2:
-    write_tensor_csv_static_type<float_e5m2_t>(out, *this);
-    break;
-  case library::NumericTypeID::kF16:
-    write_tensor_csv_static_type<half_t>(out, *this);
-    break;
-    
-  case library::NumericTypeID::kBF16:
-    write_tensor_csv_static_type<bfloat16_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kTF32:
-    write_tensor_csv_static_type<tfloat32_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kF32:
-    write_tensor_csv_static_type<float>(out, *this);
-    break;
-
-  case library::NumericTypeID::kF64:
-    write_tensor_csv_static_type<double>(out, *this);
-    break;
-  
-  case library::NumericTypeID::kS2:
-    write_tensor_csv_static_type<int2b_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kS4:
-    write_tensor_csv_static_type<int4b_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kS8:
-    write_tensor_csv_static_type<int8_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kS16:
-    write_tensor_csv_static_type<int16_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kS32:
-    write_tensor_csv_static_type<int32_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kS64:
-    write_tensor_csv_static_type<int64_t>(out, *this);
-    break;
-  
-  case library::NumericTypeID::kB1:
-    write_tensor_csv_static_type<uint1b_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kU2:
-    write_tensor_csv_static_type<uint2b_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kU4:
-    write_tensor_csv_static_type<uint4b_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kU8:
-    write_tensor_csv_static_type<uint8_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kU16:
-    write_tensor_csv_static_type<uint16_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kU32:
-    write_tensor_csv_static_type<uint32_t>(out, *this);
-    break;
-
-  case library::NumericTypeID::kU64:
-    write_tensor_csv_static_type<uint64_t>(out, *this);
-    break;
-  
-  case library::NumericTypeID::kCF16:
-    write_tensor_csv_static_type<cutlass::complex<half_t> >(out, *this);
-    break;
-
-  case library::NumericTypeID::kCF32:
-    write_tensor_csv_static_type<cutlass::complex<float> >(out, *this);
-    break;
-
-  case library::NumericTypeID::kCF64:
-    write_tensor_csv_static_type<cutlass::complex<double> >(out, *this);
-    break;
-
-  case library::NumericTypeID::kVoid:
-    // Not dump anything as it is a empty tensor.
-    break;
-
-  default:
-    throw std::runtime_error(std::string("Unsupported numeric type: ") + to_string(this->type()) ) ;
-  }
-}
+// void DeviceAllocation::write_tensor_csv(
+//   std::ostream &out) {
+//
+//    printf("---------------------use this function------------------------\n");
+//   switch (this->type()) {
+//   case library::NumericTypeID::kFE4M3:
+//     write_tensor_csv_static_type<float_e4m3_t>(out, *this);
+//     break;
+//   
+//   case library::NumericTypeID::kFE5M2:
+//     write_tensor_csv_static_type<float_e5m2_t>(out, *this);
+//     break;
+//   case library::NumericTypeID::kF16:
+//     write_tensor_csv_static_type<half_t>(out, *this);
+//     break;
+//     
+//   case library::NumericTypeID::kBF16:
+//     write_tensor_csv_static_type<bfloat16_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kTF32:
+//     write_tensor_csv_static_type<tfloat32_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kF32:
+//     write_tensor_csv_static_type<float>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kF64:
+//     write_tensor_csv_static_type<double>(out, *this);
+//     break;
+//   
+//   case library::NumericTypeID::kS2:
+//     write_tensor_csv_static_type<int2b_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kS4:
+//     write_tensor_csv_static_type<int4b_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kS8:
+//     write_tensor_csv_static_type<int8_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kS16:
+//     write_tensor_csv_static_type<int16_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kS32:
+//     write_tensor_csv_static_type<int32_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kS64:
+//     write_tensor_csv_static_type<int64_t>(out, *this);
+//     break;
+//   
+//   case library::NumericTypeID::kB1:
+//     write_tensor_csv_static_type<uint1b_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kU2:
+//     write_tensor_csv_static_type<uint2b_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kU4:
+//     write_tensor_csv_static_type<uint4b_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kU8:
+//     write_tensor_csv_static_type<uint8_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kU16:
+//     write_tensor_csv_static_type<uint16_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kU32:
+//     write_tensor_csv_static_type<uint32_t>(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kU64:
+//     write_tensor_csv_static_type<uint64_t>(out, *this);
+//     break;
+//   
+//   case library::NumericTypeID::kCF16:
+//     write_tensor_csv_static_type<cutlass::complex<half_t> >(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kCF32:
+//     write_tensor_csv_static_type<cutlass::complex<float> >(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kCF64:
+//     write_tensor_csv_static_type<cutlass::complex<double> >(out, *this);
+//     break;
+//
+//   case library::NumericTypeID::kVoid:
+//     // Not dump anything as it is a empty tensor.
+//     break;
+//
+//   default:
+//     throw std::runtime_error(std::string("Unsupported numeric type: ") + to_string(this->type()) ) ;
+//   }
+// }
 
 template <typename Element, typename Layout>
 static void tensor_fill_tensor_view(DeviceAllocation &allocation, Element val = Element()) {
