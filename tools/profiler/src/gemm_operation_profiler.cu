@@ -948,23 +948,23 @@ bool GemmOperationProfiler::verify_with_reference_(
     std::vector<uint8_t> host_data_C;
     std::vector<uint8_t> host_data_D;
 
-    if (provider == library::Provider::kReferenceHost) {
-
-      host_data_A.resize(gemm_workspace_.A->bytes());
-      ptr_A = host_data_A.data();
-      gemm_workspace_.A->copy_to_host(ptr_A);
-
-      host_data_B.resize(gemm_workspace_.B->bytes());
-      ptr_B = host_data_B.data();
-      gemm_workspace_.B->copy_to_host(ptr_B);
-
-      host_data_C.resize(gemm_workspace_.C->bytes());
-      ptr_C = host_data_C.data();
-      gemm_workspace_.C->copy_to_host(ptr_C);
-
-      host_data_D.resize(gemm_workspace_.Reference->bytes());
-      ptr_D = host_data_D.data();
-    }
+    // if (provider == library::Provider::kReferenceHost) {
+    //
+    //   host_data_A.resize(gemm_workspace_.A->bytes());
+    //   ptr_A = host_data_A.data();
+    //   gemm_workspace_.A->copy_to_host(ptr_A);
+    //
+    //   host_data_B.resize(gemm_workspace_.B->bytes());
+    //   ptr_B = host_data_B.data();
+    //   gemm_workspace_.B->copy_to_host(ptr_B);
+    //
+    //   host_data_C.resize(gemm_workspace_.C->bytes());
+    //   ptr_C = host_data_C.data();
+    //   gemm_workspace_.C->copy_to_host(ptr_C);
+    //
+    //   host_data_D.resize(gemm_workspace_.Reference->bytes());
+    //   ptr_D = host_data_D.data();
+    // }
 
     //
     // Launch

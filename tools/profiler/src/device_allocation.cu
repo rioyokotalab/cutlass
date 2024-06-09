@@ -490,7 +490,7 @@ void DeviceAllocation::copy_from_host(void const *ptr) {//calling
 }
 //
 /// Copies from an equivalent-sized tensor in device memory
-void DeviceAllocation::copy_to_host(void *ptr) { //calling
+// void DeviceAllocation::copy_to_host(void *ptr) { //calling
 //   if (!bytes()) {
 // #ifndef NDEBUG
 //     std::cout << "Skipping copy of size 0 allocation\n";
@@ -502,7 +502,7 @@ void DeviceAllocation::copy_to_host(void *ptr) { //calling
 //   if (result != cudaSuccess) {
 //     throw std::runtime_error("Failed device-to-host copy");
 //   }
-}
+//}
 
 void DeviceAllocation::initialize_random_device(int seed, Distribution dist) {//used
   if (!bytes()) {

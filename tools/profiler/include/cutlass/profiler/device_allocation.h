@@ -219,7 +219,7 @@ public:
   void copy_from_host(void const *ptr);
 
   /// Copies from an equivalent-sized tensor in device memory
-  void copy_to_host(void *ptr);
+  // void copy_to_host(void *ptr);
 
   /// Writes a tensor to csv 
   void write_tensor_csv(std::ostream &out);
