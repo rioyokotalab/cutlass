@@ -731,7 +731,6 @@ bool DeviceAllocation::block_compare_relatively_equal(
   double epsilon,
   double nonzero_floor) {
 
-   printf("---------------------use this function------------------------\n");
   switch (numeric_type) {
   case library::NumericTypeID::kFE4M3:
     return reference::device::BlockCompareRelativelyEqual<float_e4m3_t>(
@@ -978,6 +977,7 @@ static void write_tensor_csv_static_tensor_view(
   std::ostream &out, 
   DeviceAllocation &allocation) {
 
+   printf("---------------------use this function------------------------\n");
   Coord<Layout::kRank> extent;
   Coord<Layout::kStrideRank, typename Layout::Stride::Index> stride;
 
