@@ -141,15 +141,15 @@ DeviceAllocation *DeviceContext::allocate_tensor(
     }
 
     if (options.initialization.provider == library::Provider::kReferenceDevice) {
-      if (data_distribution.kind == Distribution::Sequential) {
-        allocation->initialize_sequential_device(
-          data_distribution);
-      }
-      else {
-        allocation->initialize_random_device(
-          options.initialization.seed + seed_shift, 
-          data_distribution);
-      }
+      // if (data_distribution.kind == Distribution::Sequential) {
+      //   allocation->initialize_sequential_device(
+      //     data_distribution);
+      // }
+      // else {
+      //   allocation->initialize_random_device(
+      //     options.initialization.seed + seed_shift, 
+      //     data_distribution);
+      // }
     }
     else if (options.initialization.provider == library::Provider::kReferenceHost) {
       if (data_distribution.kind == Distribution::Sequential) {

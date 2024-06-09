@@ -195,7 +195,7 @@ public:
   // void initialize_random_host(int seed, Distribution dist);
 
   /// Initializes a device allocation to a sequential distribution
-  void initialize_sequential_device(Distribution dist);
+  // void initialize_sequential_device(Distribution dist);
 
   /// Initializes a host allocation to a sequential distribution
   void initialize_sequential_host(Distribution dist);
