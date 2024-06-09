@@ -67,7 +67,7 @@ namespace profiler {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-PerformanceReport::PerformanceReport(
+PerformanceReport::PerformanceReport( //used
   Options const &options,
   std::vector<std::string> const &argument_names,
   library::OperationKind const &op_kind
@@ -135,11 +135,11 @@ PerformanceReport::PerformanceReport(
   }
 }
 
-void PerformanceReport::next_problem() {
+void PerformanceReport::next_problem() { //used
   ++problem_index_;
 }
 
-void PerformanceReport::append_result(PerformanceResult result) {
+void PerformanceReport::append_result(PerformanceResult result) { //used
 
   result.problem_index = problem_index_;
 
@@ -160,21 +160,21 @@ void PerformanceReport::append_result(PerformanceResult result) {
   }
 }
 
-void PerformanceReport::sort_results(PerformanceResultVector &results) {
-
-  struct FlopsPerByteCompare
-  {
-    bool operator()(const PerformanceResult &a, const PerformanceResult &b)
-    {
-      double a_flops_per_byte = double(a.flops) / double(a.bytes);
-      double b_flops_per_byte = double(b.flops) / double(b.bytes);
-
-      return (a_flops_per_byte < b_flops_per_byte);
-    }
-  };
-
-  std::stable_sort(results.begin(), results.end(), FlopsPerByteCompare());
-}
+// void PerformanceReport::sort_results(PerformanceResultVector &results) {
+//
+//   struct FlopsPerByteCompare
+//   {
+//     bool operator()(const PerformanceResult &a, const PerformanceResult &b)
+//     {
+//       double a_flops_per_byte = double(a.flops) / double(a.bytes);
+//       double b_flops_per_byte = double(b.flops) / double(b.bytes);
+//
+//       return (a_flops_per_byte < b_flops_per_byte);
+//     }
+//   };
+//
+//   std::stable_sort(results.begin(), results.end(), FlopsPerByteCompare());
+// }
 
 void PerformanceReport::append_results(PerformanceResultVector const &results) {
 
@@ -225,6 +225,7 @@ PerformanceReport::~PerformanceReport() {
 }
 
 static const char *disposition_status_color(Disposition disposition) {
+       printf("---------------------use this function------------------------\n");
   switch (disposition) {
     case Disposition::kPassed: return SHELL_COLOR_GREEN();
     case Disposition::kIncorrect: return SHELL_COLOR_RED();

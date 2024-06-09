@@ -582,7 +582,7 @@ Status GemmOperationProfiler::initialize_workspace(//used
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Verifies CUTLASS against references
-bool GemmOperationProfiler::verify_cutlass(
+bool GemmOperationProfiler::verify_cutlass( //used
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -590,7 +590,6 @@ bool GemmOperationProfiler::verify_cutlass(
   ProblemSpace const &problem_space,
   ProblemSpace::Problem const &problem) {
 
-     printf("---------------------use this function------------------------\n");
   if (!options.profiling.provider_enabled(library::Provider::kCUTLASS)) {
     return true;
   }
@@ -747,128 +746,11 @@ bool GemmOperationProfiler::verify_cutlass(
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Verifies CUTLASS against references
-bool GemmOperationProfiler::verify_with_cublas_(
-  Options const &options,
-  PerformanceReport &report,
-  DeviceContext &device_context,
-  library::Operation const *operation,
-  ProblemSpace const &problem_space,
-  ProblemSpace::Problem const &problem) {
-
-#if CUTLASS_ENABLE_CUBLAS
-
-  library::GemmDescription const &gemm_desc =
-    static_cast<library::GemmDescription const &>(operation->description());
-
-  //
-  // Construct cuBLAS operators
-  //
-
-  CublasCreate handle;
-  cublasStatus_t status = handle.get_cublas_create_status();
-
-  if (status != CUBLAS_STATUS_SUCCESS) {
-
-    results_.back().verification_map[library::Provider::kCUBLAS] = get_cutlass_disposition(status);
-    return true;
-  }
-
-  std::vector<cublasGemmAlgo_t> algorithms;
-
-  detail::select_cublas_algorithms(
-    algorithms,
-    options,
-    gemm_desc);
-
-  if (algorithms.empty()) {
-    // no algorithm selected
-    return true;
-  }
-
-  //
-  // Initialize state
-  //
-
-  try {
-
-    //
-    // Construct dispatcher to cublasGemmEx()
-    //
-
-    // Initialize structure containing GEMM arguments
-    gemm_workspace_.arguments.A = gemm_workspace_.A->data();
-    gemm_workspace_.arguments.batch_stride_A = gemm_workspace_.A->batch_stride();
-    gemm_workspace_.arguments.B = gemm_workspace_.B->data();
-    gemm_workspace_.arguments.batch_stride_B = gemm_workspace_.B->batch_stride();
-    gemm_workspace_.arguments.C = gemm_workspace_.Reference->data();
-    gemm_workspace_.arguments.batch_stride_C = gemm_workspace_.Reference->batch_stride();
-    gemm_workspace_.arguments.D = gemm_workspace_.Reference->data();
-    gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Reference->batch_stride();
-    gemm_workspace_.arguments.alpha = problem_.alpha.data();
-    gemm_workspace_.arguments.beta = problem_.beta.data();
-    gemm_workspace_.arguments.pointer_mode = library::ScalarPointerMode::kHost;
-
-    detail::cublasGemmExDispatcher gemm_op(
-      gemm_desc,
-      gemm_workspace_.configuration,
-      gemm_workspace_.arguments,
-      algorithms.front()
-    );
-
-    if (gemm_op.status != Status::kSuccess) {
-      results_.back().verification_map[library::Provider::kCUBLAS] = Disposition::kNotRun;
-      return true;
-    }
-
-    results_.back().status = Status::kSuccess;
-
-    status = gemm_op(handle);
-
-    // Handle errors
-    if (status != CUBLAS_STATUS_SUCCESS) {
-
-      results_.back().verification_map[library::Provider::kCUBLAS] = get_cutlass_disposition(status);
-      return true;
-    }
-
-    //
-    // Verify results
-    //
-
-    results_.back().verification_map[library::Provider::kCUBLAS] = compare_tensors(
-      options,
-      *gemm_workspace_.Computed,
-      *gemm_workspace_.Reference,
-      gemm_workspace_.Computed->batch_stride()
-    );
-
-    // Save workspace if incorrect
-    if (options.verification.save_workspace == SaveWorkspace::kIncorrect &&
-      results_.back().verification_map[library::Provider::kCUBLAS] == Disposition::kIncorrect) {
-
-      save_workspace(
-        device_context,
-        options,
-        gemm_desc,
-        library::Provider::kCUTLASS,
-        library::Provider::kCUBLAS);
-    }
-  }
-  catch (...) {
-    results_.back().verification_map[library::Provider::kCUBLAS] = Disposition::kFailed;
-  }
-
-#endif
-
-  // Return true means continue profiling
-  return true;
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Verifies CUTLASS against host and device references
-bool GemmOperationProfiler::verify_with_reference_(
+bool GemmOperationProfiler::verify_with_reference_(//used
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -1010,7 +892,7 @@ bool GemmOperationProfiler::verify_with_reference_(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Measures performance results
-bool GemmOperationProfiler::profile(
+bool GemmOperationProfiler::profile( //used
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -1061,7 +943,7 @@ bool GemmOperationProfiler::profile(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Method to profile a CUTLASS Operation
-Status GemmOperationProfiler::profile_cutlass_( //not used 
+Status GemmOperationProfiler::profile_cutlass_( // used 
   double &runtime,
   Options const &options,
   library::Operation const *operation,
