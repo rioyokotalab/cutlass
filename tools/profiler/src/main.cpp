@@ -35,19 +35,17 @@
 #include <iostream>
 
 #include "cutlass/profiler/options.h"
-
-#include "cutlass/profiler/cutlass_profiler.h"
+#include "cutlass/library/singleton.h"
+#include "cutlass/profiler/gemm_operation_profiler.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char const *arg[]) {
-
   cutlass::CommandLine cmdline(argc, arg);
   cutlass::profiler::Options options(cmdline);
-
-  cutlass::profiler::CutlassProfiler profiler(options);
-
-  return profiler.profile_();
+  cutlass::profiler::DeviceContext device_context;
+  auto profiler = new cutlass::profiler::GemmOperationProfiler(options);
+  return profiler->profile_all(options, cutlass::library::Singleton::get().manifest, device_context);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
