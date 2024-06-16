@@ -43,7 +43,7 @@ namespace library {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void initialize_reference_operations(Manifest &manifest);
+//void initialize_reference_operations(Manifest &manifest);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,7 +58,7 @@ Status Manifest::initialize() {
   initialize_all(*this);
 
   // initialize manually instanced reference op in manifest object
-  initialize_reference_operations(*this);
+  //initialize_reference_operations(*this);
 
   // initialize manually instanced reduction reference op in manifest object
   initialize_all_reduction_op(*this);
