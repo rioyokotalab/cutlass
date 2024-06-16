@@ -50,7 +50,7 @@ namespace profiler {
 
 /// CUTLASS Profiler application 
 class CutlassProfiler {
-private:
+public:
 
   //
   // Data members
@@ -62,11 +62,6 @@ private:
   /// Entry points for each operation
   OperationProfilerVector operation_profilers_;
 
-private:
-
-  /// Prints usage
-//  void print_usage_(std::ostream &);
-  
   /// Prints usage
   void print_options_(std::ostream &);
 
@@ -78,8 +73,6 @@ private:
 
   /// Profiles all operations
   int profile_();
-
-public:
 
   CutlassProfiler(Options const &options);
   ~CutlassProfiler();

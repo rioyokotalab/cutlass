@@ -47,7 +47,7 @@ int main(int argc, char const *arg[]) {
 
   cutlass::profiler::CutlassProfiler profiler(options);
 
-  return profiler();
+  return profiler.profile_();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
