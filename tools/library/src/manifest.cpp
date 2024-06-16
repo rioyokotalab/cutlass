@@ -57,12 +57,6 @@ Status Manifest::initialize() {
   // initialize procedurally generated cutlass op in manifest object
   initialize_all(*this);
 
-  // initialize manually instanced reference op in manifest object
-  //initialize_reference_operations(*this);
-
-  // initialize manually instanced reduction reference op in manifest object
-  initialize_all_reduction_op(*this);
-
   return Status::kSuccess;
 }
 
