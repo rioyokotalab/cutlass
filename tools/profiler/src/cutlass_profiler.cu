@@ -46,60 +46,16 @@ namespace profiler {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-CutlassProfiler::CutlassProfiler(
-  Options const &options
-):
-  options_(options) {
+CutlassProfiler::CutlassProfiler(Options const &options):options_(options) {}
 
-  operation_profilers_.emplace_back(new GemmOperationProfiler(options));
-
-
-
-
-}
-
-CutlassProfiler::~CutlassProfiler() {
-
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Execute the program
-int CutlassProfiler::operator()() {
-
-
-   if (options_.execution_mode == ExecutionMode::kProfile ||
-     options_.execution_mode == ExecutionMode::kDryRun ||
-     options_.execution_mode == ExecutionMode::kTrace) {
-
-     // Profiles all operations
-     return profile_();
-   }
-  return 0;
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
+CutlassProfiler::~CutlassProfiler() {}
 
 /// Profiles all operations
 int CutlassProfiler::profile_() {
-
   int result = 0;
   DeviceContext device_context;
-  // For all profilers
-  for (auto & profiler : operation_profilers_) {
-
-    if (options_.operation_kind == library::OperationKind::kInvalid ||
-      options_.operation_kind == profiler->kind()) {
-
-      result = profiler->profile_all(options_, library::Singleton::get().manifest, device_context);
-
-      if (result) {
-        return result;
-      }
-    }
-  }
-
+  auto profiler = new GemmOperationProfiler(options_);
+  result = profiler->profile_all(options_, library::Singleton::get().manifest, device_context);
   return result;
 }
 
