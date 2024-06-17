@@ -301,28 +301,28 @@ std::ostream & PerformanceReport::print_result_pretty_( //used
 }
 
 
-namespace {
-
-  std::string escape_xml_special_chars(const std::string& src) {
-    std::stringstream dst;
-    for (char ch : src) {
-      switch (ch) {
-      case '&': dst << "&amp;"; break;
-      case '\'': dst << "&apos;"; break;
-      case '"': dst << "&quot;"; break;
-      case '<': dst << "&lt;"; break;
-      case '>': dst << "&gt;"; break;
-      default: dst << ch; break;
-      }
-    }
-    return dst.str();
-  }
-
-  template<typename T>
-  std::ostream & print_junit_result_property_(std::ostream & os, const std::string & name, const T & property) {
-    return os << "    <property name=\"" << name << "\" value=\"" << property << "\" />" << std::endl;
-  }
-}
+// namespace {
+//
+//   std::string escape_xml_special_chars(const std::string& src) {
+//     std::stringstream dst;
+//     for (char ch : src) {
+//       switch (ch) {
+//       case '&': dst << "&amp;"; break;
+//       case '\'': dst << "&apos;"; break;
+//       case '"': dst << "&quot;"; break;
+//       case '<': dst << "&lt;"; break;
+//       case '>': dst << "&gt;"; break;
+//       default: dst << ch; break;
+//       }
+//     }
+//     return dst.str();
+//   }
+//
+//   template<typename T>
+//   std::ostream & print_junit_result_property_(std::ostream & os, const std::string & name, const T & property) {
+//     return os << "    <property name=\"" << name << "\" value=\"" << property << "\" />" << std::endl;
+//   }
+// }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 

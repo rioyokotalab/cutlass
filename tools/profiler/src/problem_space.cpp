@@ -60,16 +60,6 @@ static T lexical_cast(std::string const &str) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::ostream & KernelArgument::ValueIterator::print(std::ostream &out) const {
-  out << "[" << (void *)this << "  " <<  argument->qualified_name() << "] ";
-  if (this->null_argument) {
-    out << "<null>";
-  }
-  else {
-    out << "<not null>";
-  }
-  return out;
-}
 
 KernelArgument::~KernelArgument() {
 
@@ -87,16 +77,6 @@ ScalarArgument::ScalarValue::ScalarValue(
 
 }
 
-std::ostream &ScalarArgument::ScalarValue::print(std::ostream &out) const {
-  out << argument->qualified_name() << ": ";
-  if (not_null) {
-    out << value;
-  }
-  else {
-    out << "<null>";
-  }
-  return out;
-}
 
 ScalarArgument::ScalarValueIterator::ScalarValueIterator(
   ScalarArgument const *argument_
@@ -108,7 +88,7 @@ ScalarArgument::ScalarValueIterator::ScalarValueIterator(
   }
 }
 
-void ScalarArgument::ScalarValueIterator::operator++() {
+void ScalarArgument::ScalarValueIterator::operator++() { //used
   if (this->null_argument) {
     this->null_argument = false;
   }
@@ -117,7 +97,7 @@ void ScalarArgument::ScalarValueIterator::operator++() {
   }
 }
 
-bool ScalarArgument::ScalarValueIterator::operator==(ValueIterator const &it) const {
+bool ScalarArgument::ScalarValueIterator::operator==(ValueIterator const &it) const { //used
   if (it.type() != ArgumentTypeID::kScalar) {
     throw std::runtime_error("Cannot compare ScalarValueIterator with iterator of different type");
   }
@@ -126,7 +106,7 @@ bool ScalarArgument::ScalarValueIterator::operator==(ValueIterator const &it) co
 }
 
 /// Gets the value pointed to
-std::unique_ptr<KernelArgument::Value> ScalarArgument::ScalarValueIterator::at() const {
+std::unique_ptr<KernelArgument::Value> ScalarArgument::ScalarValueIterator::at() const {//used
   if (this->null_argument) {
     return std::unique_ptr<KernelArgument::Value>(
       new ScalarArgument::ScalarValue(
@@ -142,11 +122,11 @@ std::unique_ptr<KernelArgument::Value> ScalarArgument::ScalarValueIterator::at()
   }
 }
 
-std::unique_ptr<KernelArgument::ValueIterator> ScalarArgument::begin() const {
+std::unique_ptr<KernelArgument::ValueIterator> ScalarArgument::begin() const {//used
   return std::unique_ptr<KernelArgument::ValueIterator>(new ScalarValueIterator(this));
 }
 
-std::unique_ptr<KernelArgument::ValueIterator> ScalarArgument::end() const {
+std::unique_ptr<KernelArgument::ValueIterator> ScalarArgument::end() const {//used 
   ScalarValueIterator *it = new ScalarValueIterator(this);
   it->value_it = this->values.end();
   it->null_argument = false;
@@ -164,20 +144,8 @@ IntegerArgument::IntegerValue::IntegerValue(
 }
 
 
-/// Pretty printer for debugging
-std::ostream &IntegerArgument::IntegerValue::print(std::ostream &out) const {
-  out << argument->qualified_name() << ": ";
-  if (not_null) {
-    out << value;
-  }
-  else {
-    out << "<null>";
-  }
-  return out;
-}
-
 IntegerArgument::IntegerValueIterator::IntegerValueIterator(IntegerArgument const *argument_): 
-  KernelArgument::ValueIterator(argument_) {
+  KernelArgument::ValueIterator(argument_) {//used
 
   if (argument_) {
     range_it = argument_->ranges.begin();
@@ -187,7 +155,7 @@ IntegerArgument::IntegerValueIterator::IntegerValueIterator(IntegerArgument cons
   }
 }
 
-void IntegerArgument::IntegerValueIterator::operator++() {
+void IntegerArgument::IntegerValueIterator::operator++() { //used
 
   if (this->null_argument) {
     this->null_argument = false;
@@ -203,7 +171,7 @@ void IntegerArgument::IntegerValueIterator::operator++() {
   }
 }
 
-bool IntegerArgument::IntegerValueIterator::operator==(ValueIterator const &it) const {
+bool IntegerArgument::IntegerValueIterator::operator==(ValueIterator const &it) const { //used
   if (it.type() != ArgumentTypeID::kInteger) {
     throw std::runtime_error("Cannot compare IntegerValueIterator with iterator of different type");
   }
@@ -225,7 +193,7 @@ bool IntegerArgument::IntegerValueIterator::operator==(ValueIterator const &it) 
   }
 }
 
-std::unique_ptr<KernelArgument::Value> IntegerArgument::IntegerValueIterator::at() const {
+std::unique_ptr<KernelArgument::Value> IntegerArgument::IntegerValueIterator::at() const { //used
   if (this->null_argument) {
     return std::unique_ptr<KernelArgument::Value>(
       new IntegerArgument::IntegerValue(
@@ -238,11 +206,11 @@ std::unique_ptr<KernelArgument::Value> IntegerArgument::IntegerValueIterator::at
   }
 }
 
-std::unique_ptr<KernelArgument::ValueIterator> IntegerArgument::begin() const {
+std::unique_ptr<KernelArgument::ValueIterator> IntegerArgument::begin() const { //used
   return std::unique_ptr<KernelArgument::ValueIterator>(new IntegerValueIterator(this));
 }
 
-std::unique_ptr<KernelArgument::ValueIterator> IntegerArgument::end() const {
+std::unique_ptr<KernelArgument::ValueIterator> IntegerArgument::end() const { //used
   IntegerValueIterator *it = new IntegerValueIterator(this);
   it->range_it = this->ranges.end();
   it->null_argument = false;
@@ -261,11 +229,6 @@ TensorArgument::TensorValue::TensorValue(
 
 }
 
-/// Pretty printer for debugging
-std::ostream &TensorArgument::TensorValue::print(std::ostream &out) const {
-  out << argument->qualified_name() << ": " << to_string(desc.element) << ": " << to_string(desc.layout);
-  return out;
-}
 
 TensorArgument::TensorValueIterator::TensorValueIterator(
   TensorArgument const *argument_
@@ -286,7 +249,7 @@ void TensorArgument::TensorValueIterator::operator++() {
   }
 }
 
-bool TensorArgument::TensorValueIterator::operator==(ValueIterator const &it) const {
+bool TensorArgument::TensorValueIterator::operator==(ValueIterator const &it) const { //used
   if (it.type() != ArgumentTypeID::kTensor) {
     throw std::runtime_error("Cannot compare TensorValueIterator with iterator of different type");
   }
@@ -295,7 +258,7 @@ bool TensorArgument::TensorValueIterator::operator==(ValueIterator const &it) co
 }
 
 /// Gets the value pointed to
-std::unique_ptr<KernelArgument::Value> TensorArgument::TensorValueIterator::at() const {
+std::unique_ptr<KernelArgument::Value> TensorArgument::TensorValueIterator::at() const {//used
 
   if (this->null_argument) {
     return std::unique_ptr<KernelArgument::Value>(
@@ -309,7 +272,7 @@ std::unique_ptr<KernelArgument::Value> TensorArgument::TensorValueIterator::at()
   }
 }
 
-std::unique_ptr<KernelArgument::ValueIterator> TensorArgument::begin() const {
+std::unique_ptr<KernelArgument::ValueIterator> TensorArgument::begin() const {//used
   return std::unique_ptr<KernelArgument::ValueIterator>(new TensorValueIterator(this));
 }
 
@@ -332,11 +295,6 @@ EnumeratedTypeArgument::EnumeratedTypeValue::EnumeratedTypeValue(
 
 }
 
-/// Pretty printer for debugging
-std::ostream &EnumeratedTypeArgument::EnumeratedTypeValue::print(std::ostream &out) const {
-  out << argument->qualified_name() << ": " << element;
-  return out;
-}
 
 EnumeratedTypeArgument::EnumeratedTypeValueIterator::EnumeratedTypeValueIterator(
   EnumeratedTypeArgument const *argument_
@@ -348,7 +306,7 @@ EnumeratedTypeArgument::EnumeratedTypeValueIterator::EnumeratedTypeValueIterator
   }
 }
 
-void EnumeratedTypeArgument::EnumeratedTypeValueIterator::operator++() {
+void EnumeratedTypeArgument::EnumeratedTypeValueIterator::operator++() { //used
   if (this->null_argument) {
     this->null_argument = false;
   }
@@ -357,7 +315,7 @@ void EnumeratedTypeArgument::EnumeratedTypeValueIterator::operator++() {
   }
 }
 
-bool EnumeratedTypeArgument::EnumeratedTypeValueIterator::operator==(ValueIterator const &it) const {
+bool EnumeratedTypeArgument::EnumeratedTypeValueIterator::operator==(ValueIterator const &it) const { //used
 
   if (it.type() != ArgumentTypeID::kEnumerated) {
     throw std::runtime_error("Cannot compare EnumeratedTypeValueIterator with iterator of different type");
@@ -368,7 +326,7 @@ bool EnumeratedTypeArgument::EnumeratedTypeValueIterator::operator==(ValueIterat
 }
 
 /// Gets the value pointed to
-std::unique_ptr<KernelArgument::Value> EnumeratedTypeArgument::EnumeratedTypeValueIterator::at() const {
+std::unique_ptr<KernelArgument::Value> EnumeratedTypeArgument::EnumeratedTypeValueIterator::at() const { //used
 
   if (this->null_argument) {
     return std::unique_ptr<KernelArgument::Value>(
@@ -382,7 +340,7 @@ std::unique_ptr<KernelArgument::Value> EnumeratedTypeArgument::EnumeratedTypeVal
   }
 }
 
-std::unique_ptr<KernelArgument::ValueIterator> EnumeratedTypeArgument::begin() const {
+std::unique_ptr<KernelArgument::ValueIterator> EnumeratedTypeArgument::begin() const { //used
   return std::unique_ptr<KernelArgument::ValueIterator>(new EnumeratedTypeValueIterator(this));
 }
 
@@ -399,7 +357,7 @@ ProblemSpace::Iterator::Iterator() {
 
 }
 
-ProblemSpace::Iterator::Iterator(ProblemSpace const &problem_space) {
+ProblemSpace::Iterator::Iterator(ProblemSpace const &problem_space) { //used
   for (auto const & arg_ptr : problem_space.arguments) {
     construct_(arg_ptr.get());
   }
@@ -410,12 +368,12 @@ ProblemSpace::Iterator::Iterator(Iterator && it) {
 }
 
 /// Helper for recursively constructing iterators
-void ProblemSpace::Iterator::construct_(KernelArgument const *argument) {
+void ProblemSpace::Iterator::construct_(KernelArgument const *argument) {//used
   iterators.emplace_back(argument->begin());
 }
 
 /// Given a set of ranges, iterate over the points within their Cartesian product. No big deal.
-void ProblemSpace::Iterator::operator++() {
+void ProblemSpace::Iterator::operator++() {//used
 
   // Define a pair of iterator into the vector of iterators.
   IteratorVector::iterator iterator_it = iterators.begin(); 
@@ -441,14 +399,14 @@ void ProblemSpace::Iterator::operator++() {
 }
 
 /// Moves iterator to end
-void ProblemSpace::Iterator::move_to_end() {
+void ProblemSpace::Iterator::move_to_end() {//used
   if (!iterators.empty()) {
     std::unique_ptr<KernelArgument::ValueIterator> new_iter = iterators.back()->argument->end();
     std::swap(iterators.back(), new_iter);
   }
 }
 
-ProblemSpace::Problem ProblemSpace::Iterator::at() const {
+ProblemSpace::Problem ProblemSpace::Iterator::at() const {//used
   Problem problem;
 
   for (std::unique_ptr<KernelArgument::ValueIterator> const & it : iterators) {
@@ -459,7 +417,7 @@ ProblemSpace::Problem ProblemSpace::Iterator::at() const {
 }
 
 /// Equality operator
-bool ProblemSpace::Iterator::operator==(Iterator const &it) const {
+bool ProblemSpace::Iterator::operator==(Iterator const &it) const { //used
 
   // This would be an opportunity for auto, but explicitly denoting references to 
   // owning smart pointers to dynamic polymorphic objects seems like a kindness to the reader.
@@ -480,15 +438,6 @@ bool ProblemSpace::Iterator::operator==(Iterator const &it) const {
   return true;
 }
 
-std::ostream &ProblemSpace::Iterator::print(std::ostream &out) const {
-
-  for (std::unique_ptr<KernelArgument::ValueIterator> const & iter_ptr : iterators) {
-    out << "  [iter " << (iter_ptr->null_argument ? "null" : "<not null>") 
-      << ", type: " << to_string(iter_ptr->argument->description->type) << "]" << std::endl;
-  }
-
-  return out;
-}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -507,12 +456,12 @@ ProblemSpace::ProblemSpace(ArgumentDescriptionVector const &schema, CommandLine 
 
 
 /// Returns the index of an argument by name
-size_t ProblemSpace::argument_index(char const *name) const {
+size_t ProblemSpace::argument_index(char const *name) const { //used
   return argument_index_map.at(name);
 }
 
 /// Helper for recursively cloning
-void ProblemSpace::clone_(
+void ProblemSpace::clone_( //used
   KernelArgumentVector &kernel_args,
   ArgumentDescription const *arg_desc) {
 
@@ -550,7 +499,7 @@ void ProblemSpace::clone_(
 }
 
 /// Parses a command line
-void ProblemSpace::parse_(KernelArgument *arg, CommandLine const &cmdline) {
+void ProblemSpace::parse_(KernelArgument *arg, CommandLine const &cmdline) { //used
 
   switch (arg->description->type) {
   case ArgumentTypeID::kScalar:
@@ -716,7 +665,7 @@ void ProblemSpace::parse_(KernelArgument *arg, CommandLine const &cmdline) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-ProblemSpace::Iterator ProblemSpace::begin() const {
+ProblemSpace::Iterator ProblemSpace::begin() const { //used
   return ProblemSpace::Iterator(*this);
 }
 
@@ -727,7 +676,7 @@ ProblemSpace::Iterator ProblemSpace::end() const {
 }
 
 /// Gets all argument names as an ordered vector
-std::vector<std::string> ProblemSpace::argument_names() const {
+std::vector<std::string> ProblemSpace::argument_names() const { //used
 
   Problem problem = this->begin().at();
 
@@ -744,7 +693,7 @@ std::vector<std::string> ProblemSpace::argument_names() const {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_int(int64_t &int_value, KernelArgument::Value const *value_ptr) {
+bool arg_as_int(int64_t &int_value, KernelArgument::Value const *value_ptr) {//used
   if (value_ptr->not_null) {
     if (value_ptr->argument->description->type == ArgumentTypeID::kInteger) {
       int_value = static_cast<IntegerArgument::IntegerValue const *>(value_ptr)->value; 
@@ -766,7 +715,7 @@ bool arg_as_int(int64_t &int_value, KernelArgument::Value const *value_ptr) {
 }
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_int(int &int_value, KernelArgument::Value const *value_ptr) {
+bool arg_as_int(int &int_value, KernelArgument::Value const *value_ptr) {//used
   int64_t value64;
   bool obtained = arg_as_int(value64, value_ptr);
   if (obtained) {
@@ -777,7 +726,7 @@ bool arg_as_int(int &int_value, KernelArgument::Value const *value_ptr) {
 }
 
 /// Lexically casts an argument to an int
-bool arg_as_int(
+bool arg_as_int( //used
   int &int_value,
   char const *name,
   ProblemSpace const &problem_space,
@@ -790,7 +739,7 @@ bool arg_as_int(
 }
 
 /// Lexically casts an argument to an int64
-bool arg_as_int(
+bool arg_as_int( //used
   int64_t &int_value,
   char const *name,
   ProblemSpace const &problem_space,
@@ -805,7 +754,7 @@ bool arg_as_int(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_NumericTypeID(
+bool arg_as_NumericTypeID(//used
   library::NumericTypeID &numeric_type, 
   KernelArgument::Value const *value_ptr) {
   
@@ -831,7 +780,7 @@ bool arg_as_NumericTypeID(
 }
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_NumericTypeID(
+bool arg_as_NumericTypeID( //used
   library::NumericTypeID &numeric_type,
   char const *name,
   ProblemSpace const &problem_space, 
@@ -846,7 +795,7 @@ bool arg_as_NumericTypeID(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_RasterOrder(
+bool arg_as_RasterOrder( //used
   library::RasterOrder &raster_order, 
   KernelArgument::Value const *value_ptr) {
   
@@ -871,7 +820,7 @@ bool arg_as_RasterOrder(
 }
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_RasterOrder(
+bool arg_as_RasterOrder( //used
   library::RasterOrder &raster_order,
   char const *name,
   ProblemSpace const &problem_space, 
@@ -886,7 +835,7 @@ bool arg_as_RasterOrder(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_LayoutTypeID(
+bool arg_as_LayoutTypeID( //used
   library::LayoutTypeID &layout_type, 
   KernelArgument::Value const *value_ptr) {
 
@@ -911,23 +860,10 @@ bool arg_as_LayoutTypeID(
   return false;
 }
 
-/// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_LayoutTypeID(
-  library::LayoutTypeID &layout_type,
-  char const *name,
-  ProblemSpace const &problem_space, 
-  ProblemSpace::Problem const &problem) {
-
-  size_t idx = problem_space.argument_index(name);
-  KernelArgument::Value const *value_ptr = problem.at(idx).get();
-
-  return arg_as_LayoutTypeID(layout_type, value_ptr);
-}
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_OpcodeClassID(
+bool arg_as_OpcodeClassID( //used
   library::OpcodeClassID &opcode_class,
   KernelArgument::Value const *value_ptr) {
 
@@ -953,7 +889,7 @@ bool arg_as_OpcodeClassID(
 }
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_OpcodeClassID(
+bool arg_as_OpcodeClassID( //used
   library::OpcodeClassID &opcode_class,
   char const *name,
   ProblemSpace const &problem_space, 
@@ -967,7 +903,7 @@ bool arg_as_OpcodeClassID(
 
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_SplitKModeID(
+bool arg_as_SplitKModeID( //used
   library::SplitKMode &split_k_mode,
   KernelArgument::Value const *value_ptr) {
 
@@ -993,7 +929,7 @@ bool arg_as_SplitKModeID(
 }
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_SplitKModeID(
+bool arg_as_SplitKModeID( //used
   library::SplitKMode &split_k_mode,
   char const *name,
   ProblemSpace const &problem_space, 
@@ -1008,7 +944,7 @@ bool arg_as_SplitKModeID(
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_ConvModeID(
+bool arg_as_ConvModeID( //used
   library::ConvModeID &conv_mode,
   KernelArgument::Value const *value_ptr) {
 
@@ -1034,60 +970,60 @@ bool arg_as_ConvModeID(
 }
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_ConvModeID(
-  library::ConvModeID &conv_mode,
-  char const *name,
-  ProblemSpace const &problem_space, 
-  ProblemSpace::Problem const &problem) {
-
-  size_t idx = problem_space.argument_index(name);
-  KernelArgument::Value const *value_ptr = problem.at(idx).get();
-
-  return arg_as_ConvModeID(conv_mode, value_ptr);
-}
-
-/// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_ProviderID(
-  library::Provider &provider,
-  KernelArgument::Value const *value_ptr) {
-
-  if (value_ptr->not_null) {
-    if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
-
-//      provider = library::from_string<library::Provider>(
-//        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
-
-//      if (provider == library::Provider::kInvalid) {
-//        throw std::runtime_error(
-//          "arg_as_ProviderID() - illegal cast.");
-//      }
-    }
-    else {
-
-      throw std::runtime_error(
-        "arg_as_ProviderID() - illegal cast.");
-    }
-    return true;
-  }
-  return false;
-}
+// bool arg_as_ConvModeID(
+//   library::ConvModeID &conv_mode,
+//   char const *name,
+//   ProblemSpace const &problem_space, 
+//   ProblemSpace::Problem const &problem) {
+//
+//   size_t idx = problem_space.argument_index(name);
+//   KernelArgument::Value const *value_ptr = problem.at(idx).get();
+//
+//   return arg_as_ConvModeID(conv_mode, value_ptr);
+// }
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_ProviderID(
-  library::Provider &provider,
-  char const *name,
-  ProblemSpace const &problem_space, 
-  ProblemSpace::Problem const &problem) {
-
-  size_t idx = problem_space.argument_index(name);
-  KernelArgument::Value const *value_ptr = problem.at(idx).get();
-
-  return arg_as_ProviderID(provider, value_ptr);
-}
+// bool arg_as_ProviderID( //calling
+//   library::Provider &provider,
+//   KernelArgument::Value const *value_ptr) {
+//
+//   if (value_ptr->not_null) {
+//     if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
+//
+// //      provider = library::from_string<library::Provider>(
+// //        static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr)->element);
+//
+// //      if (provider == library::Provider::kInvalid) {
+// //        throw std::runtime_error(
+// //          "arg_as_ProviderID() - illegal cast.");
+// //      }
+//     }
+//     else {
+//
+//       throw std::runtime_error(
+//         "arg_as_ProviderID() - illegal cast.");
+//     }
+//     return true;
+//   }
+//   return false;
+// }
+//
+// /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
+// bool arg_as_ProviderID(
+//   library::Provider &provider,
+//   char const *name,
+//   ProblemSpace const &problem_space, 
+//   ProblemSpace::Problem const &problem) {
+//
+//   size_t idx = problem_space.argument_index(name);
+//   KernelArgument::Value const *value_ptr = problem.at(idx).get();
+//
+//   return arg_as_ProviderID(provider, value_ptr);
+// }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Lexically casts an argument to a given type stored in a byte array. Returns true if not null.
-bool arg_as_scalar(
+bool arg_as_scalar( //used
   std::vector<uint8_t> &bytes,
   library::NumericTypeID numeric_type,
   KernelArgument::Value const *value_ptr) {
@@ -1115,7 +1051,7 @@ bool arg_as_scalar(
 }
 
 /// Lexically casts an argument to a given type and returns a byte array
-bool arg_as_scalar(
+bool arg_as_scalar( //used
   std::vector<uint8_t> &bytes,
   library::NumericTypeID numeric_type,
   char const *name,
@@ -1131,7 +1067,7 @@ bool arg_as_scalar(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Returns true if a tensor description satisfies a `tensor` value
-bool tensor_description_satisfies(
+bool tensor_description_satisfies( //used
   library::TensorDescription const &tensor_desc,
   TensorArgument::TensorValue const *value_ptr) {
 
@@ -1153,7 +1089,7 @@ bool tensor_description_satisfies(
 }
 
 /// Returns true if a tensor description satisfies a `tensor` value
-bool tensor_description_satisfies(
+bool tensor_description_satisfies( //used
   library::TensorDescription const &tensor_desc,
   char const *name, 
   ProblemSpace const &problem_space, 
@@ -1177,88 +1113,88 @@ bool tensor_description_satisfies(
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Returns true if conv_kind satisfies the value
-bool conv_kind_satisfies(
-  library::ConvKind const &conv_kind,
-  EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr) {
-
-  if (value_ptr->not_null) {
-//    library::ConvKind conv_kind_cmd_line = 
-//      library::from_string<library::ConvKind>(value_ptr->element);
-
-//    if (conv_kind_cmd_line != library::ConvKind::kUnknown && 
-//      conv_kind_cmd_line != conv_kind) {
+// bool conv_kind_satisfies(
+//   library::ConvKind const &conv_kind,
+//   EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr) {
 //
-//      return false;
-//    }
-  }
-
-  return true;
-}
+//   if (value_ptr->not_null) {
+// //    library::ConvKind conv_kind_cmd_line = 
+// //      library::from_string<library::ConvKind>(value_ptr->element);
+//
+// //    if (conv_kind_cmd_line != library::ConvKind::kUnknown && 
+// //      conv_kind_cmd_line != conv_kind) {
+// //
+// //      return false;
+// //    }
+//   }
+//
+//   return true;
+// }
 
 /// Returns true if conv_kind satisfies the value
-bool conv_kind_satisfies(
-  library::ConvKind const &conv_kind,
-  char const *name, 
-  ProblemSpace const &problem_space, 
-  ProblemSpace::Problem const &problem) {
-
-  size_t idx = problem_space.argument_index(name);
-  KernelArgument::Value const *value_ptr = problem.at(idx).get();
-
-  if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
-    return conv_kind_satisfies(
-      conv_kind, 
-      static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr));
-  }
-  else {
-    throw std::runtime_error("Kernel argument mismatch");
-  }
-
-  return false;
-}
-
+// bool conv_kind_satisfies(
+//   library::ConvKind const &conv_kind,
+//   char const *name, 
+//   ProblemSpace const &problem_space, 
+//   ProblemSpace::Problem const &problem) {
+//
+//   size_t idx = problem_space.argument_index(name);
+//   KernelArgument::Value const *value_ptr = problem.at(idx).get();
+//
+//   if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
+//     return conv_kind_satisfies(
+//       conv_kind, 
+//       static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr));
+//   }
+//   else {
+//     throw std::runtime_error("Kernel argument mismatch");
+//   }
+//
+//   return false;
+// }
+//
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Returns true if a iterator algorithm satisfies the value
-bool iterator_algorithm_satisfies(
-  library::IteratorAlgorithmID const &iterator_algorithm,
-  EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr) {
-
-  if (value_ptr->not_null) {
-//    library::IteratorAlgorithmID iterator_algorithm_cmd_line = 
-//      library::from_string<library::IteratorAlgorithmID>(value_ptr->element);
-
-//    if (iterator_algorithm_cmd_line != library::IteratorAlgorithmID::kNone && 
-//      iterator_algorithm_cmd_line != iterator_algorithm) {
+// bool iterator_algorithm_satisfies(
+//   library::IteratorAlgorithmID const &iterator_algorithm,
+//   EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr) {
 //
-//      return false;
-//    }
-  }
-
-  return true;
-}
-
-/// Returns true if a iterator algorithm satisfies the value
-bool iterator_algorithm_satisfies(
-  library::IteratorAlgorithmID const &iterator_algorithm,
-  char const *name, 
-  ProblemSpace const &problem_space, 
-  ProblemSpace::Problem const &problem) {
-
-  size_t idx = problem_space.argument_index(name);
-  KernelArgument::Value const *value_ptr = problem.at(idx).get();
-
-  if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
-    return iterator_algorithm_satisfies(
-      iterator_algorithm, 
-      static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr));
-  }
-  else {
-    throw std::runtime_error("Kernel argument mismatch");
-  }
-
-  return false;
-}
+//   if (value_ptr->not_null) {
+// //    library::IteratorAlgorithmID iterator_algorithm_cmd_line = 
+// //      library::from_string<library::IteratorAlgorithmID>(value_ptr->element);
+//
+// //    if (iterator_algorithm_cmd_line != library::IteratorAlgorithmID::kNone && 
+// //      iterator_algorithm_cmd_line != iterator_algorithm) {
+// //
+// //      return false;
+// //    }
+//   }
+//
+//   return true;
+// }
+//
+// /// Returns true if a iterator algorithm satisfies the value
+// bool iterator_algorithm_satisfies(
+//   library::IteratorAlgorithmID const &iterator_algorithm,
+//   char const *name, 
+//   ProblemSpace const &problem_space, 
+//   ProblemSpace::Problem const &problem) {
+//
+//   size_t idx = problem_space.argument_index(name);
+//   KernelArgument::Value const *value_ptr = problem.at(idx).get();
+//
+//   if (value_ptr->argument->description->type == ArgumentTypeID::kEnumerated) {
+//     return iterator_algorithm_satisfies(
+//       iterator_algorithm, 
+//       static_cast<EnumeratedTypeArgument::EnumeratedTypeValue const *>(value_ptr));
+//   }
+//   else {
+//     throw std::runtime_error("Kernel argument mismatch");
+//   }
+//
+//   return false;
+// }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 } // namespace profiler

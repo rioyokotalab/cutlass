@@ -154,20 +154,24 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
 
   this->mode = library::GemmUniversalMode::kGemm;
 
-  if (!arg_as_int(this->m, "m", problem_space, problem)) {
-    // default value
-    this->m = 1024;
-  }
+  // if (!arg_as_int(this->m, "m", problem_space, problem)) {
+  //   // default value
+  //   this->m = 1024;
+  // }
 
-  if (!arg_as_int(this->n, "n", problem_space, problem)) {
-    // default value
-    this->n = 1024;
-  }
+    this->m = 3456;
+  // if (!arg_as_int(this->n, "n", problem_space, problem)) {
+  //   // default value
+  //   this->n = 1024;
+  // }
+    this->n = 4096;
 
-  if (!arg_as_int(this->k, "k", problem_space, problem)) {
-    // default value
-    this->k = 1024;
-  }
+  // if (!arg_as_int(this->k, "k", problem_space, problem)) {
+  //   // default value
+  //   this->k = 1024;
+  // }
+
+    this->k = 4096;
 
   if (!arg_as_SplitKModeID(this->split_k_mode, "split_k_mode", problem_space, problem)) {
     // default value

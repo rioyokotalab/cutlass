@@ -129,7 +129,7 @@ struct KernelArgument {
 
     virtual ~Value() { }
 
-    virtual std::ostream &print(std::ostream &out) const =0;
+    // virtual std::ostream &print(std::ostream &out) const =0;
   };
 
   /// Abstract base class to iterate over values within arguments
@@ -178,7 +178,7 @@ struct KernelArgument {
       return !(*this == it); 
     }
 
-    std::ostream &print(std::ostream &out) const;
+    // std::ostream &print(std::ostream &out) const;
   };
 
   //
@@ -253,7 +253,7 @@ struct ScalarArgument : public KernelArgument {
       bool not_null_ = true
     );
 
-    virtual std::ostream &print(std::ostream &out) const;
+    // virtual std::ostream &print(std::ostream &out) const;
   };
 
   using ValueCollection = std::vector<std::string>;
@@ -506,7 +506,7 @@ struct IntegerArgument : public KernelArgument {
     );
 
     /// Pretty printer for debugging
-    virtual std::ostream &print(std::ostream &out) const;
+    // virtual std::ostream &print(std::ostream &out) const;
   };
   
   /// Collection of ranges represent the IntegerArgument's state
@@ -616,7 +616,7 @@ struct TensorArgument : public KernelArgument {
     );
     
     /// Pretty printer for debugging
-    virtual std::ostream &print(std::ostream &out) const;
+    // virtual std::ostream &print(std::ostream &out) const;
   };
 
   /// Abstract base class to iterate over values within arguments
@@ -687,7 +687,7 @@ struct EnumeratedTypeArgument : public KernelArgument {
     );
     
     /// Pretty printer for debugging
-    virtual std::ostream &print(std::ostream &out) const;
+    // virtual std::ostream &print(std::ostream &out) const;
   };
 
   using ValueCollection = std::vector<std::string>;
@@ -793,7 +793,7 @@ public:
     }
 
     /// Helper to print iterator state
-    std::ostream & print(std::ostream &out) const;
+    // std::ostream & print(std::ostream &out) const;
 
   private:
 
@@ -946,14 +946,14 @@ bool arg_as_RasterOrder(
   ProblemSpace::Problem const &problem);
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_ProviderID(library::Provider &provider, KernelArgument::Value const *value_ptr);
+// bool arg_as_ProviderID(library::Provider &provider, KernelArgument::Value const *value_ptr);
 
 /// Lexically casts an argument to an int64 if it is defined. Returns true if not null.
-bool arg_as_ProviderID(
-  library::Provider &provider,
-  char const *name,
-  ProblemSpace const &problem_space, 
-  ProblemSpace::Problem const &problem);
+// bool arg_as_ProviderID(
+//   library::Provider &provider,
+//   char const *name,
+//   ProblemSpace const &problem_space, 
+//   ProblemSpace::Problem const &problem);
 
 /// Lexically casts an argument to a given type stored in a byte array. Returns true if not null.
 bool arg_as_scalar(
@@ -983,28 +983,28 @@ bool tensor_description_satisfies(
 
 
 /// Returns true if a conv kind satisfies the value
-bool conv_kind_satisfies(
-  library::ConvKind const &conv_kind,
-  EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr);
-
-/// Returns true if a conv kind satisfies the value
-bool conv_kind_satisfies(
-  library::ConvKind const &conv_kind,
-  char const *name, 
-  ProblemSpace const &problem_space, 
-  ProblemSpace::Problem const &problem);
-
-/// Returns true if a iterator algorithm satisfies the value
-bool iterator_algorithm_satisfies(
-  library::IteratorAlgorithmID const &iterator_algorithm,
-  EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr);
+// bool conv_kind_satisfies(
+//   library::ConvKind const &conv_kind,
+//   EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr);
+//
+// /// Returns true if a conv kind satisfies the value
+// bool conv_kind_satisfies(
+//   library::ConvKind const &conv_kind,
+//   char const *name, 
+//   ProblemSpace const &problem_space, 
+//   ProblemSpace::Problem const &problem);
 
 /// Returns true if a iterator algorithm satisfies the value
-bool iterator_algorithm_satisfies(
-  library::IteratorAlgorithmID const &iterator_algorithm,
-  char const *name, 
-  ProblemSpace const &problem_space, 
-  ProblemSpace::Problem const &problem);
+// bool iterator_algorithm_satisfies(
+//   library::IteratorAlgorithmID const &iterator_algorithm,
+//   EnumeratedTypeArgument::EnumeratedTypeValue const *value_ptr);
+//
+// /// Returns true if a iterator algorithm satisfies the value
+// bool iterator_algorithm_satisfies(
+//   library::IteratorAlgorithmID const &iterator_algorithm,
+//   char const *name, 
+//   ProblemSpace const &problem_space, 
+//   ProblemSpace::Problem const &problem);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
