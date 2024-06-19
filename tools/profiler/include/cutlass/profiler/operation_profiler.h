@@ -64,10 +64,10 @@ namespace profiler {
 
 /// Abstract base class for each math function
 class OperationProfiler {
+
+
+// protected:
 public:
-
-
-protected:
   //
   // Data members
   //
@@ -222,8 +222,9 @@ public:
     ProblemSpace const &problem_space,
     int64_t value);
 
-protected:
+// protected:
 
+public:
   /// Sets operation description 
   static void initialize_result_(
     PerformanceResult &result,
@@ -239,8 +240,9 @@ protected:
 //    void *host_workspace,
 //    void *device_workspace);
 //
-private:
+// private:
   /// finds string matches filter_string in operation_name
+public:
   bool find_string_matches_(
     std::string const &filter_string, 
     std::string const &operation_name);
