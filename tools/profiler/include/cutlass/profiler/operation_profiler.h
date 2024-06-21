@@ -132,10 +132,10 @@ public:
   //virtual void print_examples(std::ostream &out) const =0;
 
   /// Entry point to profile all operations in the manifest
-  virtual int profile_all(
-    Options const &options, 
-    library::Manifest const &manifest, 
-    DeviceContext &device_context);
+  // virtual int profile_all(
+  //   Options const &options, 
+  //   library::Manifest const &manifest, 
+  //   DeviceContext &device_context);
 
 public:
 
