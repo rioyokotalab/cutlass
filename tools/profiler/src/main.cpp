@@ -64,7 +64,6 @@ int main(int argc, char const *arg[]) {
 
   bool continue_profiling = true;
   int retval = 0;
-
   // For each problem in problem space
   for (; continue_profiling && problem_it != problem_end; ++problem_it) {
     cutlass::profiler::ProblemSpace::Problem problem = problem_it.at();
@@ -91,26 +90,29 @@ int main(int argc, char const *arg[]) {
         std::string operation_name(operation->description().name);
         // Filter kernels by name
         bool filtered_by_name = options.operation_names.empty();
-        if (!filtered_by_name) {
-
+        if (!filtered_by_name) {//must have something in operationnames , but no output in for loop below
+          
           for (auto const & op_name : options.operation_names) {
             if (profiler->find_string_matches_(op_name, operation_name)) {
+            // std::cout << op_name << std::endl;
+            // std::cout << operation_name << std::endl;
+            // std::cout << profiler->find_string_matches_(op_name, operation_name);
               filtered_by_name = true;
               break;
             }
           }
         }
 
-        for (auto const & op_name : options.excluded_operation_names) {
-          if (profiler->find_string_matches_(op_name, operation_name)) {
-            filtered_by_name = false;
-            break;
-          }
-        }
+        // for (auto const & op_name : options.excluded_operation_names) {//0?
+        //   if (profiler->find_string_matches_(op_name, operation_name)) {
+        //     filtered_by_name = false;
+        //     break;
+        //   }
+        // }
 
-        if (!filtered_by_name || !profiler->satisfies(operation->description(), problem_space, problem)) {
-          continue;
-        }
+        // if (!filtered_by_name || !profiler->satisfies(operation->description(), problem_space, problem)) {
+        //   continue;
+        // }
 
         // we have found a kernel match, so increment the counter for match kernels
         ++matched_operation_count;
@@ -124,26 +126,26 @@ int main(int argc, char const *arg[]) {
           problem_space,
           problem);
 
-        if (status == cutlass::Status::kErrorInternal) {
-
-          // If there was an internal error, consume the CUDA error and move to the next operation.
-          (void)cudaGetLastError();
-
-          report.append_results(profiler->results_);
-          continue;
-        }
-        else if (status != cutlass::Status::kSuccess) {
-          // If the workspace could not be initialized for any other reason, continue to
-          // the next operation.
-          continue;
-        }
+        // if (status == cutlass::Status::kErrorInternal) {
+        //
+        //   // If there was an internal error, consume the CUDA error and move to the next operation.
+        //   (void)cudaGetLastError();
+        //
+        //   report.append_results(profiler->results_);
+        //   continue;
+        // }
+        // else if (status != cutlass::Status::kSuccess) {
+        //   // If the workspace could not be initialized for any other reason, continue to
+        //   // the next operation.
+        //   continue;
+        // }
 
         if (continue_profiling) {
 
-          if (options.report.print_kernel_before_running) {
-            std::cout << "Profiling kernel for JUnit test " << options.report.junit_output_path << ": "
-                      << operation_name << std::endl;
-          }
+          // if (options.report.print_kernel_before_running) {
+          //   std::cout << "Profiling kernel for JUnit test " << options.report.junit_output_path << ": "
+          //             << operation_name << std::endl;
+          // }
 
           status = profiler->initialize_workspace(
             options,
@@ -153,19 +155,19 @@ int main(int argc, char const *arg[]) {
             problem_space,
             problem);
 
-          if (status == cutlass::Status::kErrorInternal) {
-
-            // If there was an internal error, consume the CUDA error and move to the next operation.
-            (void)cudaGetLastError();
-
-            report.append_results(profiler->results_);
-            continue;
-          }
-          else if (status != cutlass::Status::kSuccess) {
-            // If the workspace could not be initialized for any other reason, continue to
-            // the next operation.
-            continue;
-          }
+          // if (status == cutlass::Status::kErrorInternal) {
+          //
+          //   // If there was an internal error, consume the CUDA error and move to the next operation.
+          //   (void)cudaGetLastError();
+          //
+          //   report.append_results(profiler->results_);
+          //   continue;
+          // }
+          // else if (status != cutlass::Status::kSuccess) {
+          //   // If the workspace could not be initialized for any other reason, continue to
+          //   // the next operation.
+          //   continue;
+          // }
         }
 
         //
@@ -186,23 +188,24 @@ int main(int argc, char const *arg[]) {
           retval |= (not continue_profiling);
         }
 
-        if (options.execution_mode == cutlass::profiler::ExecutionMode::kDryRun) {
-          report.append_results(profiler->results_);
-          profiler->results_.clear();
-          continue;
-        }
+        // if (options.execution_mode == cutlass::profiler::ExecutionMode::kDryRun) {
+        //   report.append_results(profiler->results_);
+        //   profiler->results_.clear();
+        //   continue;
+        // }
 
         //
         // C. Optionally save workspace
         //
 
-        if (options.verification.save_workspace == cutlass::profiler::SaveWorkspace::kAlways) {
-          profiler->save_workspace(
-            device_context,
-            options,
-            operation->description(),
-            cutlass::library::Provider::kCUTLASS);
-        }
+        // if (options.verification.save_workspace == cutlass::profiler::SaveWorkspace::kAlways) {
+        //   printf("------------using this part-------------");
+        //   profiler->save_workspace(
+        //     device_context,
+        //     options,
+        //     operation->description(),
+        //     cutlass::library::Provider::kCUTLASS);
+        // }
 
         //
         // D. Profile
@@ -229,12 +232,12 @@ int main(int argc, char const *arg[]) {
     }
 
     // If we did not find any kernels that match our filters and error_on_no_match was set, report an error
-    if (options.profiling.error_on_no_match && matched_operation_count <= 0) {
-      #if !NDEBUG
-      std::cout << "Error: No matching kernels found with kernel selection filters [--error_on_no_match]" << std::endl;
-      #endif
-      retval = 1;
-    }
+    // if (options.profiling.error_on_no_match && matched_operation_count <= 0) {
+    //   #if !NDEBUG
+    //   std::cout << "Error: No matching kernels found with kernel selection filters [--error_on_no_match]" << std::endl;
+    //   #endif
+    //   retval = 1;
+    // }
   }
 
   return retval;
