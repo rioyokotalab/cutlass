@@ -73,18 +73,6 @@ int main(int argc, char const *arg[]) {
   };
 
   profiler->arguments_.insert(profiler->arguments_.end(), tile_description_arguments.begin(), tile_description_arguments.end());
-
-  // for (auto provider : verification_providers) {
-  //   printf("used?");
-  //   if (std::find(
-  //     options.verification.providers.begin(),
-  //     options.verification.providers.end(),
-  //     provider) != options.verification.providers.end()) {
-  //
-  //     verification_providers_.push_back(provider);
-  //   }
-  // }
-  //
   //---------------------------------profile_all()---------------------------------//
   // cutlass::library::Manifest &manifest = cutlass::library::Singleton::get().manifest;
   const cutlass::library::Manifest &manifest = cutlass::library::Singleton::get().manifest;
