@@ -201,12 +201,12 @@ public:
     DeviceAllocation &reference,
     int64_t count = 0);
 
-  static void save_workspace(
-    DeviceContext &device_context,
-    Options const &options,
-    library::OperationDescription const &desc,
-    library::Provider provider,
-    library::Provider verification_provider = library::Provider::kInvalid);
+  // static void save_workspace(
+  //   DeviceContext &device_context,
+  //   Options const &options,
+  //   library::OperationDescription const &desc,
+  //   library::Provider provider,
+  //   library::Provider verification_provider = library::Provider::kInvalid);
   
   /// Helper to set a performance result member
   static void set_argument(  

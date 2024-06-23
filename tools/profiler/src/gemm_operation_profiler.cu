@@ -878,16 +878,16 @@ bool GemmOperationProfiler::verify_with_reference_(//used
     );
 
     // Save workspace if incorrect
-    if (options.verification.save_workspace == SaveWorkspace::kIncorrect &&
-      results_.back().verification_map[provider] == Disposition::kIncorrect) {
-
-      save_workspace(
-        device_context,
-        options,
-        gemm_desc,
-        library::Provider::kCUTLASS,
-        provider);
-    }
+    // if (options.verification.save_workspace == SaveWorkspace::kIncorrect &&
+    //   results_.back().verification_map[provider] == Disposition::kIncorrect) {
+    //
+    //   save_workspace(
+    //     device_context,
+    //     options,
+    //     gemm_desc,
+    //     library::Provider::kCUTLASS,
+    //     provider);
+    // }
   }
 
   return true;
