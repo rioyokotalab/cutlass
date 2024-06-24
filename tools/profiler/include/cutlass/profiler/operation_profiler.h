@@ -189,10 +189,10 @@ public:
   static void sleep(int sleep_duration);
 
   /// Returns true if the current operation description satisfies the problem space
-  static bool satisfies(
-    library::OperationDescription const &op_desc,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem);
+  // static bool satisfies(
+  //   library::OperationDescription const &op_desc,
+  //   ProblemSpace const &problem_space,
+  //   ProblemSpace::Problem const &problem);
   
   /// Compares tensors for equality
   static Disposition compare_tensors(
