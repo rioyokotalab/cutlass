@@ -60,7 +60,7 @@ namespace profiler {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-OperationProfiler::OperationProfiler(): kind_(library::OperationKind::kInvalid) { }
+// OperationProfiler::OperationProfiler(): kind_(library::OperationKind::kInvalid) { }
 
 /// Ctor
 OperationProfiler::OperationProfiler(
@@ -68,8 +68,8 @@ OperationProfiler::OperationProfiler(
   library::OperationKind kind,
   ArgumentDescriptionVector const &arguments,
   ProviderVector const & verification_providers
-):
-  kind_(kind), arguments_(arguments) {
+)
+   {
 
 }
 
@@ -77,9 +77,6 @@ OperationProfiler::OperationProfiler(
 OperationProfiler::~OperationProfiler() {}
 
 /// Gets the schema description
-std::string const & OperationProfiler::description() const {
-  return description_;
-}
 
 /// Prints usage statement for the math function
 
@@ -94,59 +91,59 @@ std::string const & OperationProfiler::description() const {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Sleep for a given duration in ms
-void OperationProfiler::sleep(int sleep_duration) { //used
-  if (sleep_duration) {
-    #ifdef __unix__
-    usleep(sleep_duration * 1000);
-    #elif defined(_WIN32) || defined(WIN32)
-    SleepEx(sleep_duration, false);
-    #else
-    // sleep not supported
-    #endif
-  }
-}
-
-
-/// Compares tensors for equality
-Disposition OperationProfiler::compare_tensors( //used
-  Options const &options,
-  DeviceAllocation &experimental,
-  DeviceAllocation &reference,
-  int64_t count) {
-
-  if (experimental.type() != reference.type()) {
-    return Disposition::kIncorrect;
-  }
-
-  bool passed = false;
-
-  if (count == 0) {
-    count = reference.capacity();
-  }
-
-
-  return passed ? Disposition::kPassed : Disposition::kIncorrect;
-}
-
-
-/// Helper
-void OperationProfiler::set_argument( //used
-  PerformanceResult &result,
-  char const *name,
-  ProblemSpace const &problem_space,
-  std::string const &value) {
-
-  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
-}
-
-void OperationProfiler::set_argument( //used
-  PerformanceResult &result,
-  char const *name,
-  ProblemSpace const &problem_space,
-  int64_t value) {
-
-  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), library::lexical_cast(value));
-}
+// void OperationProfiler::sleep(int sleep_duration) { //used
+//   if (sleep_duration) {
+//     #ifdef __unix__
+//     usleep(sleep_duration * 1000);
+//     #elif defined(_WIN32) || defined(WIN32)
+//     SleepEx(sleep_duration, false);
+//     #else
+//     // sleep not supported
+//     #endif
+//   }
+// }
+//
+//
+// /// Compares tensors for equality
+// Disposition OperationProfiler::compare_tensors( //used
+//   Options const &options,
+//   DeviceAllocation &experimental,
+//   DeviceAllocation &reference,
+//   int64_t count) {
+//
+//   if (experimental.type() != reference.type()) {
+//     return Disposition::kIncorrect;
+//   }
+//
+//   bool passed = false;
+//
+//   if (count == 0) {
+//     count = reference.capacity();
+//   }
+//
+//
+//   return passed ? Disposition::kPassed : Disposition::kIncorrect;
+// }
+//
+//
+// /// Helper
+// void OperationProfiler::set_argument( //used
+//   PerformanceResult &result,
+//   char const *name,
+//   ProblemSpace const &problem_space,
+//   std::string const &value) {
+//
+//   result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
+// }
+//
+// void OperationProfiler::set_argument( //used
+//   PerformanceResult &result,
+//   char const *name,
+//   ProblemSpace const &problem_space,
+//   int64_t value) {
+//
+//   result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), library::lexical_cast(value));
+// }
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

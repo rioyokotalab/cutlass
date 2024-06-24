@@ -73,23 +73,23 @@ public:
   //
 
   /// Top-level operation kind
-  library::OperationKind kind_;
-
-  /// Human readable description
-  std::string description_;
-
-  /// Arguments parsed from command line
-  ArgumentDescriptionVector arguments_;
-
-  /// List of providers used to verify and compare each result
-  ProviderVector verification_providers_;
-
-  /// Model performance result initialized by the operation profiler with workload statistics
-  /// and reasonable default state.
-  PerformanceResult model_result_;
-
-  /// Performance result vector constructed by profiling the operation
-  PerformanceResultVector results_;
+  // library::OperationKind kind_;
+  //
+  // /// Human readable description
+  // std::string description_;
+  //
+  // /// Arguments parsed from command line
+  // ArgumentDescriptionVector arguments_;
+  //
+  // /// List of providers used to verify and compare each result
+  // ProviderVector verification_providers_;
+  //
+  // /// Model performance result initialized by the operation profiler with workload statistics
+  // /// and reasonable default state.
+  // PerformanceResult model_result_;
+  //
+  // /// Performance result vector constructed by profiling the operation
+  // PerformanceResultVector results_;
 
 public:
 
@@ -110,13 +110,13 @@ public:
   virtual ~OperationProfiler();
 
   /// Obtains the operation kind
-  library::OperationKind kind() const { return kind_; }
-
-  /// Gets the schema description
-  std::string const &description() const;
-
-  /// Returns a reference to the arguments
-  ArgumentDescriptionVector const &arguments() const { return arguments_; }
+  // library::OperationKind kind() const { return kind_; }
+  //
+  // /// Gets the schema description
+  // std::string const &description() const;
+  //
+  // /// Returns a reference to the arguments
+  // ArgumentDescriptionVector const &arguments() const { return arguments_; }
 
 public:
 
@@ -186,41 +186,41 @@ public:
   //
 
   /// Sleep for a given duration in ms
-  static void sleep(int sleep_duration);
-
-  /// Returns true if the current operation description satisfies the problem space
-  // static bool satisfies(
-  //   library::OperationDescription const &op_desc,
-  //   ProblemSpace const &problem_space,
-  //   ProblemSpace::Problem const &problem);
-  
-  /// Compares tensors for equality
-  static Disposition compare_tensors(
-    Options const &options,
-    DeviceAllocation &experimental,
-    DeviceAllocation &reference,
-    int64_t count = 0);
-
-  // static void save_workspace(
-  //   DeviceContext &device_context,
+  // static void sleep(int sleep_duration);
+  //
+  // /// Returns true if the current operation description satisfies the problem space
+  // // static bool satisfies(
+  // //   library::OperationDescription const &op_desc,
+  // //   ProblemSpace const &problem_space,
+  // //   ProblemSpace::Problem const &problem);
+  // 
+  // /// Compares tensors for equality
+  // static Disposition compare_tensors(
   //   Options const &options,
-  //   library::OperationDescription const &desc,
-  //   library::Provider provider,
-  //   library::Provider verification_provider = library::Provider::kInvalid);
-  
-  /// Helper to set a performance result member
-  static void set_argument(  
-    PerformanceResult &result,
-    char const *name,
-    ProblemSpace const &problem_space,
-    std::string const &value);
-
-  /// Helper to set a performance result member
-  static void set_argument(  
-    PerformanceResult &result,
-    char const *name,
-    ProblemSpace const &problem_space,
-    int64_t value);
+  //   DeviceAllocation &experimental,
+  //   DeviceAllocation &reference,
+  //   int64_t count = 0);
+  //
+  // // static void save_workspace(
+  // //   DeviceContext &device_context,
+  // //   Options const &options,
+  // //   library::OperationDescription const &desc,
+  // //   library::Provider provider,
+  // //   library::Provider verification_provider = library::Provider::kInvalid);
+  // 
+  // /// Helper to set a performance result member
+  // static void set_argument(  
+  //   PerformanceResult &result,
+  //   char const *name,
+  //   ProblemSpace const &problem_space,
+  //   std::string const &value);
+  //
+  // /// Helper to set a performance result member
+  // static void set_argument(  
+  //   PerformanceResult &result,
+  //   char const *name,
+  //   ProblemSpace const &problem_space,
+  //   int64_t value);
 
 // protected:
 
@@ -251,7 +251,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Vector of owning operation profilers
-using OperationProfilerVector = std::vector<std::unique_ptr<OperationProfiler>>;
+// using OperationProfilerVector = std::vector<std::unique_ptr<OperationProfiler>>;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
