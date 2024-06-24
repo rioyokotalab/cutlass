@@ -226,10 +226,10 @@ public:
 
 public:
   /// Sets operation description 
-  static void initialize_result_(
-    PerformanceResult &result,
-    library::OperationDescription const &operation_desc,
-    ProblemSpace const &problem_space);
+  // static void initialize_result_(
+  //   PerformanceResult &result,
+  //   library::OperationDescription const &operation_desc,
+  //   ProblemSpace const &problem_space);
 
   /// Method to profile an initialized CUTLASS operation
 //  virtual Status profile_cutlass_(

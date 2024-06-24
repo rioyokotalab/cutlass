@@ -247,33 +247,33 @@ Disposition OperationProfiler::compare_tensors( //used
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Sets operation description
-void OperationProfiler::initialize_result_( //used
-  PerformanceResult &result,
-  library::OperationDescription const &operation_desc,
-  ProblemSpace const &problem_space) {
-
-  set_argument(result, "op_class", problem_space,
-    library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
-
-  set_argument(result, "accum", problem_space,
-    library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
-
-  set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
-  set_argument(result, "cta_n", problem_space, operation_desc.tile_description.threadblock_shape.n());
-  set_argument(result, "cta_k", problem_space, operation_desc.tile_description.threadblock_shape.k());
-  set_argument(result, "cluster_m", problem_space, operation_desc.tile_description.cluster_shape.m());
-  set_argument(result, "cluster_n", problem_space, operation_desc.tile_description.cluster_shape.n());
-  set_argument(result, "cluster_k", problem_space, operation_desc.tile_description.cluster_shape.k());
-  set_argument(result, "stages", problem_space, operation_desc.tile_description.threadblock_stages);
-  set_argument(result, "warps_m", problem_space, operation_desc.tile_description.warp_count.m());
-  set_argument(result, "warps_n", problem_space, operation_desc.tile_description.warp_count.n());
-  set_argument(result, "warps_k", problem_space, operation_desc.tile_description.warp_count.k());
-  set_argument(result, "inst_m", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.m());
-  set_argument(result, "inst_n", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.n());
-  set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
-  set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
-  set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
-}
+// void OperationProfiler::initialize_result_( //used
+//   PerformanceResult &result,
+//   library::OperationDescription const &operation_desc,
+//   ProblemSpace const &problem_space) {
+//
+//   set_argument(result, "op_class", problem_space,
+//     library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
+//
+//   set_argument(result, "accum", problem_space,
+//     library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
+//
+//   set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
+//   set_argument(result, "cta_n", problem_space, operation_desc.tile_description.threadblock_shape.n());
+//   set_argument(result, "cta_k", problem_space, operation_desc.tile_description.threadblock_shape.k());
+//   set_argument(result, "cluster_m", problem_space, operation_desc.tile_description.cluster_shape.m());
+//   set_argument(result, "cluster_n", problem_space, operation_desc.tile_description.cluster_shape.n());
+//   set_argument(result, "cluster_k", problem_space, operation_desc.tile_description.cluster_shape.k());
+//   set_argument(result, "stages", problem_space, operation_desc.tile_description.threadblock_stages);
+//   set_argument(result, "warps_m", problem_space, operation_desc.tile_description.warp_count.m());
+//   set_argument(result, "warps_n", problem_space, operation_desc.tile_description.warp_count.n());
+//   set_argument(result, "warps_k", problem_space, operation_desc.tile_description.warp_count.k());
+//   set_argument(result, "inst_m", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.m());
+//   set_argument(result, "inst_n", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.n());
+//   set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
+//   set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
+//   set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
+// }
 
 /// Helper
 void OperationProfiler::set_argument( //used
