@@ -243,9 +243,9 @@ public:
 // private:
   /// finds string matches filter_string in operation_name
 public:
-  bool find_string_matches_(
-    std::string const &filter_string, 
-    std::string const &operation_name);
+  // bool find_string_matches_(
+  //   std::string const &filter_string, 
+  //   std::string const &operation_name);
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////

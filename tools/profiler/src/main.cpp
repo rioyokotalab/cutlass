@@ -44,6 +44,38 @@
 #include "cutlass/trace.h"
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+bool find_string_matches_( //used
+  std::string const &filter_string,
+  std::string const &operation_name) {
+  // Returns true if all substrings appear in the operation_name in order
+
+  // Split filter_string of the format "gemm*f32*nt" to tokens ["gemm", "f32", "nt"]
+  std::string item;
+  std::istringstream iss(filter_string);
+  std::vector<std::string> filter_tokens;
+  while (std::getline(iss, item, '*')) {
+    filter_tokens.push_back(item);
+  }
+
+  // Search filter_tokens in operation_name in order
+  size_t start = 0, idx = 0;
+  for (auto & token : filter_tokens) {
+    // Check if characters left to be parsed in operation_name
+    if (start < operation_name.length()) {
+      // Find token in operation_name[start:]
+      idx = operation_name.substr(start).find(token);
+      if (idx == std::string::npos) {
+        return false;
+      }
+    }
+    start += (idx + token.length());
+  }
+
+  // All tokens in filter_string found in operation_name
+  return true;
+}
+
+
 int main(int argc, char const *arg[]) {
   cutlass::CommandLine cmdline(argc, arg);
   cutlass::profiler::Options options(cmdline);
@@ -116,7 +148,7 @@ int main(int argc, char const *arg[]) {
         if (!filtered_by_name) {//must have something in operationnames , but no output in for loop below
           
           for (auto const & op_name : options.operation_names) {
-            if (profiler->find_string_matches_(op_name, operation_name)) {
+            if (find_string_matches_(op_name, operation_name)) {
               filtered_by_name = true;
               break;
             }
