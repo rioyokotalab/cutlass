@@ -67,17 +67,10 @@ int main(int argc, char const *arg[]) {
   cutlass::profiler::PerformanceReport report(options, problem_space.argument_names(), profiler->kind_);
   cutlass::profiler::ProblemSpace::Iterator problem_it = problem_space.begin();
   cutlass::profiler::ProblemSpace::Iterator problem_end = problem_space.end();
-  bool continue_profiling = true;
-  int retval = 0;
   cutlass::profiler::ProblemSpace::Problem problem = problem_it.at();
   report.next_problem();
-  int matched_operation_count = 0;
-  auto operation_ptr = manifest.begin();
-  cutlass::library::Operation const *operation = operation_ptr->get();
+  cutlass::library::Operation const *operation = manifest.begin()->get();
   device_context.free();
-  std::string operation_name(operation->description().name);
-  ++matched_operation_count;
-
   cutlass::Status status = profiler->initialize_configuration(
     options,
     report,
@@ -86,7 +79,7 @@ int main(int argc, char const *arg[]) {
     problem_space,
     problem);
 
-  status = profiler->initialize_workspace(
+  profiler->initialize_workspace(
     options,
     report,
     device_context,
@@ -94,7 +87,7 @@ int main(int argc, char const *arg[]) {
     problem_space,
     problem);
 
-  continue_profiling = profiler->verify_cutlass(
+  profiler->verify_cutlass(
     options,
     report,
     device_context,
@@ -102,16 +95,13 @@ int main(int argc, char const *arg[]) {
     problem_space,
     problem);
 
-  continue_profiling = profiler->profile(
+  profiler->profile(
     options,
     report,
     device_context,
     operation,
     problem_space,
     problem);
-
-  report.append_results(profiler->results_);
-  profiler->results_.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
