@@ -102,34 +102,14 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   this->split_k_slices = 1;
   this->batch_count = 1;
   this->raster_order = library::RasterOrder::kHeuristic;
-
-  if (!arg_as_scalar(
-    this->alpha,
-    operation_desc.element_epilogue,
-    "alpha",
-    problem_space,
-    problem)) {
-    cast_from_double(this->alpha, operation_desc.element_epilogue, 1);
-  }
-
-  if (!arg_as_scalar(
-    this->beta,
-    operation_desc.element_epilogue,
-    "beta",
-    problem_space,
-    problem)) {
-    cast_from_double(this->beta, operation_desc.element_epilogue, 0);
-  }
-
+  cast_from_double(this->alpha, operation_desc.element_epilogue, 1);
+  cast_from_double(this->beta, operation_desc.element_epilogue, 0);
   this->lda = DeviceAllocation::get_packed_layout(
     operation_desc.A.layout, {int(this->m), int(this->k)}).front();
-
   this->ldb = DeviceAllocation::get_packed_layout(
     operation_desc.B.layout, {int(this->k), int(this->n)}).front();
-
   this->ldc = DeviceAllocation::get_packed_layout(
     operation_desc.C.layout, {int(this->m), int(this->n)}).front();
-
   return Status::kSuccess;
 }
 
