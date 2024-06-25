@@ -93,9 +93,6 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   ProblemSpace const &problem_space,
   ProblemSpace::Problem const &problem) {
 
-  this->m = 3456;
-  this->n = 4096;
-  this->k = 4096;
   this->split_k_mode = library::SplitKMode::kSerial;
   this->mode = library::GemmUniversalMode::kGemm;
   this->split_k_slices = 1;
@@ -210,6 +207,9 @@ Status GemmOperationProfiler::initialize_configuration(//used
     static_cast<library::GemmDescription const &>(operation->description());
 
   problem_.mode = library::GemmUniversalMode::kGemm;
+  problem_.m = 3456;
+  problem_.n = 4096;
+  problem_.k = 4096;
   problem_.parse(operation_desc, problem_space, problem);
 
   gemm_workspace_.configuration.mode = problem_.mode;
