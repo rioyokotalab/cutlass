@@ -136,20 +136,6 @@ int main(int argc, char const *arg[]) {
   device_context.free();
 
   std::string operation_name(operation->description().name);
-  // Filter kernels by name
-  /*
-  bool filtered_by_name = options.operation_names.empty();
-  if (!filtered_by_name) {//must have something in operationnames , but no output in for loop below
-    
-    for (auto const & op_name : options.operation_names) {
-      if (find_string_matches_(op_name, operation_name)) {
-	filtered_by_name = true;
-	break;
-      }
-    }
-  }
-  */
-
   // we have found a kernel match, so increment the counter for match kernels
   ++matched_operation_count;
 
@@ -163,6 +149,7 @@ int main(int argc, char const *arg[]) {
     problem);
 
   if (continue_profiling) {
+    printf("IF: 0\n");
     status = profiler->initialize_workspace(
       options,
       report,
@@ -180,6 +167,7 @@ int main(int argc, char const *arg[]) {
 
   // B. Verify CUTLASS
   if (continue_profiling && options.profiling.provider_enabled(cutlass::library::Provider::kCUTLASS)) {
+    printf("IF: 1\n");
 
     continue_profiling = profiler->verify_cutlass(
       options,
@@ -197,6 +185,7 @@ int main(int argc, char const *arg[]) {
   //
 
   if (continue_profiling && options.profiling.enabled) {
+    printf("IF: 2\n");
 
     continue_profiling = profiler->profile(
       options,
