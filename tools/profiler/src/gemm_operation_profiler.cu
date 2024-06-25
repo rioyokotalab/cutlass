@@ -100,14 +100,7 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   this->split_k_mode = library::SplitKMode::kSerial;
   this->mode = library::GemmUniversalMode::kGemm;
   this->split_k_slices = 1;
-
-  if (!arg_as_int(this->batch_count, "batch_count", problem_space, problem)) {
-    printf("IF: 2\n");
-    // default value
-    this->batch_count = 1;
-  } else if (this->batch_count > 1) {
-    this->mode = library::GemmUniversalMode::kBatched;
-  }
+  this->batch_count = 1;
 
   if (!arg_as_RasterOrder(this->raster_order, "raster_order", problem_space, problem)) {
     printf("IF: 3\n");
