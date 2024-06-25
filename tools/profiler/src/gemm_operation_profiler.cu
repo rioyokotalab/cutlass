@@ -99,11 +99,7 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   this->k = 4096;
   this->split_k_mode = library::SplitKMode::kSerial;
   this->mode = library::GemmUniversalMode::kGemm;
-  if (!arg_as_int(this->split_k_slices, "split_k_slices", problem_space, problem)) {
-    // default value
-    printf("IF: 1\n");
-    this->split_k_slices = 1;
-  }
+  this->split_k_slices = 1;
 
   if (!arg_as_int(this->batch_count, "batch_count", problem_space, problem)) {
     printf("IF: 2\n");
