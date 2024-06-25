@@ -127,7 +127,6 @@ int main(int argc, char const *arg[]) {
     // For each operation in manifest
   int matched_operation_count = 0;
   auto operation_ptr = manifest.begin();
-  printf("DEBUG: 0\n");
   cutlass::library::Operation const *operation = operation_ptr->get();
 
   auto min_cc = operation->description().tile_description.minimum_compute_capability;
@@ -141,6 +140,7 @@ int main(int argc, char const *arg[]) {
       operation->description().provider == cutlass::library::Provider::kCUTLASS &&
       options.device.compute_capability() >= min_cc &&
       options.device.compute_capability() <= max_cc) {
+    printf("IF: 0\n");
 
     std::string operation_name(operation->description().name);
     // Filter kernels by name
