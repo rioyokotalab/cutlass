@@ -69,9 +69,12 @@ int main(int argc, char const *arg[]) {
   cutlass::profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   cutlass::profiler::ProblemSpace::Problem problem = problem_it.at();
   report.next_problem();
-  cutlass::library::Operation const *operation = manifest.begin()->get();
+  auto operation_ptr = manifest.begin();
+  cutlass::library::Operation const *operation = operation_ptr->get();
   device_context.free();
-  cutlass::Status status = profiler->initialize_configuration(
+  std::string operation_name(operation->description().name);
+
+  profiler->initialize_configuration(
     options,
     report,
     device_context,
@@ -102,6 +105,9 @@ int main(int argc, char const *arg[]) {
     operation,
     problem_space,
     problem);
+
+  report.append_results(profiler->results_);
+  profiler->results_.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
