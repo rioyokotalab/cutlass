@@ -101,38 +101,7 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   this->mode = library::GemmUniversalMode::kGemm;
   this->split_k_slices = 1;
   this->batch_count = 1;
-
-  if (!arg_as_RasterOrder(this->raster_order, "raster_order", problem_space, problem)) {
-    printf("IF: 3\n");
-    // default value
-    this->raster_order = library::RasterOrder::kHeuristic;
-  }
-
-  if (this->split_k_slices > 1 && this->batch_count > 1) {
-    printf("IF: 4\n");
-    // At least one of these must be one
-    return Status::kErrorInvalidProblem;
-  }
-
-  if (!tensor_description_satisfies(operation_desc.A, "A", problem_space, problem)) {
-    printf("IF: 5\n");
-    return Status::kErrorInvalidProblem;
-  }
-
-  if (!tensor_description_satisfies(operation_desc.B, "B", problem_space, problem)) {
-    printf("IF: 6\n");
-    return Status::kErrorInvalidProblem;
-  }
-
-  if (!tensor_description_satisfies(operation_desc.C, "C", problem_space, problem)) {
-    printf("IF: 7\n");
-    return Status::kErrorInvalidProblem;
-  }
-
-  if (!tensor_description_satisfies(operation_desc.D, "D", problem_space, problem)) {
-    printf("IF: 8\n");
-    return Status::kErrorInvalidProblem;
-  }
+  this->raster_order = library::RasterOrder::kHeuristic;
 
   if (!arg_as_scalar(
     this->alpha,
