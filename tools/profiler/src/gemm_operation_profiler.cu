@@ -93,14 +93,6 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   ProblemSpace const &problem_space,
   ProblemSpace::Problem const &problem) {
 
-  cast_from_double(this->alpha, operation_desc.element_epilogue, 1);
-  cast_from_double(this->beta, operation_desc.element_epilogue, 0);
-  this->lda = DeviceAllocation::get_packed_layout(
-    operation_desc.A.layout, {int(this->m), int(this->k)}).front();
-  this->ldb = DeviceAllocation::get_packed_layout(
-    operation_desc.B.layout, {int(this->k), int(this->n)}).front();
-  this->ldc = DeviceAllocation::get_packed_layout(
-    operation_desc.C.layout, {int(this->m), int(this->n)}).front();
   return Status::kSuccess;
 }
 
@@ -210,7 +202,14 @@ Status GemmOperationProfiler::initialize_configuration(//used
   problem_.split_k_slices = 1;
   problem_.batch_count = 1;
   problem_.raster_order = library::RasterOrder::kHeuristic;
-  problem_.parse(operation_desc, problem_space, problem);
+  cast_from_double(problem_.alpha, operation_desc.element_epilogue, 1);
+  cast_from_double(problem_.beta, operation_desc.element_epilogue, 0);
+  problem_.lda = DeviceAllocation::get_packed_layout(
+    operation_desc.A.layout, {int(problem_.m), int(problem_.k)}).front();
+  problem_.ldb = DeviceAllocation::get_packed_layout(
+    operation_desc.B.layout, {int(problem_.k), int(problem_.n)}).front();
+  problem_.ldc = DeviceAllocation::get_packed_layout(
+    operation_desc.C.layout, {int(problem_.m), int(problem_.n)}).front();
 
   gemm_workspace_.configuration.mode = problem_.mode;
   gemm_workspace_.configuration.problem_size.m() = int(problem_.m);
