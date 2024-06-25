@@ -99,9 +99,51 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   this->k = 4096;
   this->split_k_mode = library::SplitKMode::kSerial;
   this->mode = library::GemmUniversalMode::kGemm;
-  this->split_k_slices = 1;
-  this->batch_count = 1;
-  this->raster_order = library::RasterOrder::kHeuristic;
+  if (!arg_as_int(this->split_k_slices, "split_k_slices", problem_space, problem)) {
+    // default value
+    printf("IF: 1\n");
+    this->split_k_slices = 1;
+  }
+
+  if (!arg_as_int(this->batch_count, "batch_count", problem_space, problem)) {
+    printf("IF: 2\n");
+    // default value
+    this->batch_count = 1;
+  } else if (this->batch_count > 1) {
+    this->mode = library::GemmUniversalMode::kBatched;
+  }
+
+  if (!arg_as_RasterOrder(this->raster_order, "raster_order", problem_space, problem)) {
+    printf("IF: 3\n");
+    // default value
+    this->raster_order = library::RasterOrder::kHeuristic;
+  }
+
+  if (this->split_k_slices > 1 && this->batch_count > 1) {
+    printf("IF: 4\n");
+    // At least one of these must be one
+    return Status::kErrorInvalidProblem;
+  }
+
+  if (!tensor_description_satisfies(operation_desc.A, "A", problem_space, problem)) {
+    printf("IF: 5\n");
+    return Status::kErrorInvalidProblem;
+  }
+
+  if (!tensor_description_satisfies(operation_desc.B, "B", problem_space, problem)) {
+    printf("IF: 6\n");
+    return Status::kErrorInvalidProblem;
+  }
+
+  if (!tensor_description_satisfies(operation_desc.C, "C", problem_space, problem)) {
+    printf("IF: 7\n");
+    return Status::kErrorInvalidProblem;
+  }
+
+  if (!tensor_description_satisfies(operation_desc.D, "D", problem_space, problem)) {
+    printf("IF: 8\n");
+    return Status::kErrorInvalidProblem;
+  }
 
   if (!arg_as_scalar(
     this->alpha,
@@ -109,6 +151,11 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
     "alpha",
     problem_space,
     problem)) {
+    printf("IF: 9\n");
+
+    if (!cast_from_double(this->alpha, operation_desc.element_epilogue, 1)) {
+      return Status::kErrorInternal;
+    }
   }
 
   if (!arg_as_scalar(
@@ -117,6 +164,11 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
     "beta",
     problem_space,
     problem)) {
+    printf("IF: 10\n");
+
+    if (!cast_from_double(this->beta, operation_desc.element_epilogue, 0)) {
+      return Status::kErrorInternal;
+    }
   }
 
   this->lda = DeviceAllocation::get_packed_layout(
