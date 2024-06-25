@@ -93,11 +93,6 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   ProblemSpace const &problem_space,
   ProblemSpace::Problem const &problem) {
 
-  this->split_k_mode = library::SplitKMode::kSerial;
-  this->mode = library::GemmUniversalMode::kGemm;
-  this->split_k_slices = 1;
-  this->batch_count = 1;
-  this->raster_order = library::RasterOrder::kHeuristic;
   cast_from_double(this->alpha, operation_desc.element_epilogue, 1);
   cast_from_double(this->beta, operation_desc.element_epilogue, 0);
   this->lda = DeviceAllocation::get_packed_layout(
@@ -210,6 +205,11 @@ Status GemmOperationProfiler::initialize_configuration(//used
   problem_.m = 3456;
   problem_.n = 4096;
   problem_.k = 4096;
+  problem_.split_k_mode = library::SplitKMode::kSerial;
+  problem_.mode = library::GemmUniversalMode::kGemm;
+  problem_.split_k_slices = 1;
+  problem_.batch_count = 1;
+  problem_.raster_order = library::RasterOrder::kHeuristic;
   problem_.parse(operation_desc, problem_space, problem);
 
   gemm_workspace_.configuration.mode = problem_.mode;
