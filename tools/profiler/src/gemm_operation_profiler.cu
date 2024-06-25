@@ -87,6 +87,31 @@ GemmOperationProfiler::~GemmOperationProfiler() {
 
 }
 
+//
+Status GemmOperationProfiler::GemmProblem::parse(//used
+  library::GemmDescription const &operation_desc,
+  ProblemSpace const &problem_space,
+  ProblemSpace::Problem const &problem) {
+
+  this->m = 3456;
+  this->n = 4096;
+  this->k = 4096;
+  this->split_k_mode = library::SplitKMode::kSerial;
+  this->mode = library::GemmUniversalMode::kGemm;
+  this->split_k_slices = 1;
+  this->batch_count = 1;
+  this->raster_order = library::RasterOrder::kHeuristic;
+  cast_from_double(this->alpha, operation_desc.element_epilogue, 1);
+  cast_from_double(this->beta, operation_desc.element_epilogue, 0);
+  this->lda = DeviceAllocation::get_packed_layout(
+    operation_desc.A.layout, {int(this->m), int(this->k)}).front();
+  this->ldb = DeviceAllocation::get_packed_layout(
+    operation_desc.B.layout, {int(this->k), int(this->n)}).front();
+  this->ldc = DeviceAllocation::get_packed_layout(
+    operation_desc.C.layout, {int(this->m), int(this->n)}).front();
+  return Status::kSuccess;
+}
+
 /// Total number of bytes loaded
 int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {//used
   // Input bytes read and Output bytes written for the gemm problem
@@ -184,31 +209,8 @@ Status GemmOperationProfiler::initialize_configuration(//used
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
 
-  if (operation_desc.gemm_kind != library::GemmKind::kUniversal) {
-    return Status::kErrorInvalidProblem;
-  }
-
-  this->mode = library::GemmUniversalMode::kGemm;
-  this->m = 3456;
-  this->n = 4096;
-  this->k = 4096;
-  this->split_k_mode = library::SplitKMode::kSerial;
-  this->mode = library::GemmUniversalMode::kGemm;
-  this->split_k_slices = 1;
-  this->batch_count = 1;
-  this->raster_order = library::RasterOrder::kHeuristic;
-  cast_from_double(this->alpha, operation_desc.element_epilogue, 1);
-  cast_from_double(this->beta, operation_desc.element_epilogue, 0);
-  this->lda = DeviceAllocation::get_packed_layout(
-    operation_desc.A.layout, {int(this->m), int(this->k)}).front();
-  this->ldb = DeviceAllocation::get_packed_layout(
-    operation_desc.B.layout, {int(this->k), int(this->n)}).front();
-  this->ldc = DeviceAllocation::get_packed_layout(
-    operation_desc.C.layout, {int(this->m), int(this->n)}).front();
-
-  if (status != Status::kSuccess) {
-    return status;
-  }
+  problem_.mode = library::GemmUniversalMode::kGemm;
+  problem_.parse(operation_desc, problem_space, problem);
 
   gemm_workspace_.configuration.mode = problem_.mode;
   gemm_workspace_.configuration.problem_size.m() = int(problem_.m);
