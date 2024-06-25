@@ -28,64 +28,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************************************/
-/* \file
-   \brief 
-*/
-
 #include <iostream>
-
 #include "cutlass/profiler/options.h"
 #include "cutlass/library/singleton.h"
 #include "cutlass/profiler/gemm_operation_profiler.h"
-
 #include "cutlass/profiler/operation_profiler.h"
 #include "cutlass/profiler/gpu_timer.h"
-
 #include "cutlass/trace.h"
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-bool find_string_matches_( //used
-  std::string const &filter_string,
-  std::string const &operation_name) {
-  // Returns true if all substrings appear in the operation_name in order
-
-  // Split filter_string of the format "gemm*f32*nt" to tokens ["gemm", "f32", "nt"]
-  std::string item;
-  std::istringstream iss(filter_string);
-  std::vector<std::string> filter_tokens;
-  while (std::getline(iss, item, '*')) {
-    filter_tokens.push_back(item);
-  }
-
-  // Search filter_tokens in operation_name in order
-  size_t start = 0, idx = 0;
-  for (auto & token : filter_tokens) {
-    // Check if characters left to be parsed in operation_name
-    if (start < operation_name.length()) {
-      // Find token in operation_name[start:]
-      idx = operation_name.substr(start).find(token);
-      if (idx == std::string::npos) {
-        return false;
-      }
-    }
-    start += (idx + token.length());
-  }
-
-  // All tokens in filter_string found in operation_name
-  return true;
-}
-*/
-
 
 int main(int argc, char const *arg[]) {
   cutlass::CommandLine cmdline(argc, arg);
   cutlass::profiler::Options options(cmdline);
   cutlass::profiler::DeviceContext device_context;
   auto profiler = new cutlass::profiler::GemmOperationProfiler(options);
-  // return profiler->profile_all(options, cutlass::library::Singleton::get().manifest, device_context);
-  //--------------------------------constrcut profiler-----------------------------//
-  //
   cutlass::profiler::ArgumentDescriptionVector tile_description_arguments{
     {cutlass::profiler::ArgumentTypeID::kEnumerated, {"op_class", "opcode-class"}, "Class of math instruction (simt, tensorop, wmmatensorop, wmma)"},
     {cutlass::profiler::ArgumentTypeID::kEnumerated, {"accum", "accumulator-type"}, "Math instruction accumulator data type"},
@@ -107,36 +62,19 @@ int main(int argc, char const *arg[]) {
   };
 
   profiler->arguments_.insert(profiler->arguments_.end(), tile_description_arguments.begin(), tile_description_arguments.end());
-  //---------------------------------profile_all()---------------------------------//
-  // cutlass::library::Manifest &manifest = cutlass::library::Singleton::get().manifest;
   const cutlass::library::Manifest &manifest = cutlass::library::Singleton::get().manifest;
-
   cutlass::profiler::ProblemSpace problem_space(profiler->arguments_, options.cmdline);
-   // 1. Construct performance report
   cutlass::profiler::PerformanceReport report(options, problem_space.argument_names(), profiler->kind_);
-
-  // 2. For each problem in problem space
   cutlass::profiler::ProblemSpace::Iterator problem_it = problem_space.begin();
   cutlass::profiler::ProblemSpace::Iterator problem_end = problem_space.end();
-
   bool continue_profiling = true;
   int retval = 0;
-
-  // For each problem in problem space
   cutlass::profiler::ProblemSpace::Problem problem = problem_it.at();
   report.next_problem();
-
-    // For each operation in manifest
   int matched_operation_count = 0;
   auto operation_ptr = manifest.begin();
   cutlass::library::Operation const *operation = operation_ptr->get();
-
-  auto min_cc = operation->description().tile_description.minimum_compute_capability;
-  auto max_cc = operation->description().tile_description.maximum_compute_capability;
-
-
   device_context.free();
-
   std::string operation_name(operation->description().name);
   ++matched_operation_count;
 
@@ -164,8 +102,6 @@ int main(int argc, char const *arg[]) {
     problem_space,
     problem);
 
-  retval |= (not continue_profiling);
-
   continue_profiling = profiler->profile(
     options,
     report,
@@ -176,8 +112,6 @@ int main(int argc, char const *arg[]) {
 
   report.append_results(profiler->results_);
   profiler->results_.clear();
-
-  return retval;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
