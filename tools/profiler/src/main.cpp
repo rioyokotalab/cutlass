@@ -119,108 +119,101 @@ int main(int argc, char const *arg[]) {
 
   bool continue_profiling = true;
   int retval = 0;
+
   // For each problem in problem space
-  for (; continue_profiling && problem_it != problem_end; ++problem_it) {
-    cutlass::profiler::ProblemSpace::Problem problem = problem_it.at();
-    report.next_problem();
+  cutlass::profiler::ProblemSpace::Problem problem = problem_it.at();
+  report.next_problem();
 
     // For each operation in manifest
-    int matched_operation_count = 0;
-    for (auto const& operation_ptr : manifest) {
+  int matched_operation_count = 0;
+  auto operation_ptr = manifest.begin();
+  printf("DEBUG: 0\n");
+  cutlass::library::Operation const *operation = operation_ptr->get();
 
-      cutlass::library::Operation const *operation = operation_ptr.get();
-
-      auto min_cc = operation->description().tile_description.minimum_compute_capability;
-      auto max_cc = operation->description().tile_description.maximum_compute_capability;
-
-
-      device_context.free();
-
-      // Execute compatible cutlass operations if they satisfy the current device's compute capability
-      if (operation->description().kind == profiler->kind_ &&
-          operation->description().provider == cutlass::library::Provider::kCUTLASS &&
-          options.device.compute_capability() >= min_cc &&
-          options.device.compute_capability() <= max_cc) {
-
-        std::string operation_name(operation->description().name);
-        // Filter kernels by name
-        bool filtered_by_name = options.operation_names.empty();
-        if (!filtered_by_name) {//must have something in operationnames , but no output in for loop below
-          
-          for (auto const & op_name : options.operation_names) {
-            if (find_string_matches_(op_name, operation_name)) {
-              filtered_by_name = true;
-              break;
-            }
-          }
-        }
-
-        // we have found a kernel match, so increment the counter for match kernels
-        ++matched_operation_count;
-
-        // A. Initialize configuration
-        cutlass::Status status = profiler->initialize_configuration(
-          options,
-          report,
-          device_context,
-          operation,
-          problem_space,
-          problem);
-
-        if (continue_profiling) {
-          status = profiler->initialize_workspace(
-            options,
-            report,
-            device_context,
-            operation,
-            problem_space,
-            problem);
+  auto min_cc = operation->description().tile_description.minimum_compute_capability;
+  auto max_cc = operation->description().tile_description.maximum_compute_capability;
 
 
-        }
+  device_context.free();
 
-        //
-        // Profile CUTLASS if it is enabled
-        //
+  // Execute compatible cutlass operations if they satisfy the current device's compute capability
+  if (operation->description().kind == profiler->kind_ &&
+      operation->description().provider == cutlass::library::Provider::kCUTLASS &&
+      options.device.compute_capability() >= min_cc &&
+      options.device.compute_capability() <= max_cc) {
 
-        // B. Verify CUTLASS
-        if (continue_profiling && options.profiling.provider_enabled(cutlass::library::Provider::kCUTLASS)) {
-
-          continue_profiling = profiler->verify_cutlass(
-            options,
-            report,
-            device_context,
-            operation,
-            problem_space,
-            problem);
-
-          retval |= (not continue_profiling);
-        }
-
-        //
-        // D. Profile
-        //
-
-        if (continue_profiling && options.profiling.enabled) {
-
-          continue_profiling = profiler->profile(
-            options,
-            report,
-            device_context,
-            operation,
-            problem_space,
-            problem);
-        }
-
-        report.append_results(profiler->results_);
-        profiler->results_.clear();
-      }
-
-      if (!continue_profiling) {
-        break;
+    std::string operation_name(operation->description().name);
+    // Filter kernels by name
+    bool filtered_by_name = options.operation_names.empty();
+    if (!filtered_by_name) {//must have something in operationnames , but no output in for loop below
+      
+      for (auto const & op_name : options.operation_names) {
+	if (find_string_matches_(op_name, operation_name)) {
+	  filtered_by_name = true;
+	  break;
+	}
       }
     }
 
+    // we have found a kernel match, so increment the counter for match kernels
+    ++matched_operation_count;
+
+    // A. Initialize configuration
+    cutlass::Status status = profiler->initialize_configuration(
+      options,
+      report,
+      device_context,
+      operation,
+      problem_space,
+      problem);
+
+    if (continue_profiling) {
+      status = profiler->initialize_workspace(
+	options,
+	report,
+	device_context,
+	operation,
+	problem_space,
+	problem);
+
+
+    }
+
+    //
+    // Profile CUTLASS if it is enabled
+    //
+
+    // B. Verify CUTLASS
+    if (continue_profiling && options.profiling.provider_enabled(cutlass::library::Provider::kCUTLASS)) {
+
+      continue_profiling = profiler->verify_cutlass(
+	options,
+	report,
+	device_context,
+	operation,
+	problem_space,
+	problem);
+
+      retval |= (not continue_profiling);
+    }
+
+    //
+    // D. Profile
+    //
+
+    if (continue_profiling && options.profiling.enabled) {
+
+      continue_profiling = profiler->profile(
+	options,
+	report,
+	device_context,
+	operation,
+	problem_space,
+	problem);
+    }
+
+    report.append_results(profiler->results_);
+    profiler->results_.clear();
   }
 
   return retval;

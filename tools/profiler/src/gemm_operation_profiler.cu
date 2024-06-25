@@ -94,30 +94,10 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
   ProblemSpace::Problem const &problem) {
 
   this->mode = library::GemmUniversalMode::kGemm;
-
-  // if (!arg_as_int(this->m, "m", problem_space, problem)) {
-  //   // default value
-  //   this->m = 1024;
-  // }
-
-    this->m = 3456;
-  // if (!arg_as_int(this->n, "n", problem_space, problem)) {
-  //   // default value
-  //   this->n = 1024;
-  // }
-    this->n = 4096;
-
-  // if (!arg_as_int(this->k, "k", problem_space, problem)) {
-  //   // default value
-  //   this->k = 1024;
-  // }
-
-    this->k = 4096;
-
-  if (!arg_as_SplitKModeID(this->split_k_mode, "split_k_mode", problem_space, problem)) {
-    // default value
-    this->split_k_mode = library::SplitKMode::kSerial;
-  }
+  this->m = 3456;
+  this->n = 4096;
+  this->k = 4096;
+  this->split_k_mode = library::SplitKMode::kSerial;
 
   this->mode = library::GemmUniversalMode::kGemm;
   if (this->split_k_mode == library::SplitKMode::kParallel) {
