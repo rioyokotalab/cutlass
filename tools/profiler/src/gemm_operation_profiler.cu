@@ -109,12 +109,7 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
     "alpha",
     problem_space,
     problem)) {
-    printf("IF: 9\n");
-
-    if (!cast_from_double(this->alpha, operation_desc.element_epilogue, 1)) {
-      printf("IF: 9.1\n");
-      return Status::kErrorInternal;
-    }
+    printf("alpha = %d\n",this->alpha);
   }
 
   if (!arg_as_scalar(
@@ -123,12 +118,7 @@ Status GemmOperationProfiler::GemmProblem::parse(//used
     "beta",
     problem_space,
     problem)) {
-    printf("IF: 10\n");
-
-    if (!cast_from_double(this->beta, operation_desc.element_epilogue, 0)) {
-      printf("IF: 10.1\n");
-      return Status::kErrorInternal;
-    }
+    printf("beta = %d\n",this->beta);
   }
 
   this->lda = DeviceAllocation::get_packed_layout(
