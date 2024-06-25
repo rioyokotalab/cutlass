@@ -61,26 +61,9 @@ namespace profiler {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Abstract base class for each math function
-class GemmOperationProfiler /* : public OperationProfiler  */{
+class GemmOperationProfiler : public OperationProfiler {
 public:
 
-  library::OperationKind kind_;
-
-  /// Human readable description
-  std::string description_;
-
-  /// Arguments parsed from command line
-  ArgumentDescriptionVector arguments_;
-
-  /// List of providers used to verify and compare each result
-  ProviderVector verification_providers_;
-
-  /// Model performance result initialized by the operation profiler with workload statistics
-  /// and reasonable default state.
-  PerformanceResult model_result_;
-
-  /// Performance result vector constructed by profiling the operation
-  PerformanceResultVector results_;
   /// Problem structure obtained from problem space
   struct GemmProblem {
 
@@ -166,33 +149,6 @@ protected:
   // Data members
   //
 
-  static void sleep(int sleep_duration);
-
-  /// Returns true if the current operation description satisfies the problem space
-  // static bool satisfies(
-  //   library::OperationDescription const &op_desc,
-  //   ProblemSpace const &problem_space,
-  //   ProblemSpace::Problem const &problem);
-  
-  /// Compares tensors for equality
-  static Disposition compare_tensors(
-    Options const &options,
-    DeviceAllocation &experimental,
-    DeviceAllocation &reference,
-    int64_t count = 0);
-
-  static void set_argument(  
-    PerformanceResult &result,
-    char const *name,
-    ProblemSpace const &problem_space,
-    std::string const &value);
-
-  /// Helper to set a performance result member
-  static void set_argument(  
-    PerformanceResult &result,
-    char const *name,
-    ProblemSpace const &problem_space,
-    int64_t value);
   /// GEMM problem obtained from problem space
   GemmProblem problem_;
 
@@ -215,13 +171,6 @@ public:
 
   GemmProblem const& problem() const { return problem_; }
 
-  library::OperationKind kind() const { return kind_; }
-
-  /// Gets the schema description
-  std::string const &description() const;
-
-  /// Returns a reference to the arguments
-  ArgumentDescriptionVector const &arguments() const { return arguments_; }
   /// Prints usage statement for the math function
 //  virtual void print_usage(std::ostream &out) const;
 

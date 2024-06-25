@@ -54,18 +54,12 @@ namespace profiler {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-// OperationProfiler::GemmOperationProfiler(
-//   Options const &options,
-//   library::OperationKind kind,
-//   ArgumentDescriptionVector const &arguments,
-//   ProviderVector const & verification_providers
-// ):
-//   kind_(kind), arguments_(arguments) {
-//
-// }
+
 /// Ctor
 GemmOperationProfiler::GemmOperationProfiler(Options const &options):
-    kind_(library::OperationKind::kGemm), arguments_(
+  OperationProfiler(
+    options,
+    library::OperationKind::kGemm,
     {
       {ArgumentTypeID::kEnumerated, {"gemm_kind"}, "Variant of GEMM (universal, gemm, planar_complex, planar_complex_array)"},
       {ArgumentTypeID::kInteger, {"m", "problem-size::m"}, "M dimension of the GEMM problem space"},
@@ -81,8 +75,9 @@ GemmOperationProfiler::GemmOperationProfiler(Options const &options):
       {ArgumentTypeID::kInteger, {"split_k_slices", "split-k-slices"}, "Number of partitions of K dimension"},
       {ArgumentTypeID::kInteger, {"batch_count", "batch-count"}, "Number of GEMMs computed in one batch"},
       {ArgumentTypeID::kEnumerated, {"raster_order", "raster-order"}, "Raster order (heuristic, along_n, along_m)"},
-    })
-   {
+    },
+    { library::Provider::kCUBLAS}
+  ) {
 
   description_ = "      General matrix-matrix product. D = alpha * A*B + beta * C";
 }
@@ -92,63 +87,6 @@ GemmOperationProfiler::~GemmOperationProfiler() {
 
 }
 
-// GemmOperationProfiler::GemmOperationProfiler(): kind_(library::OperationKind::kInvalid) { }
-
-void GemmOperationProfiler::sleep(int sleep_duration) { //used
-  if (sleep_duration) {
-    #ifdef __unix__
-    sleep(sleep_duration * 1000);
-    #elif defined(_WIN32) || defined(WIN32)
-    SleepEx(sleep_duration, false);
-    #else
-    // sleep not supported
-    #endif
-  }
-}
-
-std::string const & GemmOperationProfiler::description() const {
-  return description_;
-}
-/// Compares tensors for equality
-Disposition GemmOperationProfiler::compare_tensors( //used
-  Options const &options,
-  DeviceAllocation &experimental,
-  DeviceAllocation &reference,
-  int64_t count) {
-
-  if (experimental.type() != reference.type()) {
-    return Disposition::kIncorrect;
-  }
-
-  bool passed = false;
-
-  if (count == 0) {
-    count = reference.capacity();
-  }
-
-
-  return passed ? Disposition::kPassed : Disposition::kIncorrect;
-}
-
-
-/// Helper
-void GemmOperationProfiler::set_argument( //used
-  PerformanceResult &result,
-  char const *name,
-  ProblemSpace const &problem_space,
-  std::string const &value) {
-
-  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
-}
-
-void GemmOperationProfiler::set_argument( //used
-  PerformanceResult &result,
-  char const *name,
-  ProblemSpace const &problem_space,
-  int64_t value) {
-
-  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), library::lexical_cast(value));
-}
 //
 Status GemmOperationProfiler::GemmProblem::parse(//used
   library::GemmDescription const &operation_desc,
@@ -461,11 +399,13 @@ Status GemmOperationProfiler::initialize_workspace(//used
 
   library::Operation const* underlying_operation = operation;
 
+  /*
   if (problem_.split_k_mode == library::SplitKMode::kParallel) {
     if (!(underlying_operation = library::find_gemm_operation_for_parallel_reduction(operation))) {
       return Status::kErrorNotSupported;
     }
   }
+*/
 
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
@@ -486,6 +426,7 @@ Status GemmOperationProfiler::initialize_workspace(//used
   }
 
   bool allocate_device_tensors = options.execution_mode != ExecutionMode::kDryRun;
+  printf("allocate_device_tensors=%d\n",allocate_device_tensors);
   if (allocate_device_tensors) {
     int seed_shift = 0;
     gemm_workspace_.A = device_context.allocate_tensor(
