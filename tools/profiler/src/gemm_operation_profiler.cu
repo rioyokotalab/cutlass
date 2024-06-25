@@ -406,7 +406,6 @@ Status GemmOperationProfiler::initialize_workspace(//used
   }
 
   bool allocate_device_tensors = options.execution_mode != ExecutionMode::kDryRun;
-  printf("allocate_device_tensors=%d\n",allocate_device_tensors);
   if (allocate_device_tensors) {
     int seed_shift = 0;
     gemm_workspace_.A = device_context.allocate_tensor(
@@ -924,7 +923,6 @@ Status GemmOperationProfiler::profile_cutlass_( // used
   //
 
   Status status;
-  // printf("options.profiling.warmup_iterations:%d\n", options.profiling.warmup_iterations);
   for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
     
     int problem_idx = (iteration % gemm_workspace_.problem_count) * problem_.batch_count;
