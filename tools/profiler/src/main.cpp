@@ -44,6 +44,7 @@
 #include "cutlass/trace.h"
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+/*
 bool find_string_matches_( //used
   std::string const &filter_string,
   std::string const &operation_name) {
@@ -74,6 +75,7 @@ bool find_string_matches_( //used
   // All tokens in filter_string found in operation_name
   return true;
 }
+*/
 
 
 int main(int argc, char const *arg[]) {
@@ -136,10 +138,8 @@ int main(int argc, char const *arg[]) {
   device_context.free();
 
   std::string operation_name(operation->description().name);
-  // we have found a kernel match, so increment the counter for match kernels
   ++matched_operation_count;
 
-  // A. Initialize configuration
   cutlass::Status status = profiler->initialize_configuration(
     options,
     report,
@@ -148,53 +148,31 @@ int main(int argc, char const *arg[]) {
     problem_space,
     problem);
 
-  if (continue_profiling) {
-    printf("IF: 0\n");
-    status = profiler->initialize_workspace(
-      options,
-      report,
-      device_context,
-      operation,
-      problem_space,
-      problem);
+  status = profiler->initialize_workspace(
+    options,
+    report,
+    device_context,
+    operation,
+    problem_space,
+    problem);
 
+  continue_profiling = profiler->verify_cutlass(
+    options,
+    report,
+    device_context,
+    operation,
+    problem_space,
+    problem);
 
-  }
+  retval |= (not continue_profiling);
 
-  //
-  // Profile CUTLASS if it is enabled
-  //
-
-  // B. Verify CUTLASS
-  if (continue_profiling && options.profiling.provider_enabled(cutlass::library::Provider::kCUTLASS)) {
-    printf("IF: 1\n");
-
-    continue_profiling = profiler->verify_cutlass(
-      options,
-      report,
-      device_context,
-      operation,
-      problem_space,
-      problem);
-
-    retval |= (not continue_profiling);
-  }
-
-  //
-  // D. Profile
-  //
-
-  if (continue_profiling && options.profiling.enabled) {
-    printf("IF: 2\n");
-
-    continue_profiling = profiler->profile(
-      options,
-      report,
-      device_context,
-      operation,
-      problem_space,
-      problem);
-  }
+  continue_profiling = profiler->profile(
+    options,
+    report,
+    device_context,
+    operation,
+    problem_space,
+    problem);
 
   report.append_results(profiler->results_);
   profiler->results_.clear();
