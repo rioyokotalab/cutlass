@@ -354,7 +354,6 @@ Status GemmOperationProfiler::profile_cutlass_( // used
 
   Status status;
   for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
-    printf("it: %d\n",iteration);
     int problem_idx = (iteration % gemm_workspace_.problem_count) * problem_.batch_count;
     gemm_workspace_.arguments.A = gemm_workspace_.A->batch_data(problem_idx);
     gemm_workspace_.arguments.B = gemm_workspace_.B->batch_data(problem_idx);
@@ -367,62 +366,23 @@ Status GemmOperationProfiler::profile_cutlass_( // used
   }
 
   timer.start();
-
   int Iterations = options.profiling.iterations;
-
   int iteration = 0;
   for (; iteration < Iterations; ++iteration) {
-
-    // Iterate over copies of the problem in memory
+    printf("it: %d\n",iteration);
     int workspace_idx = options.profiling.warmup_iterations + iteration;
     int problem_idx = (workspace_idx % gemm_workspace_.problem_count) * problem_.batch_count;
-
     gemm_workspace_.arguments.A = gemm_workspace_.A->batch_data(problem_idx);
     gemm_workspace_.arguments.B = gemm_workspace_.B->batch_data(problem_idx);
     gemm_workspace_.arguments.C = gemm_workspace_.C->batch_data(problem_idx);
     gemm_workspace_.arguments.D = gemm_workspace_.Computed->batch_data(problem_idx);
-
-    if (problem_.split_k_mode == library::SplitKMode::kParallel) {
-      gemm_workspace_.arguments.D                     = gemm_workspace_.device_workspace.data();
-
-      gemm_workspace_.reduction_arguments.workspace   = gemm_workspace_.device_workspace.data();
-      gemm_workspace_.reduction_arguments.source      = gemm_workspace_.C->batch_data(problem_idx);
-      gemm_workspace_.reduction_arguments.destination = gemm_workspace_.Computed->batch_data(problem_idx);
-    }
-
     status = underlying_operation->run(
       arguments,
       host_workspace,
       device_workspace);
-
-    if (status != Status::kSuccess) {
-      return status;
-    }
-
-    // Run parallel reduction kernel for parallel split_k_mode
-    if (problem_.split_k_mode == library::SplitKMode::kParallel) {
-      status = reduction_op_->run(
-        &gemm_workspace_.reduction_arguments,
-        gemm_workspace_.reduction_host_workspace.data(),
-        nullptr);
-
-      if (status != Status::kSuccess) {
-        return status;
-      }
-    }
   }
-
-  //
-  // Wait for completion
-  //
-
   timer.stop_and_wait();
-  //
-  // Update performance result
-  //
-
   runtime = timer.duration(iteration);
-
   return status;
 }
 
