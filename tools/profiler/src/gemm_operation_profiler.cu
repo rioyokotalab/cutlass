@@ -207,7 +207,6 @@ Status GemmOperationProfiler::initialize_workspace(
   ProblemSpace const &problem_space,
   ProblemSpace::Problem const &problem) {
 
-  library::Operation const* underlying_operation = operation;
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
   int64_t bytes = problem_.bytes(operation_desc);
@@ -278,12 +277,12 @@ Status GemmOperationProfiler::initialize_workspace(
   gemm_workspace_.arguments.sm_count = options.device.properties.multiProcessorCount;
 
   Status status = Status::kSuccess;
-  uint64_t workspace_size = underlying_operation->get_host_workspace_size(&gemm_workspace_.configuration);
+  uint64_t workspace_size = operation->get_host_workspace_size(&gemm_workspace_.configuration);
   gemm_workspace_.host_workspace.resize(workspace_size, 0);
-  workspace_size = underlying_operation->get_device_workspace_size(&gemm_workspace_.configuration,
+  workspace_size = operation->get_device_workspace_size(&gemm_workspace_.configuration,
 							&gemm_workspace_.arguments);
   gemm_workspace_.device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
-  status = underlying_operation->initialize(
+  status = operation->initialize(
     &gemm_workspace_.configuration,
     gemm_workspace_.host_workspace.data(),
     gemm_workspace_.device_workspace.data());
@@ -318,7 +317,6 @@ bool GemmOperationProfiler::profile( //used
   gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
 
   GpuTimer timer;
-  library::Operation const * underlying_operation = operation;
   sleep(options.profiling.sleep_duration);
 
   for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
@@ -327,7 +325,7 @@ bool GemmOperationProfiler::profile( //used
     gemm_workspace_.arguments.B = gemm_workspace_.B->batch_data(problem_idx);
     gemm_workspace_.arguments.C = gemm_workspace_.C->batch_data(problem_idx);
     gemm_workspace_.arguments.D = gemm_workspace_.Computed->batch_data(problem_idx);
-    underlying_operation->run(
+    operation->run(
       &gemm_workspace_.arguments,
       gemm_workspace_.host_workspace.data(),
       gemm_workspace_.device_workspace.data());
@@ -343,7 +341,7 @@ bool GemmOperationProfiler::profile( //used
     gemm_workspace_.arguments.B = gemm_workspace_.B->batch_data(problem_idx);
     gemm_workspace_.arguments.C = gemm_workspace_.C->batch_data(problem_idx);
     gemm_workspace_.arguments.D = gemm_workspace_.Computed->batch_data(problem_idx);
-    underlying_operation->run(
+    operation->run(
       &gemm_workspace_.arguments,
       gemm_workspace_.host_workspace.data(),
       gemm_workspace_.device_workspace.data());
