@@ -104,44 +104,9 @@ public:
   /// Returns a reference to the arguments
   ArgumentDescriptionVector const &arguments() const { return arguments_; }
 
-  /// Extracts the problem dimensions
-  /*
-  virtual Status initialize_configuration(
-    Options const &options, 
-    PerformanceReport &report, 
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem) = 0;
-
-  /// Initializes workspace
-  virtual Status initialize_workspace(
-    Options const &options, 
-    PerformanceReport &report, 
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem) = 0;
-
-  /// Measures performance results
-  virtual bool profile(
-    Options const &options,  
-    PerformanceReport &report,
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem) = 0;
-  */
-
   /// Sleep for a given duration in ms
   static void sleep(int sleep_duration);
 
-  /// Returns true if the current operation description satisfies the problem space
-  // static bool satisfies(
-  //   library::OperationDescription const &op_desc,
-  //   ProblemSpace const &problem_space,
-  //   ProblemSpace::Problem const &problem);
-  
   /// Compares tensors for equality
   static Disposition compare_tensors(
     Options const &options,
@@ -149,13 +114,6 @@ public:
     DeviceAllocation &reference,
     int64_t count = 0);
 
-  // static void save_workspace(
-  //   DeviceContext &device_context,
-  //   Options const &options,
-  //   library::OperationDescription const &desc,
-  //   library::Provider provider,
-  //   library::Provider verification_provider = library::Provider::kInvalid);
-  
   /// Helper to set a performance result member
   static void set_argument(  
     PerformanceResult &result,
@@ -169,31 +127,6 @@ public:
     char const *name,
     ProblemSpace const &problem_space,
     int64_t value);
-
-// protected:
-
-public:
-  /// Sets operation description 
-  // static void initialize_result_(
-  //   PerformanceResult &result,
-  //   library::OperationDescription const &operation_desc,
-  //   ProblemSpace const &problem_space);
-
-  /// Method to profile an initialized CUTLASS operation
-//  virtual Status profile_cutlass_(
-//    double &runtime,
-//    Options const &options,
-//    library::Operation const *operation,
-//    void *arguments,
-//    void *host_workspace,
-//    void *device_workspace);
-//
-// private:
-  /// finds string matches filter_string in operation_name
-public:
-  // bool find_string_matches_(
-  //   std::string const &filter_string, 
-  //   std::string const &operation_name);
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////

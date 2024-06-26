@@ -84,9 +84,6 @@ public:
     int batch_count{1};
 
     cutlass::library::RasterOrder raster_order{cutlass::library::RasterOrder::kHeuristic};
-    // gemm with parallel interleaved reduction
-    // gemm epilogue (alpha, beta) = (1.0, 0.0)
-    // reduction epilogue (alpha, beta) = (GemmProblem::alpha, GemmProblem::beta)
     std::vector<uint8_t> alpha_one;
     std::vector<uint8_t> beta_zero;
 
@@ -204,6 +201,7 @@ public:
     library::GemmDescription const &operation_desc,
     ProblemSpace const &problem_space);
 
+  /*
   /// Verifies CUTLASS against references
   bool verify_with_cublas_(
     Options const &options,
@@ -223,7 +221,7 @@ public:
     ProblemSpace::Problem const &problem,
     cutlass::library::NumericTypeID element_A,
     cutlass::library::NumericTypeID element_B);
-
+*/
   /// Method to profile a CUTLASS Operation
   Status profile_cutlass_(
     double &runtime,
