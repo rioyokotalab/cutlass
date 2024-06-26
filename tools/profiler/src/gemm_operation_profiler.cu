@@ -58,7 +58,6 @@ namespace profiler {
 /// Ctor
 GemmOperationProfiler::GemmOperationProfiler(Options const &options):
   OperationProfiler(
-    options,
     library::OperationKind::kGemm,
     {
       {ArgumentTypeID::kEnumerated, {"gemm_kind"}, "Variant of GEMM (universal, gemm, planar_complex, planar_complex_array)"},
