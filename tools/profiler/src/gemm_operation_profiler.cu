@@ -211,10 +211,10 @@ Status GemmOperationProfiler::initialize_configuration(//used
   problem_.ldc = DeviceAllocation::get_packed_layout(
     operation_desc.C.layout, {int(problem_.m), int(problem_.n)}).front();
 
-  gemm_workspace_.configuration.mode = problem_.mode;
-  gemm_workspace_.configuration.problem_size.m() = int(problem_.m);
-  gemm_workspace_.configuration.problem_size.n() = int(problem_.n);
-  gemm_workspace_.configuration.problem_size.k() = int(problem_.k);
+  gemm_workspace_.configuration.mode = library::GemmUniversalMode::kGemm;
+  gemm_workspace_.configuration.problem_size.m() = 3456;
+  gemm_workspace_.configuration.problem_size.n() = 4096;
+  gemm_workspace_.configuration.problem_size.k() = 4096;
   gemm_workspace_.configuration.lda = problem_.lda;
   gemm_workspace_.configuration.ldb = problem_.ldb;
   gemm_workspace_.configuration.ldc = problem_.ldc;
