@@ -41,7 +41,7 @@ int main(int argc, char const *arg[]) {
   CommandLine cmdline(argc, arg);
   profiler::Options options(cmdline);
   profiler::DeviceContext device_context;
-  auto profiler = new profiler::GemmOperationProfiler(options);
+  auto profiler = new profiler::GemmOperationProfiler();
   profiler::ArgumentDescriptionVector tile_description_arguments{
     {profiler::ArgumentTypeID::kEnumerated, {"op_class", "opcode-class"}, "Class of math instruction (simt, tensorop, wmmatensorop, wmma)"},
     {profiler::ArgumentTypeID::kEnumerated, {"accum", "accumulator-type"}, "Math instruction accumulator data type"},
