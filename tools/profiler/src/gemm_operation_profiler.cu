@@ -195,17 +195,17 @@ Status GemmOperationProfiler::initialize_configuration(//used
     std::string(library::to_string(operation_desc.C.element)) + ":" + library::to_string(operation_desc.C.layout));
   set_argument(result, "D", problem_space,
     std::string(library::to_string(operation_desc.D.element)) + ":" + library::to_string(operation_desc.D.layout));
-  set_argument(result, "m", problem_space, m);
-  set_argument(result, "n", problem_space, n);
-  set_argument(result, "k", problem_space, k);
-  set_argument(result, "split_k_mode", problem_space, library::to_string(split_k_mode));
-  set_argument(result, "split_k_slices", problem_space, split_k_slices);
-  set_argument(result, "batch_count", problem_space, batch_count);
-  set_argument(result, "raster_order", problem_space, library::to_string(raster_order));
+  set_argument(result, "m", problem_space, problem_.m);
+  set_argument(result, "n", problem_space, problem_.n);
+  set_argument(result, "k", problem_space, problem_.k);
+  set_argument(result, "split_k_mode", problem_space, library::to_string(problem_.split_k_mode));
+  set_argument(result, "split_k_slices", problem_space, problem_.split_k_slices);
+  set_argument(result, "batch_count", problem_space, problem_.batch_count);
+  set_argument(result, "raster_order", problem_space, library::to_string(problem_.raster_order));
   set_argument(result, "alpha", problem_space,
-    library::lexical_cast(alpha, operation_desc.element_epilogue));
+    library::lexical_cast(problem_.alpha, operation_desc.element_epilogue));
   set_argument(result, "beta", problem_space,
-    library::lexical_cast(beta, operation_desc.element_epilogue));
+    library::lexical_cast(problem_.beta, operation_desc.element_epilogue));
   set_argument(result, "op_class", problem_space, library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
   set_argument(result, "accum", problem_space, library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
   set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
