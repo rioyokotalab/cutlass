@@ -107,21 +107,20 @@ public:
   /// Sleep for a given duration in ms
   static void sleep(int sleep_duration);
 
-  /// Compares tensors for equality
+  /*
   static Disposition compare_tensors(
     Options const &options,
     DeviceAllocation &experimental,
     DeviceAllocation &reference,
     int64_t count = 0);
+*/
 
-  /// Helper to set a performance result member
   static void set_argument(  
     PerformanceResult &result,
     char const *name,
     ProblemSpace const &problem_space,
     std::string const &value);
 
-  /// Helper to set a performance result member
   static void set_argument(  
     PerformanceResult &result,
     char const *name,

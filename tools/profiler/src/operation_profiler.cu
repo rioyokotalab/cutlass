@@ -106,8 +106,7 @@ void OperationProfiler::sleep(int sleep_duration) { //used
   }
 }
 
-
-/// Compares tensors for equality
+/*
 Disposition OperationProfiler::compare_tensors( //used
   Options const &options,
   DeviceAllocation &experimental,
@@ -127,24 +126,21 @@ Disposition OperationProfiler::compare_tensors( //used
 
   return passed ? Disposition::kPassed : Disposition::kIncorrect;
 }
+*/
 
-
-/// Helper
-void OperationProfiler::set_argument( //used
+void OperationProfiler::set_argument(
   PerformanceResult &result,
   char const *name,
   ProblemSpace const &problem_space,
   std::string const &value) {
-
   result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
 }
 
-void OperationProfiler::set_argument( //used
+void OperationProfiler::set_argument(
   PerformanceResult &result,
   char const *name,
   ProblemSpace const &problem_space,
   int64_t value) {
-
   result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), library::lexical_cast(value));
 }
 
