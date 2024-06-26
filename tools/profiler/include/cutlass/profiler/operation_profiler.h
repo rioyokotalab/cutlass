@@ -62,16 +62,9 @@ namespace profiler {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Abstract base class for each math function
 class OperationProfiler {
 
-
-// protected:
 public:
-  //
-  // Data members
-  //
-
   /// Top-level operation kind
   library::OperationKind kind_;
 
@@ -91,13 +84,6 @@ public:
   /// Performance result vector constructed by profiling the operation
   PerformanceResultVector results_;
 
-public:
-
-  //
-  // Methods
-  //
-
-  /// Ctor
   OperationProfiler();
 
   OperationProfiler(
@@ -118,32 +104,8 @@ public:
   /// Returns a reference to the arguments
   ArgumentDescriptionVector const &arguments() const { return arguments_; }
 
-public:
-
-  //
-  // Basic overrides
-  //
-
-
-  /// Prints usage statement for the math function
-//  virtual void print_usage(std::ostream &out) const;
-
-  /// Prints examples
-  //virtual void print_examples(std::ostream &out) const =0;
-
-  /// Entry point to profile all operations in the manifest
-  // virtual int profile_all(
-  //   Options const &options, 
-  //   library::Manifest const &manifest, 
-  //   DeviceContext &device_context);
-
-public:
-
-  //
-  // Operation-specific phases of verification and profiling
-  //
-
   /// Extracts the problem dimensions
+  /*
   virtual Status initialize_configuration(
     Options const &options, 
     PerformanceReport &report, 
@@ -169,12 +131,7 @@ public:
     library::Operation const *operation,
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem) = 0;
-
-public:
-
-  //
-  // Static helpers
-  //
+  */
 
   /// Sleep for a given duration in ms
   static void sleep(int sleep_duration);
