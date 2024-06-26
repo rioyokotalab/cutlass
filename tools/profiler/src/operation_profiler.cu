@@ -41,16 +41,11 @@
 #include "cutlass/profiler/gpu_timer.h"
 #include "cutlass/trace.h"
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 namespace cutlass {
 namespace profiler {
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+//OperationProfiler::OperationProfiler(): kind_(library::OperationKind::kInvalid) { }
 
-OperationProfiler::OperationProfiler(): kind_(library::OperationKind::kInvalid) { }
-
-/// Ctor
 OperationProfiler::OperationProfiler(
   Options const &options,
   library::OperationKind kind,
@@ -60,17 +55,11 @@ OperationProfiler::OperationProfiler(
 
 }
 
-/// Destructor
 OperationProfiler::~OperationProfiler() {}
 
-/// Gets the schema description
 std::string const & OperationProfiler::description() const {
   return description_;
 }
-
-/// Returns true if the current operation description satisfies the problem space
-#if defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
-#endif // defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
 
 void OperationProfiler::set_argument(
   PerformanceResult &result,
@@ -88,10 +77,5 @@ void OperationProfiler::set_argument(
   result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), library::lexical_cast(value));
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 } // namespace profiler
 } // namespace cutlass
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
