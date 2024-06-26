@@ -219,16 +219,7 @@ Status GemmOperationProfiler::initialize_configuration(//used
   gemm_workspace_.configuration.ldb = problem_.ldb;
   gemm_workspace_.configuration.ldc = problem_.ldc;
   gemm_workspace_.configuration.ldd = problem_.ldc;
-
-  if (problem_.mode == library::GemmUniversalMode::kBatched) {
-    printf("if\n");
-    gemm_workspace_.configuration.batch_count = problem_.batch_count;
-  }
-  else {
-    printf("else\n");
-    gemm_workspace_.configuration.batch_count = problem_.split_k_slices;
-  }
-
+  gemm_workspace_.configuration.batch_count = problem_.split_k_slices;
   gemm_workspace_.arguments.A = nullptr;
   gemm_workspace_.arguments.B = nullptr;
   gemm_workspace_.arguments.C = nullptr;
@@ -237,12 +228,6 @@ Status GemmOperationProfiler::initialize_configuration(//used
   gemm_workspace_.arguments.beta = problem_.beta.data();
   gemm_workspace_.arguments.pointer_mode = library::ScalarPointerMode::kHost;
   gemm_workspace_.arguments.raster_order = problem_.raster_order;
-  // initialize reduction operation for parallel splitKMode
-  // if (problem_.split_k_mode == library::SplitKMode::kParallel) {
-  //   if (!initialize_reduction_configuration_(operation, problem)) {
-  //     return Status::kErrorInternal;
-  //   }
-  // }
 
   initialize_result_(this->model_result_, options, operation_desc, problem_space);
 
