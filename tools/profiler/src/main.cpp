@@ -121,10 +121,10 @@ int main(int argc, char const *arg[]) {
   result.status = Status::kSuccess;
   result.operation_name = operation_desc.name;
   result.arguments.resize(problem_space.rank());
-  set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
-  set_argument(result, "A", problem_space,
+  profiler->set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
+  profiler->set_argument(result, "A", problem_space,
     std::string(library::to_string(operation_desc.A.element)) + ":" + library::to_string(operation_desc.A.layout));
-  set_argument(result, "B", problem_space,
+  profiler->set_argument(result, "B", problem_space,
     std::string(library::to_string(operation_desc.B.element)) + ":" + library::to_string(operation_desc.B.layout));
 
   profiler->initialize_workspace(options, report, device_context, operation, problem_space, problem);
