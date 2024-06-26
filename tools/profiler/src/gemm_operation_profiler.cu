@@ -312,9 +312,6 @@ bool GemmOperationProfiler::profile( //used
   gemm_workspace_.arguments.batch_stride_C = gemm_workspace_.C->batch_stride();
   gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
 
-  GpuTimer timer;
-  sleep(options.profiling.sleep_duration);
-
   for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
     int problem_idx = (iteration % gemm_workspace_.problem_count) * problem_.batch_count;
     gemm_workspace_.arguments.A = gemm_workspace_.A->batch_data(problem_idx);
@@ -327,6 +324,7 @@ bool GemmOperationProfiler::profile( //used
       gemm_workspace_.device_workspace.data());
   }
 
+  GpuTimer timer;
   timer.start();
   int Iterations = options.profiling.iterations;
   int iteration = 0;

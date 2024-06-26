@@ -28,9 +28,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************************************/
-/* \file
-   \brief Defines a math function
-*/
 
 #include <algorithm>
 #include <stdexcept>
@@ -39,18 +36,9 @@
 #include <fstream>
 #include <sstream>
 
-#ifdef __unix__
-#include <unistd.h>
-#elif defined(_WIN32) || defined(WIN32)
-#include <windows.h>
-#else
-// sleep not supported
-#endif
-
 #include "cutlass/profiler/options.h"
 #include "cutlass/profiler/operation_profiler.h"
 #include "cutlass/profiler/gpu_timer.h"
-
 #include "cutlass/trace.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -83,19 +71,6 @@ std::string const & OperationProfiler::description() const {
 /// Returns true if the current operation description satisfies the problem space
 #if defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
 #endif // defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
-
-/// Sleep for a given duration in ms
-void OperationProfiler::sleep(int sleep_duration) { //used
-  if (sleep_duration) {
-    #ifdef __unix__
-    usleep(sleep_duration * 1000);
-    #elif defined(_WIN32) || defined(WIN32)
-    SleepEx(sleep_duration, false);
-    #else
-    // sleep not supported
-    #endif
-  }
-}
 
 void OperationProfiler::set_argument(
   PerformanceResult &result,

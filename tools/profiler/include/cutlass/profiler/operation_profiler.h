@@ -79,7 +79,6 @@ public:
   library::OperationKind kind() const { return kind_; }
   std::string const &description() const;
   ArgumentDescriptionVector const &arguments() const { return arguments_; }
-  static void sleep(int sleep_duration);
 
   static void set_argument(  
     PerformanceResult &result,
