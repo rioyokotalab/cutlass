@@ -86,13 +86,13 @@ int64_t GemmOperationProfiler::bytes(library::GemmDescription const &operation_d
     int64_t(library::sizeof_bits(operation_desc.A.element) * problem_.m / 8) * problem_.k +
     int64_t(library::sizeof_bits(operation_desc.B.element) * problem_.n / 8) * problem_.k +
     int64_t(library::sizeof_bits(operation_desc.C.element) * problem_.m / 8) * problem_.n;
-  bytes *= batch_count;
+  bytes *= problem_.batch_count;
   return bytes;
 }
 
 /// Total number of flops computed
 int64_t GemmOperationProfiler::flops() const {
-  int64_t flops_ = (problem_.m * problem_.n * problem_.k + problem_.m * problem_.n) * 2 * batch_count;
+  int64_t flops_ = (problem_.m * problem_.n * problem_.k + problem_.m * problem_.n) * 2 * problem_.batch_count;
   return flops_;
 }
 
@@ -187,8 +187,8 @@ void GemmOperationProfiler::initialize_configuration(
   set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
   set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
   set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
-  result.bytes = problem_.bytes(operation_desc);
-  result.flops = problem_.flops();
+  result.bytes = bytes(operation_desc);
+  result.flops = flops();
   result.runtime = 0;
 }
 
@@ -202,7 +202,7 @@ void GemmOperationProfiler::initialize_workspace(
 
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
-  int64_t bytes = problem_.bytes(operation_desc);
+  int64_t bytes = bytes(operation_desc);
   gemm_workspace_.problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
   int seed_shift = 0;
