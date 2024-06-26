@@ -81,7 +81,7 @@ int main(int argc, char const *arg[]) {
 
   profiler->profile(options, report, device_context, operation, problem_space, problem);
 
-  //report.append_results(profiler->results_);
+  report.append_results(profiler->results_);
   //profiler->results_.clear();
 }
 
