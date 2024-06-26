@@ -225,18 +225,12 @@ Status GemmOperationProfiler::initialize_workspace(//used
     static_cast<library::GemmDescription const &>(operation->description());
 
   int64_t bytes = problem_.bytes(operation_desc);
-  if (bytes < 3 * int64_t(options.device.properties.l2CacheSize)) {
-    printf("if\n");
-    gemm_workspace_.problem_count =
-      1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
-  }
-  else {
-    printf("else\n");
-    gemm_workspace_.problem_count = 1;
-  }
+  gemm_workspace_.problem_count =
+    1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
 
   bool allocate_device_tensors = options.execution_mode != ExecutionMode::kDryRun;
   if (allocate_device_tensors) {
+    printf("this\n");
     int seed_shift = 0;
     gemm_workspace_.A = device_context.allocate_tensor(
       options,
