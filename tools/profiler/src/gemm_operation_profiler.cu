@@ -210,8 +210,7 @@ Status GemmOperationProfiler::initialize_configuration(//used
   return operation->can_implement(&gemm_workspace_.configuration, &gemm_workspace_.arguments);
 }
 
-/// Initializes workspace
-Status GemmOperationProfiler::initialize_workspace(//used
+Status GemmOperationProfiler::initialize_workspace(
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -220,15 +219,11 @@ Status GemmOperationProfiler::initialize_workspace(//used
   ProblemSpace::Problem const &problem) {
 
   library::Operation const* underlying_operation = operation;
-
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
-
   int64_t bytes = problem_.bytes(operation_desc);
   gemm_workspace_.problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
-
-  bool allocate_device_tensors = options.execution_mode != ExecutionMode::kDryRun;
   int seed_shift = 0;
   gemm_workspace_.A = device_context.allocate_tensor(
     options,
@@ -294,52 +289,26 @@ Status GemmOperationProfiler::initialize_workspace(//used
   gemm_workspace_.arguments.sm_count = options.device.properties.multiProcessorCount;
 
   Status status = Status::kSuccess;
-
-  if (options.profiling.provider_enabled(library::Provider::kCUTLASS)) {
-
-    printf("0\n");
-    if (options.execution_mode != ExecutionMode::kDryRun) {
-      printf("1\n");
-      uint64_t workspace_size = underlying_operation->get_host_workspace_size(&gemm_workspace_.configuration);
-      gemm_workspace_.host_workspace.resize(workspace_size, 0);
-
-      workspace_size = underlying_operation->get_device_workspace_size(&gemm_workspace_.configuration,
-                                                            &gemm_workspace_.arguments);
-      gemm_workspace_.device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
-
-      status = underlying_operation->initialize(
-        &gemm_workspace_.configuration,
-        gemm_workspace_.host_workspace.data(),
-        gemm_workspace_.device_workspace.data());
-
-      if (problem_.split_k_mode == library::SplitKMode::kParallel) {
-        printf("2\n");
-        workspace_size = reduction_op_->get_host_workspace_size(&gemm_workspace_.reduction_configuration);
-        gemm_workspace_.reduction_host_workspace.resize(workspace_size, 0);
-
-        status = reduction_op_->initialize(
-          &gemm_workspace_.reduction_configuration,
-          gemm_workspace_.reduction_host_workspace.data(),
-          nullptr);
-      }
-    }
-
-    results_.push_back(model_result_);
-    results_.back().provider = library::Provider::kCUTLASS;
-    results_.back().op_kind = library::OperationKind::kGemm;
-    results_.back().disposition = Disposition::kNotRun;
-
-    for (auto provider : verification_providers_) {
-      results_.back().verification_map[provider] = Disposition::kNotRun;
-    }
+  uint64_t workspace_size = underlying_operation->get_host_workspace_size(&gemm_workspace_.configuration);
+  gemm_workspace_.host_workspace.resize(workspace_size, 0);
+  workspace_size = underlying_operation->get_device_workspace_size(&gemm_workspace_.configuration,
+							&gemm_workspace_.arguments);
+  gemm_workspace_.device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
+  status = underlying_operation->initialize(
+    &gemm_workspace_.configuration,
+    gemm_workspace_.host_workspace.data(),
+    gemm_workspace_.device_workspace.data());
+  results_.push_back(model_result_);
+  results_.back().provider = library::Provider::kCUTLASS;
+  results_.back().op_kind = library::OperationKind::kGemm;
+  results_.back().disposition = Disposition::kNotRun;
+  for (auto provider : verification_providers_) {
+    results_.back().verification_map[provider] = Disposition::kNotRun;
   }
   return status;
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Verifies CUTLASS against references
-bool GemmOperationProfiler::verify_cutlass( //used
+bool GemmOperationProfiler::verify_cutlass(
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -348,10 +317,12 @@ bool GemmOperationProfiler::verify_cutlass( //used
   ProblemSpace::Problem const &problem) {
 
   if (!options.profiling.provider_enabled(library::Provider::kCUTLASS)) {
+    printf("0\n");
     return true;
   }
 
   if (options.execution_mode == ExecutionMode::kDryRun) {
+    printf("1\n");
     return true;
   }
 
@@ -369,6 +340,7 @@ bool GemmOperationProfiler::verify_cutlass( //used
   gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
 
   if (problem_.split_k_mode == library::SplitKMode::kParallel) {
+    printf("2\n");
     gemm_workspace_.arguments.D                       = gemm_workspace_.device_workspace.data();
     gemm_workspace_.arguments.alpha                   = problem_.alpha_one.data();
     gemm_workspace_.arguments.beta                    = problem_.beta_zero.data();
@@ -389,7 +361,9 @@ bool GemmOperationProfiler::verify_cutlass( //used
   library::Operation const * underlying_operation = operation;
 
   if (problem_.split_k_mode == library::SplitKMode::kParallel) {
+    printf("3\n");
     if (!(underlying_operation = library::find_gemm_operation_for_parallel_reduction(operation))) {
+    printf("4\n");
       results_.back().disposition = Disposition::kFailed;
       return false;
     }
@@ -401,18 +375,21 @@ bool GemmOperationProfiler::verify_cutlass( //used
     gemm_workspace_.device_workspace.data());
 
   if (results_.back().status != Status::kSuccess) {
+    printf("5\n");
     results_.back().disposition = Disposition::kFailed;
     return false;
   }
 
   // Run parallel reduction kernel for parallel split_k_mode
   if (problem_.split_k_mode == library::SplitKMode::kParallel) {
+    printf("6\n");
     results_.back().status = reduction_op_->run(
       &gemm_workspace_.reduction_arguments,
       gemm_workspace_.reduction_host_workspace.data(),
       nullptr);
 
     if (results_.back().status != Status::kSuccess) {
+    printf("7\n");
       results_.back().disposition = Disposition::kFailed;
       return false;
     }
@@ -420,6 +397,7 @@ bool GemmOperationProfiler::verify_cutlass( //used
 
   cudaError_t result = cudaDeviceSynchronize();
   if (result != cudaSuccess) {
+    printf("8\n");
     results_.back().disposition = Disposition::kFailed;
     return false;
   }
@@ -432,14 +410,17 @@ bool GemmOperationProfiler::verify_cutlass( //used
   //
 
   if (options.verification.enabled) {
+    printf("9\n");
 
 #if CUTLASS_ENABLE_CUBLAS
     if (options.verification.provider_enabled(library::Provider::kCUBLAS)) {
+    printf("10\n");
 
       // Guard against unsupported cases
       auto const & gemm_desc = static_cast<library::GemmDescription const &>(operation->description());
 
       if (cublas_satisfies(gemm_desc) == Status::kSuccess) {
+    printf("11\n");
 
         // call cublas verification if supported
         verify_with_cublas_(
@@ -470,6 +451,7 @@ bool GemmOperationProfiler::verify_cutlass( //used
     // verification providers which are supported
     bool is_any_verification_run_passed = false;
     for (auto &m : results_.back().verification_map) {
+    printf("12\n");
       if (m.second == Disposition::kFailed || m.second == Disposition::kIncorrect) {
         results_.back().disposition = m.second;
         return true;
@@ -480,18 +462,21 @@ bool GemmOperationProfiler::verify_cutlass( //used
     }
 
     if (is_any_verification_run_passed) {
+    printf("13\n");
       results_.back().disposition = Disposition::kPassed;
     }
   }
 
   // if verification.required is set, then return success iff at least one ref-check was run
   if (options.verification.required) {
+    printf("14\n");
     bool did_any_verification_run = false;
     for (auto provider : options.verification.providers) {
       did_any_verification_run |= (Disposition::kNotRun != results_.back().verification_map[provider]);
     }
 
     if (not did_any_verification_run) {
+    printf("15\n");
       results_.back().status = Status::kErrorNotSupported;
       return false;
     }
