@@ -221,9 +221,11 @@ Status GemmOperationProfiler::initialize_configuration(//used
   gemm_workspace_.configuration.ldd = problem_.ldc;
 
   if (problem_.mode == library::GemmUniversalMode::kBatched) {
+    printf("if\n");
     gemm_workspace_.configuration.batch_count = problem_.batch_count;
   }
   else {
+    printf("else\n");
     gemm_workspace_.configuration.batch_count = problem_.split_k_slices;
   }
 
