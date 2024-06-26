@@ -99,9 +99,10 @@ public:
   };
 
   GemmProblem problem_;
-
   GemmWorkspace gemm_workspace_;
 
+  PerformanceResult model_result_;
+  PerformanceResultVector results_;
   library::Operation const *reduction_op_;
 
   GemmOperationProfiler();

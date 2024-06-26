@@ -59,8 +59,6 @@ class OperationProfiler {
 public:
   library::OperationKind kind_;
   ArgumentDescriptionVector arguments_;
-  PerformanceResult model_result_;
-  PerformanceResultVector results_;
 
   OperationProfiler(
     library::OperationKind kind, 
