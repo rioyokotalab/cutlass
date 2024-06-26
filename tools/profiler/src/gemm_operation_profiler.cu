@@ -83,18 +83,7 @@ GemmOperationProfiler::GemmOperationProfiler(Options const &options):
 }
 
 /// Destructor
-GemmOperationProfiler::~GemmOperationProfiler() {
-
-}
-
-//
-Status GemmOperationProfiler::GemmProblem::parse(//used
-  library::GemmDescription const &operation_desc,
-  ProblemSpace const &problem_space,
-  ProblemSpace::Problem const &problem) {
-
-  return Status::kSuccess;
-}
+GemmOperationProfiler::~GemmOperationProfiler() {}
 
 /// Total number of bytes loaded
 int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {//used
