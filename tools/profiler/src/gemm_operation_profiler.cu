@@ -101,7 +101,7 @@ int64_t GemmOperationProfiler::GemmProblem::flops(library::GemmDescription const
 }
 
 /// Extracts the problem dimensions
-Status GemmOperationProfiler::initialize_configuration(//used
+void GemmOperationProfiler::initialize_configuration(//used
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -194,8 +194,6 @@ Status GemmOperationProfiler::initialize_configuration(//used
   result.bytes = problem_.bytes(operation_desc);
   result.flops = problem_.flops(operation_desc);
   result.runtime = 0;
-
-  return operation->can_implement(&gemm_workspace_.configuration, &gemm_workspace_.arguments);
 }
 
 Status GemmOperationProfiler::initialize_workspace(
