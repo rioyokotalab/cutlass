@@ -49,8 +49,8 @@
 #include "options.h"
 #include "device_context.h"
 #include "performance_result.h"
-#include "performance_report.h"
 #include "problem_space.h"
+#include "reduction_operation_profiler.h"
 
 namespace cutlass {
 namespace profiler {
