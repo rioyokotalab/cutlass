@@ -143,12 +143,6 @@ public:
     std::vector<uint8_t> reduction_host_workspace;
   };
 
-protected:
-
-  //
-  // Data members
-  //
-
   /// GEMM problem obtained from problem space
   GemmProblem problem_;
 
@@ -158,7 +152,6 @@ protected:
   /// CUTLASS parallel reduction operation to follow this* gemm operation
   library::Operation const *reduction_op_;
 
-public:
   //
   // Methods
   //
@@ -203,8 +196,6 @@ public:
     library::Operation const *operation,
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
-
-protected:
 
   /// Initializes the performance result
   void initialize_result_(

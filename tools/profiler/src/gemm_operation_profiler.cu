@@ -91,17 +91,7 @@ int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const
     int64_t(library::sizeof_bits(operation_desc.A.element) * m / 8) * k +
     int64_t(library::sizeof_bits(operation_desc.B.element) * n / 8) * k +
     int64_t(library::sizeof_bits(operation_desc.C.element) * m / 8) * n;
-
-  bool is_beta_zero = std::all_of(beta.begin(), beta.end(), [](uint8_t i) { return i==0; });
-
-  // Output bytes read for the gemm problem for non-zero beta values
-  if (!is_beta_zero) {
-    printf("is_beta_zero\n");
-    bytes += int64_t(library::sizeof_bits(operation_desc.C.element) * m / 8) * n;
-  }
-
   bytes *= batch_count;
-
   return bytes;
 }
 
