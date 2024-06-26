@@ -83,7 +83,18 @@ GemmOperationProfiler::GemmOperationProfiler(Options const &options):
 }
 
 /// Destructor
-GemmOperationProfiler::~GemmOperationProfiler() {}
+GemmOperationProfiler::~GemmOperationProfiler() {
+
+}
+
+//
+Status GemmOperationProfiler::GemmProblem::parse(//used
+  library::GemmDescription const &operation_desc,
+  ProblemSpace const &problem_space,
+  ProblemSpace::Problem const &problem) {
+
+  return Status::kSuccess;
+}
 
 /// Total number of bytes loaded
 int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {//used
@@ -168,6 +179,86 @@ void GemmOperationProfiler::GemmProblem::initialize_result(//used
     library::lexical_cast(beta, operation_desc.element_epilogue));
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Extracts the problem dimensions
+Status GemmOperationProfiler::initialize_configuration(//used
+  Options const &options,
+  PerformanceReport &report,
+  DeviceContext &device_context,
+  library::Operation const *operation,
+  ProblemSpace const &problem_space,
+  ProblemSpace::Problem const &problem) {
+
+  library::GemmDescription const &operation_desc =
+    static_cast<library::GemmDescription const &>(operation->description());
+
+  problem_.mode = library::GemmUniversalMode::kGemm;
+  problem_.m = 3456;
+  problem_.n = 4096;
+  problem_.k = 4096;
+  problem_.split_k_mode = library::SplitKMode::kSerial;
+  problem_.mode = library::GemmUniversalMode::kGemm;
+  problem_.split_k_slices = 1;
+  problem_.batch_count = 1;
+  problem_.raster_order = library::RasterOrder::kHeuristic;
+  cast_from_double(problem_.alpha, operation_desc.element_epilogue, 1);
+  cast_from_double(problem_.beta, operation_desc.element_epilogue, 0);
+  problem_.lda = DeviceAllocation::get_packed_layout(
+    operation_desc.A.layout, {int(problem_.m), int(problem_.k)}).front();
+  problem_.ldb = DeviceAllocation::get_packed_layout(
+    operation_desc.B.layout, {int(problem_.k), int(problem_.n)}).front();
+  problem_.ldc = DeviceAllocation::get_packed_layout(
+    operation_desc.C.layout, {int(problem_.m), int(problem_.n)}).front();
+
+  gemm_workspace_.configuration.mode = problem_.mode;
+  gemm_workspace_.configuration.problem_size.m() = int(problem_.m);
+  gemm_workspace_.configuration.problem_size.n() = int(problem_.n);
+  gemm_workspace_.configuration.problem_size.k() = int(problem_.k);
+  gemm_workspace_.configuration.lda = problem_.lda;
+  gemm_workspace_.configuration.ldb = problem_.ldb;
+  gemm_workspace_.configuration.ldc = problem_.ldc;
+  gemm_workspace_.configuration.ldd = problem_.ldc;
+  gemm_workspace_.configuration.batch_count = problem_.split_k_slices;
+  gemm_workspace_.arguments.A = nullptr;
+  gemm_workspace_.arguments.B = nullptr;
+  gemm_workspace_.arguments.C = nullptr;
+  gemm_workspace_.arguments.D = nullptr;
+  gemm_workspace_.arguments.alpha = problem_.alpha.data();
+  gemm_workspace_.arguments.beta = problem_.beta.data();
+  gemm_workspace_.arguments.pointer_mode = library::ScalarPointerMode::kHost;
+  gemm_workspace_.arguments.raster_order = problem_.raster_order;
+
+  PerformanceResult &result = this->model_result_;
+  result.provider = library::Provider::kCUTLASS;
+  result.disposition = Disposition::kNotRun;
+  result.status = Status::kSuccess;
+  result.operation_name = operation_desc.name;
+  problem_.initialize_result(result, operation_desc, problem_space);
+  set_argument(result, "op_class", problem_space, library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
+  set_argument(result, "accum", problem_space, library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
+  set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
+  set_argument(result, "cta_n", problem_space, operation_desc.tile_description.threadblock_shape.n());
+  set_argument(result, "cta_k", problem_space, operation_desc.tile_description.threadblock_shape.k());
+  set_argument(result, "cluster_m", problem_space, operation_desc.tile_description.cluster_shape.m());
+  set_argument(result, "cluster_n", problem_space, operation_desc.tile_description.cluster_shape.n());
+  set_argument(result, "cluster_k", problem_space, operation_desc.tile_description.cluster_shape.k());
+  set_argument(result, "stages", problem_space, operation_desc.tile_description.threadblock_stages);
+  set_argument(result, "warps_m", problem_space, operation_desc.tile_description.warp_count.m());
+  set_argument(result, "warps_n", problem_space, operation_desc.tile_description.warp_count.n());
+  set_argument(result, "warps_k", problem_space, operation_desc.tile_description.warp_count.k());
+  set_argument(result, "inst_m", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.m());
+  set_argument(result, "inst_n", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.n());
+  set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
+  set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
+  set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
+  result.bytes = problem_.bytes(operation_desc);
+  result.flops = problem_.flops(operation_desc);
+  result.runtime = 0;
+
+  return operation->can_implement(&gemm_workspace_.configuration, &gemm_workspace_.arguments);
+}
+
 /// Initializes workspace
 Status GemmOperationProfiler::initialize_workspace(//used
   Options const &options,
@@ -179,9 +270,18 @@ Status GemmOperationProfiler::initialize_workspace(//used
 
   library::Operation const* underlying_operation = operation;
 
+  /*
+  if (problem_.split_k_mode == library::SplitKMode::kParallel) {
+    if (!(underlying_operation = library::find_gemm_operation_for_parallel_reduction(operation))) {
+      return Status::kErrorNotSupported;
+    }
+  }
+*/
+
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
 
+  // Compute the number of copies of the problem to avoid L2 camping.
   if (!options.profiling.workspace_count) {
     int64_t bytes = problem_.bytes(operation_desc);
     if (bytes < 3 * int64_t(options.device.properties.l2CacheSize)) {
