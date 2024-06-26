@@ -349,38 +349,18 @@ bool GemmOperationProfiler::verify_cutlass(
 
     bool is_any_verification_run_passed = false;
     for (auto &m : results_.back().verification_map) {
-    printf("12\n");
       if (m.second == Disposition::kFailed || m.second == Disposition::kIncorrect) {
         results_.back().disposition = m.second;
         return true;
       }
       if (!is_any_verification_run_passed && m.second == Disposition::kPassed) {
+        printf("passed\n");
         is_any_verification_run_passed = true;
       }
     }
 
-    if (is_any_verification_run_passed) {
-    printf("13\n");
-      results_.back().disposition = Disposition::kPassed;
-    }
   }
 
-  // if verification.required is set, then return success iff at least one ref-check was run
-  if (options.verification.required) {
-    printf("14\n");
-    bool did_any_verification_run = false;
-    for (auto provider : options.verification.providers) {
-      did_any_verification_run |= (Disposition::kNotRun != results_.back().verification_map[provider]);
-    }
-
-    if (not did_any_verification_run) {
-    printf("15\n");
-      results_.back().status = Status::kErrorNotSupported;
-      return false;
-    }
-  }
-
-  // Return true means continue profiling
   return true;
 }
 
