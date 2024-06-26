@@ -115,14 +115,17 @@ int64_t GemmOperationProfiler::GemmProblem::flops(library::GemmDescription const
   // complex-valued support
   switch (operation_desc.tile_description.math_instruction.math_operation) {
   case library::MathOperationID::kMultiplyAddComplex:
+    printf("kMultiplyAddComplex\n");
     flops_ *= 4;
     break;
 
   case library::MathOperationID::kMultiplyAddComplexFastF32:
+    printf("kMultiplyAddComplexFastF32\n");
     flops_ *= 4;
     break;
 
   case library::MathOperationID::kMultiplyAddGaussianComplex:
+    printf("kMultiplyAddGaussianComplex\n");
     flops_ *= 3;
     break;
 
