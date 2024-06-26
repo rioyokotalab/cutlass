@@ -340,27 +340,6 @@ bool GemmOperationProfiler::verify_cutlass(
   results_.back().disposition = Disposition::kNotVerified;
 
   if (options.verification.enabled) {
-    printf("9\n");
-
-    if (options.verification.provider_enabled(library::Provider::kCUBLAS)) {
-    printf("10\n");
-
-      // Guard against unsupported cases
-      auto const & gemm_desc = static_cast<library::GemmDescription const &>(operation->description());
-
-    printf("11\n");
-
-        // call cublas verification if supported
-        verify_with_cublas_(
-          options,
-          report,
-          device_context,
-          operation,
-          problem_space,
-          problem);
-        }
-    }
-
     library::GemmDescription const &gemm_desc =
       static_cast<library::GemmDescription const &>(operation->description());
 
