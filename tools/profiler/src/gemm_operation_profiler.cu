@@ -193,10 +193,10 @@ Status GemmOperationProfiler::initialize_configuration(//used
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
 
-  //problem_.mode = library::GemmUniversalMode::kGemm;
-  //problem_.m = 3456;
-  //problem_.n = 4096;
-  //problem_.k = 4096;
+  problem_.mode = library::GemmUniversalMode::kGemm;
+  problem_.m = 3456;
+  problem_.n = 4096;
+  problem_.k = 4096;
   problem_.split_k_mode = library::SplitKMode::kSerial;
   problem_.mode = library::GemmUniversalMode::kGemm;
   problem_.split_k_slices = 1;
@@ -211,10 +211,10 @@ Status GemmOperationProfiler::initialize_configuration(//used
   problem_.ldc = DeviceAllocation::get_packed_layout(
     operation_desc.C.layout, {int(problem_.m), int(problem_.n)}).front();
 
-  gemm_workspace_.configuration.mode = library::GemmUniversalMode::kGemm;
-  gemm_workspace_.configuration.problem_size.m() = 3456;
-  gemm_workspace_.configuration.problem_size.n() = 4096;
-  gemm_workspace_.configuration.problem_size.k() = 4096;
+  gemm_workspace_.configuration.mode = problem_.mode;
+  gemm_workspace_.configuration.problem_size.m() = problem_.m;
+  gemm_workspace_.configuration.problem_size.n() = problem_.n;
+  gemm_workspace_.configuration.problem_size.k() = problem_.k;
   gemm_workspace_.configuration.lda = problem_.lda;
   gemm_workspace_.configuration.ldb = problem_.ldb;
   gemm_workspace_.configuration.ldc = problem_.ldc;
@@ -229,35 +229,14 @@ Status GemmOperationProfiler::initialize_configuration(//used
   gemm_workspace_.arguments.pointer_mode = library::ScalarPointerMode::kHost;
   gemm_workspace_.arguments.raster_order = problem_.raster_order;
 
-  initialize_result_(this->model_result_, options, operation_desc, problem_space);
-
-  return operation->can_implement(&gemm_workspace_.configuration, &gemm_workspace_.arguments);
-}
-
-/// Initializes the performance result
-void GemmOperationProfiler::initialize_result_(//used
-  PerformanceResult &result,
-  Options const &options,
-  library::GemmDescription const &operation_desc,
-  ProblemSpace const &problem_space) {
-
+  PerformanceResult &result = this->model_result_;
   result.provider = library::Provider::kCUTLASS;
   result.disposition = Disposition::kNotRun;
   result.status = Status::kSuccess;
   result.operation_name = operation_desc.name;
-
   problem_.initialize_result(result, operation_desc, problem_space);
-
-  // OperationProfiler::initialize_result_(result, operation_desc, problem_space);
-
-
-
-  set_argument(result, "op_class", problem_space,
-    library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
-
-  set_argument(result, "accum", problem_space,
-    library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
-
+  set_argument(result, "op_class", problem_space, library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
+  set_argument(result, "accum", problem_space, library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
   set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
   set_argument(result, "cta_n", problem_space, operation_desc.tile_description.threadblock_shape.n());
   set_argument(result, "cta_k", problem_space, operation_desc.tile_description.threadblock_shape.k());
@@ -273,13 +252,12 @@ void GemmOperationProfiler::initialize_result_(//used
   set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
   set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
   set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
-
   result.bytes = problem_.bytes(operation_desc);
   result.flops = problem_.flops(operation_desc);
   result.runtime = 0;
 
+  return operation->can_implement(&gemm_workspace_.configuration, &gemm_workspace_.arguments);
 }
-
 
 /// Initializes workspace
 Status GemmOperationProfiler::initialize_workspace(//used
