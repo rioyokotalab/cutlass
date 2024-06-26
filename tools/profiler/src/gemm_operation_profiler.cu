@@ -335,14 +335,13 @@ bool GemmOperationProfiler::profile( //used
   library::Operation const * underlying_operation = operation;
   sleep(options.profiling.sleep_duration);
 
-  Status status;
   for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
     int problem_idx = (iteration % gemm_workspace_.problem_count) * problem_.batch_count;
     gemm_workspace_.arguments.A = gemm_workspace_.A->batch_data(problem_idx);
     gemm_workspace_.arguments.B = gemm_workspace_.B->batch_data(problem_idx);
     gemm_workspace_.arguments.C = gemm_workspace_.C->batch_data(problem_idx);
     gemm_workspace_.arguments.D = gemm_workspace_.Computed->batch_data(problem_idx);
-    status = underlying_operation->run(
+    underlying_operation->run(
       &gemm_workspace_.arguments,
       gemm_workspace_.host_workspace.data(),
       gemm_workspace_.device_workspace.data());
@@ -358,14 +357,14 @@ bool GemmOperationProfiler::profile( //used
     gemm_workspace_.arguments.B = gemm_workspace_.B->batch_data(problem_idx);
     gemm_workspace_.arguments.C = gemm_workspace_.C->batch_data(problem_idx);
     gemm_workspace_.arguments.D = gemm_workspace_.Computed->batch_data(problem_idx);
-    status = underlying_operation->run(
+    underlying_operation->run(
       &gemm_workspace_.arguments,
       gemm_workspace_.host_workspace.data(),
       gemm_workspace_.device_workspace.data());
   }
   timer.stop_and_wait();
   results_.back().runtime = timer.duration(iteration);
-  return status;
+  return true;
 }
 
 } // namespace profiler
