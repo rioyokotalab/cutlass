@@ -83,9 +83,7 @@ GemmOperationProfiler::GemmOperationProfiler(Options const &options):
 }
 
 /// Destructor
-GemmOperationProfiler::~GemmOperationProfiler() {
-
-}
+GemmOperationProfiler::~GemmOperationProfiler() {}
 
 /// Total number of bytes loaded
 int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {//used
@@ -111,27 +109,6 @@ int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const
 /// Total number of flops computed
 int64_t GemmOperationProfiler::GemmProblem::flops(library::GemmDescription const &operation_desc) const {//used
   int64_t flops_ = (int64_t(m) * n * k + m * n) * 2 * batch_count;
-
-  // complex-valued support
-  switch (operation_desc.tile_description.math_instruction.math_operation) {
-  case library::MathOperationID::kMultiplyAddComplex:
-    printf("kMultiplyAddComplex\n");
-    flops_ *= 4;
-    break;
-
-  case library::MathOperationID::kMultiplyAddComplexFastF32:
-    printf("kMultiplyAddComplexFastF32\n");
-    flops_ *= 4;
-    break;
-
-  case library::MathOperationID::kMultiplyAddGaussianComplex:
-    printf("kMultiplyAddGaussianComplex\n");
-    flops_ *= 3;
-    break;
-
-  default: break;
-  }
-
   return flops_;
 }
 
@@ -244,19 +221,11 @@ Status GemmOperationProfiler::initialize_workspace(//used
 
   library::Operation const* underlying_operation = operation;
 
-  /*
-  if (problem_.split_k_mode == library::SplitKMode::kParallel) {
-    if (!(underlying_operation = library::find_gemm_operation_for_parallel_reduction(operation))) {
-      return Status::kErrorNotSupported;
-    }
-  }
-*/
-
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
 
-  // Compute the number of copies of the problem to avoid L2 camping.
   if (!options.profiling.workspace_count) {
+    printf("if\n");
     int64_t bytes = problem_.bytes(operation_desc);
     if (bytes < 3 * int64_t(options.device.properties.l2CacheSize)) {
       gemm_workspace_.problem_count =
@@ -267,6 +236,7 @@ Status GemmOperationProfiler::initialize_workspace(//used
     }
   }
   else {
+    printf("else\n");
     gemm_workspace_.problem_count = options.profiling.workspace_count;
   }
 
