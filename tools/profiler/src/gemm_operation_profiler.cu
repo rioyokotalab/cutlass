@@ -87,20 +87,16 @@ GemmOperationProfiler::~GemmOperationProfiler() {}
 
 /// Total number of bytes loaded
 int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {//used
-  // Input bytes read and Output bytes written for the gemm problem
   int64_t bytes =
     int64_t(library::sizeof_bits(operation_desc.A.element) * m / 8) * k +
     int64_t(library::sizeof_bits(operation_desc.B.element) * n / 8) * k +
     int64_t(library::sizeof_bits(operation_desc.C.element) * m / 8) * n;
 
-  printf("%d %d %d\n",library::sizeof_bits(operation_desc.A.element),
-	 library::sizeof_bits(operation_desc.B.element),
-	 library::sizeof_bits(operation_desc.C.element));
-  // Set is_beta_zero true if beta is zero
   bool is_beta_zero = std::all_of(beta.begin(), beta.end(), [](uint8_t i) { return i==0; });
 
   // Output bytes read for the gemm problem for non-zero beta values
   if (!is_beta_zero) {
+    printf("is_beta_zero\n");
     bytes += int64_t(library::sizeof_bits(operation_desc.C.element) * m / 8) * n;
   }
 
