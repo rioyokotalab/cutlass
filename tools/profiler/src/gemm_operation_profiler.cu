@@ -229,63 +229,60 @@ Status GemmOperationProfiler::initialize_workspace(//used
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
 
   bool allocate_device_tensors = options.execution_mode != ExecutionMode::kDryRun;
-  if (allocate_device_tensors) {
-    printf("this\n");
-    int seed_shift = 0;
-    gemm_workspace_.A = device_context.allocate_tensor(
-      options,
-      "A",
-      operation_desc.A.element,
-      operation_desc.A.layout,
-      {int(problem_.m), int(problem_.k)},
-      {int(problem_.lda)},
-      problem_.batch_count * gemm_workspace_.problem_count,
-      seed_shift++
-    );
+  int seed_shift = 0;
+  gemm_workspace_.A = device_context.allocate_tensor(
+    options,
+    "A",
+    operation_desc.A.element,
+    operation_desc.A.layout,
+    {int(problem_.m), int(problem_.k)},
+    {int(problem_.lda)},
+    problem_.batch_count * gemm_workspace_.problem_count,
+    seed_shift++
+  );
 
-    gemm_workspace_.B = device_context.allocate_tensor(
-      options,
-      "B",
-      operation_desc.B.element,
-      operation_desc.B.layout,
-      {int(problem_.k), int(problem_.n)},
-      {int(problem_.ldb)},
-      problem_.batch_count * gemm_workspace_.problem_count,
-      seed_shift++
-    );
+  gemm_workspace_.B = device_context.allocate_tensor(
+    options,
+    "B",
+    operation_desc.B.element,
+    operation_desc.B.layout,
+    {int(problem_.k), int(problem_.n)},
+    {int(problem_.ldb)},
+    problem_.batch_count * gemm_workspace_.problem_count,
+    seed_shift++
+  );
 
-    gemm_workspace_.C = device_context.allocate_tensor(
-      options,
-      "C",
-      operation_desc.C.element,
-      operation_desc.C.layout,
-      {int(problem_.m), int(problem_.n)},
-      {int(problem_.ldc)},
-      problem_.batch_count * gemm_workspace_.problem_count,
-      seed_shift++
-    );
+  gemm_workspace_.C = device_context.allocate_tensor(
+    options,
+    "C",
+    operation_desc.C.element,
+    operation_desc.C.layout,
+    {int(problem_.m), int(problem_.n)},
+    {int(problem_.ldc)},
+    problem_.batch_count * gemm_workspace_.problem_count,
+    seed_shift++
+  );
 
-    gemm_workspace_.Computed = device_context.allocate_tensor(
-      "D",
-      operation_desc.D.element,
-      operation_desc.D.layout,
-      {int(problem_.m), int(problem_.n)},
-      {int(problem_.ldc)},
-      problem_.batch_count * gemm_workspace_.problem_count
-    );
+  gemm_workspace_.Computed = device_context.allocate_tensor(
+    "D",
+    operation_desc.D.element,
+    operation_desc.D.layout,
+    {int(problem_.m), int(problem_.n)},
+    {int(problem_.ldc)},
+    problem_.batch_count * gemm_workspace_.problem_count
+  );
 
-    gemm_workspace_.Reference = device_context.allocate_tensor(
-      "Reference",
-      operation_desc.D.element,
-      operation_desc.D.layout,
-      {int(problem_.m), int(problem_.n)},
-      {int(problem_.ldc)},
-      problem_.batch_count * gemm_workspace_.problem_count
-    );
-  }
+  gemm_workspace_.Reference = device_context.allocate_tensor(
+    "Reference",
+    operation_desc.D.element,
+    operation_desc.D.layout,
+    {int(problem_.m), int(problem_.n)},
+    {int(problem_.ldc)},
+    problem_.batch_count * gemm_workspace_.problem_count
+  );
 
   if (options.execution_mode != ExecutionMode::kDryRun) {
-    // NOTE: the leading non-batch strides are duplicated here for 3.0 API kernels
+    printf("this\n");
     gemm_workspace_.arguments.problem_size = {int(problem_.m), int(problem_.n), int(problem_.k)};
     gemm_workspace_.arguments.batch_count = problem_.batch_count;
     gemm_workspace_.arguments.lda = problem_.lda;
@@ -296,8 +293,6 @@ Status GemmOperationProfiler::initialize_workspace(//used
     gemm_workspace_.arguments.batch_stride_B = gemm_workspace_.B->batch_stride();
     gemm_workspace_.arguments.batch_stride_C = gemm_workspace_.C->batch_stride();
     gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
-
-    /* Query device SM count to pass onto the kernel as an argument, where needed */
     gemm_workspace_.arguments.sm_count = options.device.properties.multiProcessorCount;
   }
 
