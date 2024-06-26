@@ -281,29 +281,25 @@ Status GemmOperationProfiler::initialize_workspace(//used
     problem_.batch_count * gemm_workspace_.problem_count
   );
 
-  if (options.execution_mode != ExecutionMode::kDryRun) {
-    printf("this\n");
-    gemm_workspace_.arguments.problem_size = {int(problem_.m), int(problem_.n), int(problem_.k)};
-    gemm_workspace_.arguments.batch_count = problem_.batch_count;
-    gemm_workspace_.arguments.lda = problem_.lda;
-    gemm_workspace_.arguments.ldb = problem_.ldb;
-    gemm_workspace_.arguments.ldc = problem_.ldc;
-    gemm_workspace_.arguments.ldd = problem_.ldc;
-    gemm_workspace_.arguments.batch_stride_A = gemm_workspace_.A->batch_stride();
-    gemm_workspace_.arguments.batch_stride_B = gemm_workspace_.B->batch_stride();
-    gemm_workspace_.arguments.batch_stride_C = gemm_workspace_.C->batch_stride();
-    gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
-    gemm_workspace_.arguments.sm_count = options.device.properties.multiProcessorCount;
-  }
+  gemm_workspace_.arguments.problem_size = {int(problem_.m), int(problem_.n), int(problem_.k)};
+  gemm_workspace_.arguments.batch_count = problem_.batch_count;
+  gemm_workspace_.arguments.lda = problem_.lda;
+  gemm_workspace_.arguments.ldb = problem_.ldb;
+  gemm_workspace_.arguments.ldc = problem_.ldc;
+  gemm_workspace_.arguments.ldd = problem_.ldc;
+  gemm_workspace_.arguments.batch_stride_A = gemm_workspace_.A->batch_stride();
+  gemm_workspace_.arguments.batch_stride_B = gemm_workspace_.B->batch_stride();
+  gemm_workspace_.arguments.batch_stride_C = gemm_workspace_.C->batch_stride();
+  gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
+  gemm_workspace_.arguments.sm_count = options.device.properties.multiProcessorCount;
 
-  //
-  // Initialize the CUTLASS operation
-  //
   Status status = Status::kSuccess;
 
   if (options.profiling.provider_enabled(library::Provider::kCUTLASS)) {
 
+    printf("0\n");
     if (options.execution_mode != ExecutionMode::kDryRun) {
+      printf("1\n");
       uint64_t workspace_size = underlying_operation->get_host_workspace_size(&gemm_workspace_.configuration);
       gemm_workspace_.host_workspace.resize(workspace_size, 0);
 
@@ -315,11 +311,9 @@ Status GemmOperationProfiler::initialize_workspace(//used
         &gemm_workspace_.configuration,
         gemm_workspace_.host_workspace.data(),
         gemm_workspace_.device_workspace.data());
-      if (status != Status::kSuccess) {
-        return status;
-      }
 
       if (problem_.split_k_mode == library::SplitKMode::kParallel) {
+        printf("2\n");
         workspace_size = reduction_op_->get_host_workspace_size(&gemm_workspace_.reduction_configuration);
         gemm_workspace_.reduction_host_workspace.resize(workspace_size, 0);
 
@@ -327,16 +321,9 @@ Status GemmOperationProfiler::initialize_workspace(//used
           &gemm_workspace_.reduction_configuration,
           gemm_workspace_.reduction_host_workspace.data(),
           nullptr);
-
-        if (status != Status::kSuccess) {
-          return status;
-        }
       }
     }
 
-    //
-    // If CUTLASS is enabled, generate a result for it
-    //
     results_.push_back(model_result_);
     results_.back().provider = library::Provider::kCUTLASS;
     results_.back().op_kind = library::OperationKind::kGemm;
