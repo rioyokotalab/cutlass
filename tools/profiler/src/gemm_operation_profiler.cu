@@ -193,10 +193,10 @@ Status GemmOperationProfiler::initialize_configuration(//used
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
 
-  problem_.mode = library::GemmUniversalMode::kGemm;
-  problem_.m = 3456;
-  problem_.n = 4096;
-  problem_.k = 4096;
+  //problem_.mode = library::GemmUniversalMode::kGemm;
+  //problem_.m = 3456;
+  //problem_.n = 4096;
+  //problem_.k = 4096;
   problem_.split_k_mode = library::SplitKMode::kSerial;
   problem_.mode = library::GemmUniversalMode::kGemm;
   problem_.split_k_slices = 1;
