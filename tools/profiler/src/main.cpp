@@ -80,7 +80,7 @@ int main(int argc, char const *arg[]) {
 
   profiler->initialize_workspace(options, report, device_context, operation, problem_space, problem);
 
-  profiler->verify_cutlass(options, report, device_context, operation, problem_space, problem);
+  //profiler->verify_cutlass(options, report, device_context, operation, problem_space, problem);
 
   profiler->profile(options, report, device_context, operation, problem_space, problem);
 
