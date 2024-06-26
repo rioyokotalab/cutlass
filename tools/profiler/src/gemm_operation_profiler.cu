@@ -28,10 +28,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************************************/
-/* \file
-   \brief Execution environment
-*/
-
 #include <iostream>
 #include <stdexcept>
 #include <iomanip>
@@ -39,7 +35,6 @@
 #include <vector>
 
 #include "cutlass/core_io.h"
-
 #include "cutlass/profiler/cublas_helpers.h"
 #include "cutlass/profiler/gemm_operation_profiler.h"
 #include "cutlass/profiler/gpu_timer.h"
@@ -47,15 +42,9 @@
 #include "cutlass/library/library.h"
 #include "cutlass/library/handle.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
 namespace cutlass {
 namespace profiler {
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Ctor
 GemmOperationProfiler::GemmOperationProfiler():
   OperationProfiler(
     library::OperationKind::kGemm,
@@ -77,10 +66,8 @@ GemmOperationProfiler::GemmOperationProfiler():
     }
   ) {}
 
-/// Destructor
 GemmOperationProfiler::~GemmOperationProfiler() {}
 
-/// Total number of bytes loaded
 int64_t GemmOperationProfiler::bytes(library::GemmDescription const &operation_desc) const {
   int64_t bytes =
     int64_t(library::sizeof_bits(operation_desc.A.element) * problem_.m / 8) * problem_.k +
@@ -90,13 +77,27 @@ int64_t GemmOperationProfiler::bytes(library::GemmDescription const &operation_d
   return bytes;
 }
 
-/// Total number of flops computed
 int64_t GemmOperationProfiler::flops() const {
   int64_t flops_ = (problem_.m * problem_.n * problem_.k + problem_.m * problem_.n) * 2 * problem_.batch_count;
   return flops_;
 }
 
-/// Extracts the problem dimensions
+void GemmOperationProfiler::set_argument(
+  PerformanceResult &result,
+  char const *name,
+  ProblemSpace const &problem_space,
+  std::string const &value) {
+  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
+}
+
+void GemmOperationProfiler::set_argument(
+  PerformanceResult &result,
+  char const *name,
+  ProblemSpace const &problem_space,
+  int64_t value) {
+  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), library::lexical_cast(value));
+}
+
 void GemmOperationProfiler::initialize_configuration(
   Options const &options,
   PerformanceReport &report,

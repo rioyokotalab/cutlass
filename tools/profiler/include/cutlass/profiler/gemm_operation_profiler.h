@@ -76,7 +76,6 @@ public:
     std::vector<uint8_t> alpha_one;
     std::vector<uint8_t> beta_zero;
 
-
     void initialize_result(
       PerformanceResult &result,
       library::GemmDescription const &operation_desc,
@@ -114,6 +113,18 @@ public:
   int64_t bytes(library::GemmDescription const &operation_desc) const;
 
   int64_t flops() const;
+
+  static void set_argument(  
+    PerformanceResult &result,
+    char const *name,
+    ProblemSpace const &problem_space,
+    std::string const &value);
+
+  static void set_argument(  
+    PerformanceResult &result,
+    char const *name,
+    ProblemSpace const &problem_space,
+    int64_t value);
 
   void initialize_configuration(
     Options const &options,

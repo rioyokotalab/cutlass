@@ -52,21 +52,6 @@ OperationProfiler::OperationProfiler(
 
 OperationProfiler::~OperationProfiler() {}
 
-void OperationProfiler::set_argument(
-  PerformanceResult &result,
-  char const *name,
-  ProblemSpace const &problem_space,
-  std::string const &value) {
-  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
-}
-
-void OperationProfiler::set_argument(
-  PerformanceResult &result,
-  char const *name,
-  ProblemSpace const &problem_space,
-  int64_t value) {
-  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), library::lexical_cast(value));
-}
 
 } // namespace profiler
 } // namespace cutlass

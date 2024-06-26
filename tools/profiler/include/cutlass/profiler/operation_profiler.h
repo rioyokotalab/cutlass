@@ -68,17 +68,6 @@ public:
 
   ~OperationProfiler();
 
-  static void set_argument(  
-    PerformanceResult &result,
-    char const *name,
-    ProblemSpace const &problem_space,
-    std::string const &value);
-
-  static void set_argument(  
-    PerformanceResult &result,
-    char const *name,
-    ProblemSpace const &problem_space,
-    int64_t value);
 };
 
 } // namespace profiler
