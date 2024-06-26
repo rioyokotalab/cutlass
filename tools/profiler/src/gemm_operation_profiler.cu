@@ -46,8 +46,8 @@ namespace cutlass {
 namespace profiler {
 
 GemmOperationProfiler::GemmOperationProfiler():
-  kind_(library::OperationKind::kGemm),
-  arguments_(
+  OperationProfiler(
+    library::OperationKind::kGemm,
     {
       {ArgumentTypeID::kEnumerated, {"gemm_kind"}, "Variant of GEMM (universal, gemm, planar_complex, planar_complex_array)"},
       {ArgumentTypeID::kInteger, {"m", "problem-size::m"}, "M dimension of the GEMM problem space"},
