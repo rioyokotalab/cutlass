@@ -87,6 +87,7 @@ public:
   OperationProfiler();
 
   OperationProfiler(
+    Options const &options,
     library::OperationKind kind, 
     ArgumentDescriptionVector const &arguments = ArgumentDescriptionVector(),
     ProviderVector const & verification_providers = ProviderVector());
@@ -106,6 +107,14 @@ public:
   /// Sleep for a given duration in ms
   static void sleep(int sleep_duration);
 
+  /*
+  static Disposition compare_tensors(
+    Options const &options,
+    DeviceAllocation &experimental,
+    DeviceAllocation &reference,
+    int64_t count = 0);
+*/
+
   static void set_argument(  
     PerformanceResult &result,
     char const *name,
@@ -119,7 +128,14 @@ public:
     int64_t value);
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Vector of owning operation profilers
 using OperationProfilerVector = std::vector<std::unique_ptr<OperationProfiler>>;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace profiler
 } // namespace cutlass
+
+/////////////////////////////////////////////////////////////////////////////////////////////////

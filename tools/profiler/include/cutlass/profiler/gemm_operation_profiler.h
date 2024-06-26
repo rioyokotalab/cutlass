@@ -149,6 +149,16 @@ public:
   /// CUTLASS parallel reduction operation to follow this* gemm operation
   library::Operation const *reduction_op_;
 
+  //
+  // Methods
+  //
+
+  /// Ctor
+  GemmOperationProfiler(Options const &options);
+
+  /// Destructor
+  virtual ~GemmOperationProfiler();
+
   GemmProblem const& problem() const { return problem_; }
 
   /// Prints usage statement for the math function
