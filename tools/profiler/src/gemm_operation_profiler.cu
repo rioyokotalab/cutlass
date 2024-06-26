@@ -318,6 +318,7 @@ bool GemmOperationProfiler::profile( //used
 
   if (options.profiling.provider_enabled(library::Provider::kCUTLASS)) {
 
+    printf("0\n");
     // Initialize structure containing GEMM arguments
     gemm_workspace_.arguments.A = gemm_workspace_.A->data();
     gemm_workspace_.arguments.B = gemm_workspace_.B->data();
@@ -332,6 +333,7 @@ bool GemmOperationProfiler::profile( //used
     gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
 
     if (problem_.split_k_mode == library::SplitKMode::kParallel) {
+      printf("1\n");
       gemm_workspace_.arguments.D                       = gemm_workspace_.device_workspace.data();
       gemm_workspace_.arguments.alpha                   = problem_.alpha_one.data();
       gemm_workspace_.arguments.beta                    = problem_.beta_zero.data();
