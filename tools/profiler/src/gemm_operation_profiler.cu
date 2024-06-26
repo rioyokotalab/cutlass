@@ -87,15 +87,6 @@ GemmOperationProfiler::~GemmOperationProfiler() {
 
 }
 
-//
-Status GemmOperationProfiler::GemmProblem::parse(//used
-  library::GemmDescription const &operation_desc,
-  ProblemSpace const &problem_space,
-  ProblemSpace::Problem const &problem) {
-
-  return Status::kSuccess;
-}
-
 /// Total number of bytes loaded
 int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {//used
   // Input bytes read and Output bytes written for the gemm problem
@@ -140,46 +131,6 @@ int64_t GemmOperationProfiler::GemmProblem::flops(library::GemmDescription const
 
   return flops_;
 }
-
-
-/// Initializes a performance result
-void GemmOperationProfiler::GemmProblem::initialize_result(//used
-  PerformanceResult &result,
-  library::GemmDescription const &operation_desc,
-  ProblemSpace const &problem_space) {
-
-  result.arguments.resize(problem_space.rank());
-
-  set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
-
-  set_argument(result, "A", problem_space,
-    std::string(library::to_string(operation_desc.A.element)) + ":" + library::to_string(operation_desc.A.layout));
-
-  set_argument(result, "B", problem_space,
-    std::string(library::to_string(operation_desc.B.element)) + ":" + library::to_string(operation_desc.B.layout));
-
-  set_argument(result, "C", problem_space,
-    std::string(library::to_string(operation_desc.C.element)) + ":" + library::to_string(operation_desc.C.layout));
-
-  set_argument(result, "D", problem_space,
-    std::string(library::to_string(operation_desc.D.element)) + ":" + library::to_string(operation_desc.D.layout));
-
-  set_argument(result, "m", problem_space, m);
-  set_argument(result, "n", problem_space, n);
-  set_argument(result, "k", problem_space, k);
-
-  set_argument(result, "split_k_mode", problem_space, library::to_string(split_k_mode));
-  set_argument(result, "split_k_slices", problem_space, split_k_slices);
-  set_argument(result, "batch_count", problem_space, batch_count);
-  set_argument(result, "raster_order", problem_space, library::to_string(raster_order));
-  set_argument(result, "alpha", problem_space,
-    library::lexical_cast(alpha, operation_desc.element_epilogue));
-
-  set_argument(result, "beta", problem_space,
-    library::lexical_cast(beta, operation_desc.element_epilogue));
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Extracts the problem dimensions
 Status GemmOperationProfiler::initialize_configuration(//used
@@ -234,7 +185,27 @@ Status GemmOperationProfiler::initialize_configuration(//used
   result.disposition = Disposition::kNotRun;
   result.status = Status::kSuccess;
   result.operation_name = operation_desc.name;
-  problem_.initialize_result(result, operation_desc, problem_space);
+  result.arguments.resize(problem_space.rank());
+  set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
+  set_argument(result, "A", problem_space,
+    std::string(library::to_string(operation_desc.A.element)) + ":" + library::to_string(operation_desc.A.layout));
+  set_argument(result, "B", problem_space,
+    std::string(library::to_string(operation_desc.B.element)) + ":" + library::to_string(operation_desc.B.layout));
+  set_argument(result, "C", problem_space,
+    std::string(library::to_string(operation_desc.C.element)) + ":" + library::to_string(operation_desc.C.layout));
+  set_argument(result, "D", problem_space,
+    std::string(library::to_string(operation_desc.D.element)) + ":" + library::to_string(operation_desc.D.layout));
+  set_argument(result, "m", problem_space, m);
+  set_argument(result, "n", problem_space, n);
+  set_argument(result, "k", problem_space, k);
+  set_argument(result, "split_k_mode", problem_space, library::to_string(split_k_mode));
+  set_argument(result, "split_k_slices", problem_space, split_k_slices);
+  set_argument(result, "batch_count", problem_space, batch_count);
+  set_argument(result, "raster_order", problem_space, library::to_string(raster_order));
+  set_argument(result, "alpha", problem_space,
+    library::lexical_cast(alpha, operation_desc.element_epilogue));
+  set_argument(result, "beta", problem_space,
+    library::lexical_cast(beta, operation_desc.element_epilogue));
   set_argument(result, "op_class", problem_space, library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
   set_argument(result, "accum", problem_space, library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
   set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
