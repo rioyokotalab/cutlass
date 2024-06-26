@@ -53,18 +53,12 @@
 #include "problem_space.h"
 #include "reduction_operation_profiler.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
 namespace cutlass {
 namespace profiler {
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Abstract base class for each math function
 class GemmOperationProfiler : public OperationProfiler {
 public:
 
-  /// Problem structure obtained from problem space
   struct GemmProblem {
 
     cutlass::library::GemmUniversalMode mode{library::GemmUniversalMode::kGemm};
@@ -87,30 +81,21 @@ public:
     std::vector<uint8_t> alpha_one;
     std::vector<uint8_t> beta_zero;
 
-    //
-    // Methods
-    //
-
-    /// Parses the problem
     Status parse(
       library::GemmDescription const &operation_desc,
       ProblemSpace const &problem_space,
       ProblemSpace::Problem const &problem);
 
-    /// Total number of bytes loaded
     int64_t bytes(library::GemmDescription const &operation_desc) const;
 
-    /// Total number of flops computed
     int64_t flops(library::GemmDescription const &operation_desc) const;
 
-    /// Initializes a performance result
     void initialize_result(
       PerformanceResult &result,
       library::GemmDescription const &operation_desc,
       ProblemSpace const &problem_space);
   };
 
-  /// Workspace used
   struct GemmWorkspace {
 
     DeviceAllocation *A{nullptr};
@@ -119,56 +104,29 @@ public:
     DeviceAllocation *Computed{nullptr};
     DeviceAllocation *Reference{nullptr};
 
-    /// Number of copies of the problem workspace which are visited sequentially during
-    /// profiling to avoid camping in the last level cache.
     int problem_count{1};
-
     library::GemmUniversalConfiguration configuration;
     library::GemmUniversalArguments arguments;
-
-    /// Buffer used for the operation's host workspace
     std::vector<uint8_t> host_workspace;
-
-    /// Buffer used for the operations' device workspace
     DeviceAllocation device_workspace;
-
-    /// Library configuration and arguments for reduction operator
     library::ReductionConfiguration reduction_configuration;
     library::ReductionArguments reduction_arguments;
-
-    /// Buffer used for the cutlass reduction operations' host workspace
     std::vector<uint8_t> reduction_host_workspace;
   };
 
-  /// GEMM problem obtained from problem space
   GemmProblem problem_;
 
-  /// Device memory allocations
   GemmWorkspace gemm_workspace_;
 
-  /// CUTLASS parallel reduction operation to follow this* gemm operation
   library::Operation const *reduction_op_;
 
-  //
-  // Methods
-  //
-
-  /// Ctor
   GemmOperationProfiler(Options const &options);
 
-  /// Destructor
   virtual ~GemmOperationProfiler();
 
   GemmProblem const& problem() const { return problem_; }
 
-  /// Prints usage statement for the math function
-//  virtual void print_usage(std::ostream &out) const;
-
-  /// Prints examples
- // virtual void print_examples(std::ostream &out) const;
-
-  /// Extracts the problem dimensions
-  virtual Status initialize_configuration(
+  virtual void initialize_configuration(
     Options const &options,
     PerformanceReport &report,
     DeviceContext &device_context,
@@ -176,7 +134,6 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  /// Initializes workspace
   virtual Status initialize_workspace(
     Options const &options,
     PerformanceReport &report,
@@ -185,7 +142,6 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  /// Measures performance results
   virtual bool profile(
     Options const &options,
     PerformanceReport &report,
@@ -194,35 +150,12 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  /// Initializes the performance result
   void initialize_result_(
     PerformanceResult &result,
     Options const &options,
     library::GemmDescription const &operation_desc,
     ProblemSpace const &problem_space);
 
-  /*
-  /// Verifies CUTLASS against references
-  bool verify_with_cublas_(
-    Options const &options,
-    PerformanceReport &report,
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem);
-
-  /// Verifies CUTLASS against host and device references
-  bool verify_with_reference_(
-    Options const &options,
-    PerformanceReport &report,
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem,
-    cutlass::library::NumericTypeID element_A,
-    cutlass::library::NumericTypeID element_B);
-*/
-  /// Method to profile a CUTLASS Operation
   Status profile_cutlass_(
     double &runtime,
     Options const &options,
@@ -231,16 +164,10 @@ public:
     void *host_workspace,
     void *device_workspace);
 
-  /// Initialize reduction problem dimensions and library::Operation
   bool initialize_reduction_configuration_(
     library::Operation const *operation,
     ProblemSpace::Problem const &problem);
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
 } // namespace profiler
 } // namespace cutlass
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
