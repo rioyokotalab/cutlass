@@ -81,7 +81,5 @@ public:
     int64_t value);
 };
 
-using OperationProfilerVector = std::vector<std::unique_ptr<OperationProfiler>>;
-
 } // namespace profiler
 } // namespace cutlass
