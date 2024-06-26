@@ -39,15 +39,11 @@
 #include <memory>
 #include <unordered_map>
 
-// CUTLASS includes
 #include "cutlass/trace.h"
-
-// CUTLASS Library includes
 #include "cutlass/library/library.h"
 #include "cutlass/library/util.h"
 #include "cutlass/library/manifest.h"
 
-// Profiler includes
 #include "options.h"
 #include "device_context.h"
 #include "performance_result.h"
@@ -70,7 +66,6 @@ public:
   OperationProfiler();
 
   OperationProfiler(
-    Options const &options,
     library::OperationKind kind, 
     ArgumentDescriptionVector const &arguments = ArgumentDescriptionVector());
 

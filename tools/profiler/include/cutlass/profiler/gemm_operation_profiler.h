@@ -60,23 +60,18 @@ class GemmOperationProfiler : public OperationProfiler {
 public:
 
   struct GemmProblem {
-
     cutlass::library::GemmUniversalMode mode{library::GemmUniversalMode::kGemm};
-
     int64_t m{16};
     int64_t n{16};
     int64_t k{16};
-
     int64_t lda{0};
     int64_t ldb{0};
     int64_t ldc{0};
     std::vector<uint8_t> alpha;
     std::vector<uint8_t> beta;
-
     cutlass::library::SplitKMode split_k_mode{library::SplitKMode::kNone};
     int split_k_slices{1};
     int batch_count{1};
-
     cutlass::library::RasterOrder raster_order{cutlass::library::RasterOrder::kHeuristic};
     std::vector<uint8_t> alpha_one;
     std::vector<uint8_t> beta_zero;
@@ -87,7 +82,6 @@ public:
       ProblemSpace::Problem const &problem);
 
     int64_t bytes(library::GemmDescription const &operation_desc) const;
-
     int64_t flops(library::GemmDescription const &operation_desc) const;
 
     void initialize_result(
@@ -97,13 +91,11 @@ public:
   };
 
   struct GemmWorkspace {
-
     DeviceAllocation *A{nullptr};
     DeviceAllocation *B{nullptr};
     DeviceAllocation *C{nullptr};
     DeviceAllocation *Computed{nullptr};
     DeviceAllocation *Reference{nullptr};
-
     int problem_count{1};
     library::GemmUniversalConfiguration configuration;
     library::GemmUniversalArguments arguments;
@@ -120,13 +112,13 @@ public:
 
   library::Operation const *reduction_op_;
 
-  GemmOperationProfiler(Options const &options);
+  GemmOperationProfiler();
 
-  virtual ~GemmOperationProfiler();
+  ~GemmOperationProfiler();
 
   GemmProblem const& problem() const { return problem_; }
 
-  virtual void initialize_configuration(
+  void initialize_configuration(
     Options const &options,
     PerformanceReport &report,
     DeviceContext &device_context,
@@ -134,7 +126,7 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  virtual Status initialize_workspace(
+  Status initialize_workspace(
     Options const &options,
     PerformanceReport &report,
     DeviceContext &device_context,
@@ -142,7 +134,7 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  virtual bool profile(
+  bool profile(
     Options const &options,
     PerformanceReport &report,
     DeviceContext &device_context,
