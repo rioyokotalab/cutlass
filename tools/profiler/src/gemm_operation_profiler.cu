@@ -212,9 +212,9 @@ Status GemmOperationProfiler::initialize_configuration(//used
     operation_desc.C.layout, {int(problem_.m), int(problem_.n)}).front();
 
   gemm_workspace_.configuration.mode = problem_.mode;
-  gemm_workspace_.configuration.problem_size.m() = problem_.m;
-  gemm_workspace_.configuration.problem_size.n() = problem_.n;
-  gemm_workspace_.configuration.problem_size.k() = problem_.k;
+  gemm_workspace_.configuration.problem_size.m() = int(problem_.m);
+  gemm_workspace_.configuration.problem_size.n() = int(problem_.n);
+  gemm_workspace_.configuration.problem_size.k() = int(problem_.k);
   gemm_workspace_.configuration.lda = problem_.lda;
   gemm_workspace_.configuration.ldb = problem_.ldb;
   gemm_workspace_.configuration.ldc = problem_.ldc;

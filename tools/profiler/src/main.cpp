@@ -74,37 +74,13 @@ int main(int argc, char const *arg[]) {
   device_context.free();
   std::string operation_name(operation->description().name);
 
-  profiler->initialize_configuration(
-    options,
-    report,
-    device_context,
-    operation,
-    problem_space,
-    problem);
+  profiler->initialize_configuration(options, report, device_context, operation, problem_space, problem);
 
-  profiler->initialize_workspace(
-    options,
-    report,
-    device_context,
-    operation,
-    problem_space,
-    problem);
+  profiler->initialize_workspace(options, report, device_context, operation, problem_space, problem);
 
-  profiler->verify_cutlass(
-    options,
-    report,
-    device_context,
-    operation,
-    problem_space,
-    problem);
+  profiler->verify_cutlass(options, report, device_context, operation, problem_space, problem);
 
-  profiler->profile(
-    options,
-    report,
-    device_context,
-    operation,
-    problem_space,
-    problem);
+  profiler->profile(options, report, device_context, operation, problem_space, problem);
 
   report.append_results(profiler->results_);
   profiler->results_.clear();
