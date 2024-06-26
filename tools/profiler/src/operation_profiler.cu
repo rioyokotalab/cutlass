@@ -66,8 +66,7 @@ OperationProfiler::OperationProfiler(): kind_(library::OperationKind::kInvalid) 
 OperationProfiler::OperationProfiler(
   Options const &options,
   library::OperationKind kind,
-  ArgumentDescriptionVector const &arguments,
-  ProviderVector const & verification_providers
+  ArgumentDescriptionVector const &arguments
 ):
   kind_(kind), arguments_(arguments) {
 
@@ -81,17 +80,9 @@ std::string const & OperationProfiler::description() const {
   return description_;
 }
 
-/// Prints usage statement for the math function
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 /// Returns true if the current operation description satisfies the problem space
 #if defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
 #endif // defined(CUTLASS_DEBUG_TRACE_LEVEL) && (CUTLASS_DEBUG_TRACE_LEVEL > 1)
-
-/// Entry point to profile all operations in the manifest
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Sleep for a given duration in ms
 void OperationProfiler::sleep(int sleep_duration) { //used
@@ -105,28 +96,6 @@ void OperationProfiler::sleep(int sleep_duration) { //used
     #endif
   }
 }
-
-/*
-Disposition OperationProfiler::compare_tensors( //used
-  Options const &options,
-  DeviceAllocation &experimental,
-  DeviceAllocation &reference,
-  int64_t count) {
-
-  if (experimental.type() != reference.type()) {
-    return Disposition::kIncorrect;
-  }
-
-  bool passed = false;
-
-  if (count == 0) {
-    count = reference.capacity();
-  }
-
-
-  return passed ? Disposition::kPassed : Disposition::kIncorrect;
-}
-*/
 
 void OperationProfiler::set_argument(
   PerformanceResult &result,

@@ -55,33 +55,16 @@
 #include "problem_space.h"
 #include "debug.h"
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
 namespace cutlass {
 namespace profiler {
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 class OperationProfiler {
 
 public:
-  /// Top-level operation kind
   library::OperationKind kind_;
-
-  /// Human readable description
   std::string description_;
-
-  /// Arguments parsed from command line
   ArgumentDescriptionVector arguments_;
-
-  /// List of providers used to verify and compare each result
-  ProviderVector verification_providers_;
-
-  /// Model performance result initialized by the operation profiler with workload statistics
-  /// and reasonable default state.
   PerformanceResult model_result_;
-
-  /// Performance result vector constructed by profiling the operation
   PerformanceResultVector results_;
 
   OperationProfiler();
@@ -89,31 +72,14 @@ public:
   OperationProfiler(
     Options const &options,
     library::OperationKind kind, 
-    ArgumentDescriptionVector const &arguments = ArgumentDescriptionVector(),
-    ProviderVector const & verification_providers = ProviderVector());
+    ArgumentDescriptionVector const &arguments = ArgumentDescriptionVector());
 
-  /// Destructor
   virtual ~OperationProfiler();
 
-  /// Obtains the operation kind
   library::OperationKind kind() const { return kind_; }
-
-  /// Gets the schema description
   std::string const &description() const;
-
-  /// Returns a reference to the arguments
   ArgumentDescriptionVector const &arguments() const { return arguments_; }
-
-  /// Sleep for a given duration in ms
   static void sleep(int sleep_duration);
-
-  /*
-  static Disposition compare_tensors(
-    Options const &options,
-    DeviceAllocation &experimental,
-    DeviceAllocation &reference,
-    int64_t count = 0);
-*/
 
   static void set_argument(  
     PerformanceResult &result,
@@ -128,14 +94,7 @@ public:
     int64_t value);
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Vector of owning operation profilers
 using OperationProfilerVector = std::vector<std::unique_ptr<OperationProfiler>>;
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace profiler
 } // namespace cutlass
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
