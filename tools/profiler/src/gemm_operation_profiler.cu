@@ -348,7 +348,6 @@ bool GemmOperationProfiler::verify_cutlass(
       // Guard against unsupported cases
       auto const & gemm_desc = static_cast<library::GemmDescription const &>(operation->description());
 
-      if (cublas_satisfies(gemm_desc) == Status::kSuccess) {
     printf("11\n");
 
         // call cublas verification if supported
@@ -360,11 +359,6 @@ bool GemmOperationProfiler::verify_cutlass(
           problem_space,
           problem);
         }
-
-      else {
-        // set verification map for cublas to not supported
-        results_.back().verification_map[library::Provider::kCUBLAS] = Disposition::kNotSupported;
-      }
     }
 
     library::GemmDescription const &gemm_desc =
