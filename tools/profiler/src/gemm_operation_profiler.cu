@@ -81,7 +81,7 @@ GemmOperationProfiler::GemmOperationProfiler():
 GemmOperationProfiler::~GemmOperationProfiler() {}
 
 /// Total number of bytes loaded
-int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const &operation_desc) const {//used
+int64_t GemmOperationProfiler::bytes(library::GemmDescription const &operation_desc) const {
   int64_t bytes =
     int64_t(library::sizeof_bits(operation_desc.A.element) * m / 8) * k +
     int64_t(library::sizeof_bits(operation_desc.B.element) * n / 8) * k +
@@ -91,13 +91,13 @@ int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const
 }
 
 /// Total number of flops computed
-int64_t GemmOperationProfiler::GemmProblem::flops(library::GemmDescription const &operation_desc) const {//used
+int64_t GemmOperationProfiler::flops() const {
   int64_t flops_ = (int64_t(m) * n * k + m * n) * 2 * batch_count;
   return flops_;
 }
 
 /// Extracts the problem dimensions
-void GemmOperationProfiler::initialize_configuration(//used
+void GemmOperationProfiler::initialize_configuration(
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -188,11 +188,11 @@ void GemmOperationProfiler::initialize_configuration(//used
   set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
   set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
   result.bytes = problem_.bytes(operation_desc);
-  result.flops = problem_.flops(operation_desc);
+  result.flops = problem_.flops();
   result.runtime = 0;
 }
 
-Status GemmOperationProfiler::initialize_workspace(
+void GemmOperationProfiler::initialize_workspace(
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -269,13 +269,12 @@ Status GemmOperationProfiler::initialize_workspace(
   gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
   gemm_workspace_.arguments.sm_count = options.device.properties.multiProcessorCount;
 
-  Status status = Status::kSuccess;
   uint64_t workspace_size = operation->get_host_workspace_size(&gemm_workspace_.configuration);
   gemm_workspace_.host_workspace.resize(workspace_size, 0);
   workspace_size = operation->get_device_workspace_size(&gemm_workspace_.configuration,
 							&gemm_workspace_.arguments);
   gemm_workspace_.device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
-  status = operation->initialize(
+  operation->initialize(
     &gemm_workspace_.configuration,
     gemm_workspace_.host_workspace.data(),
     gemm_workspace_.device_workspace.data());
@@ -283,10 +282,9 @@ Status GemmOperationProfiler::initialize_workspace(
   results_.back().provider = library::Provider::kCUTLASS;
   results_.back().op_kind = library::OperationKind::kGemm;
   results_.back().disposition = Disposition::kNotRun;
-  return status;
 }
 
-bool GemmOperationProfiler::profile( //used
+void GemmOperationProfiler::profile(
   Options const &options,
   PerformanceReport &report,
   DeviceContext &device_context,
@@ -336,7 +334,6 @@ bool GemmOperationProfiler::profile( //used
   }
   timer.stop_and_wait();
   results_.back().runtime = timer.duration(iteration);
-  return true;
 }
 
 } // namespace profiler

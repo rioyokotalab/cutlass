@@ -76,13 +76,6 @@ public:
     std::vector<uint8_t> alpha_one;
     std::vector<uint8_t> beta_zero;
 
-    Status parse(
-      library::GemmDescription const &operation_desc,
-      ProblemSpace const &problem_space,
-      ProblemSpace::Problem const &problem);
-
-    int64_t bytes(library::GemmDescription const &operation_desc) const;
-    int64_t flops(library::GemmDescription const &operation_desc) const;
 
     void initialize_result(
       PerformanceResult &result,
@@ -118,6 +111,10 @@ public:
 
   GemmProblem const& problem() const { return problem_; }
 
+  int64_t bytes(library::GemmDescription const &operation_desc) const;
+
+  int64_t flops() const;
+
   void initialize_configuration(
     Options const &options,
     PerformanceReport &report,
@@ -126,7 +123,7 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  Status initialize_workspace(
+  void initialize_workspace(
     Options const &options,
     PerformanceReport &report,
     DeviceContext &device_context,
@@ -134,30 +131,12 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  bool profile(
+  void profile(
     Options const &options,
     PerformanceReport &report,
     DeviceContext &device_context,
     library::Operation const *operation,
     ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem);
-
-  void initialize_result_(
-    PerformanceResult &result,
-    Options const &options,
-    library::GemmDescription const &operation_desc,
-    ProblemSpace const &problem_space);
-
-  Status profile_cutlass_(
-    double &runtime,
-    Options const &options,
-    library::Operation const *operation,
-    void *arguments,
-    void *host_workspace,
-    void *device_workspace);
-
-  bool initialize_reduction_configuration_(
-    library::Operation const *operation,
     ProblemSpace::Problem const &problem);
 };
 
