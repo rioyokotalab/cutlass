@@ -75,8 +75,7 @@ GemmOperationProfiler::GemmOperationProfiler(Options const &options):
       {ArgumentTypeID::kInteger, {"split_k_slices", "split-k-slices"}, "Number of partitions of K dimension"},
       {ArgumentTypeID::kInteger, {"batch_count", "batch-count"}, "Number of GEMMs computed in one batch"},
       {ArgumentTypeID::kEnumerated, {"raster_order", "raster-order"}, "Raster order (heuristic, along_n, along_m)"},
-    },
-    { library::Provider::kCUBLAS}
+    }
   ) {
 
   description_ = "      General matrix-matrix product. D = alpha * A*B + beta * C";
@@ -290,9 +289,6 @@ Status GemmOperationProfiler::initialize_workspace(
   results_.back().provider = library::Provider::kCUTLASS;
   results_.back().op_kind = library::OperationKind::kGemm;
   results_.back().disposition = Disposition::kNotRun;
-  for (auto provider : verification_providers_) {
-    results_.back().verification_map[provider] = Disposition::kNotRun;
-  }
   return status;
 }
 
