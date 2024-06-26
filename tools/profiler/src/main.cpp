@@ -90,11 +90,11 @@ int main(int argc, char const *arg[]) {
   profiler->problem_.raster_order = library::RasterOrder::kHeuristic;
   cast_from_double(profiler->problem_.alpha, operation_desc.element_epilogue, 1);
   cast_from_double(profiler->problem_.beta, operation_desc.element_epilogue, 0);
-  profiler->problem_.lda = DeviceAllocation::get_packed_layout(
+  profiler->problem_.lda = profiler::DeviceAllocation::get_packed_layout(
     operation_desc.A.layout, {int(profiler->problem_.m), int(profiler->problem_.k)}).front();
-  profiler->problem_.ldb = DeviceAllocation::get_packed_layout(
+  profiler->problem_.ldb = profiler::DeviceAllocation::get_packed_layout(
     operation_desc.B.layout, {int(profiler->problem_.k), int(profiler->problem_.n)}).front();
-  profiler->problem_.ldc = DeviceAllocation::get_packed_layout(
+  profiler->problem_.ldc = profiler::DeviceAllocation::get_packed_layout(
     operation_desc.C.layout, {int(profiler->problem_.m), int(profiler->problem_.n)}).front();
 
   profiler->gemm_workspace_.configuration.mode = profiler->problem_.mode;
@@ -115,9 +115,9 @@ int main(int argc, char const *arg[]) {
   profiler->gemm_workspace_.arguments.pointer_mode = library::ScalarPointerMode::kHost;
   profiler->gemm_workspace_.arguments.raster_order = profiler->problem_.raster_order;
 
-  PerformanceResult &result = profiler->model_result_;
+  profiler::PerformanceResult &result = profiler->model_result_;
   result.provider = library::Provider::kCUTLASS;
-  result.disposition = Disposition::kNotRun;
+  result.disposition = profiler::Disposition::kNotRun;
   result.status = Status::kSuccess;
   result.operation_name = operation_desc.name;
   result.arguments.resize(problem_space.rank());
