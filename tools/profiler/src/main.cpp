@@ -75,57 +75,7 @@ int main(int argc, char const *arg[]) {
   device_context.free();
   std::string operation_name(operation->description().name);
 
-  //profiler->initialize_configuration(options, report, device_context, operation, problem_space, problem);
-  library::GemmDescription const &operation_desc =
-    static_cast<library::GemmDescription const &>(operation->description());
-
-  profiler->problem_.mode = library::GemmUniversalMode::kGemm;
-  profiler->problem_.m = 3456;
-  profiler->problem_.n = 4096;
-  profiler->problem_.k = 4096;
-  profiler->problem_.split_k_mode = library::SplitKMode::kSerial;
-  profiler->problem_.mode = library::GemmUniversalMode::kGemm;
-  profiler->problem_.split_k_slices = 1;
-  profiler->problem_.batch_count = 1;
-  profiler->problem_.raster_order = library::RasterOrder::kHeuristic;
-  cast_from_double(profiler->problem_.alpha, operation_desc.element_epilogue, 1);
-  cast_from_double(profiler->problem_.beta, operation_desc.element_epilogue, 0);
-  profiler->problem_.lda = profiler::DeviceAllocation::get_packed_layout(
-    operation_desc.A.layout, {int(profiler->problem_.m), int(profiler->problem_.k)}).front();
-  profiler->problem_.ldb = profiler::DeviceAllocation::get_packed_layout(
-    operation_desc.B.layout, {int(profiler->problem_.k), int(profiler->problem_.n)}).front();
-  profiler->problem_.ldc = profiler::DeviceAllocation::get_packed_layout(
-    operation_desc.C.layout, {int(profiler->problem_.m), int(profiler->problem_.n)}).front();
-
-  profiler->gemm_workspace_.configuration.mode = profiler->problem_.mode;
-  profiler->gemm_workspace_.configuration.problem_size.m() = int(profiler->problem_.m);
-  profiler->gemm_workspace_.configuration.problem_size.n() = int(profiler->problem_.n);
-  profiler->gemm_workspace_.configuration.problem_size.k() = int(profiler->problem_.k);
-  profiler->gemm_workspace_.configuration.lda = profiler->problem_.lda;
-  profiler->gemm_workspace_.configuration.ldb = profiler->problem_.ldb;
-  profiler->gemm_workspace_.configuration.ldc = profiler->problem_.ldc;
-  profiler->gemm_workspace_.configuration.ldd = profiler->problem_.ldc;
-  profiler->gemm_workspace_.configuration.batch_count = profiler->problem_.split_k_slices;
-  profiler->gemm_workspace_.arguments.A = nullptr;
-  profiler->gemm_workspace_.arguments.B = nullptr;
-  profiler->gemm_workspace_.arguments.C = nullptr;
-  profiler->gemm_workspace_.arguments.D = nullptr;
-  profiler->gemm_workspace_.arguments.alpha = profiler->problem_.alpha.data();
-  profiler->gemm_workspace_.arguments.beta = profiler->problem_.beta.data();
-  profiler->gemm_workspace_.arguments.pointer_mode = library::ScalarPointerMode::kHost;
-  profiler->gemm_workspace_.arguments.raster_order = profiler->problem_.raster_order;
-
-  profiler::PerformanceResult &result = profiler->model_result_;
-  result.provider = library::Provider::kCUTLASS;
-  result.disposition = profiler::Disposition::kNotRun;
-  result.status = Status::kSuccess;
-  result.operation_name = operation_desc.name;
-  result.arguments.resize(problem_space.rank());
-  profiler->set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
-  profiler->set_argument(result, "A", problem_space,
-    std::string(library::to_string(operation_desc.A.element)) + ":" + library::to_string(operation_desc.A.layout));
-  profiler->set_argument(result, "B", problem_space,
-    std::string(library::to_string(operation_desc.B.element)) + ":" + library::to_string(operation_desc.B.layout));
+  profiler->initialize_configuration(options, report, device_context, operation, problem_space, problem);
 
   profiler->initialize_workspace(options, report, device_context, operation, problem_space, problem);
 
