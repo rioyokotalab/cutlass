@@ -63,13 +63,11 @@ public:
   PerformanceResult model_result_;
   PerformanceResultVector results_;
 
-  OperationProfiler();
-
   OperationProfiler(
     library::OperationKind kind, 
     ArgumentDescriptionVector const &arguments = ArgumentDescriptionVector());
 
-  virtual ~OperationProfiler();
+  ~OperationProfiler();
 
   library::OperationKind kind() const { return kind_; }
   std::string const &description() const;
