@@ -83,16 +83,16 @@ GemmOperationProfiler::~GemmOperationProfiler() {}
 /// Total number of bytes loaded
 int64_t GemmOperationProfiler::bytes(library::GemmDescription const &operation_desc) const {
   int64_t bytes =
-    int64_t(library::sizeof_bits(operation_desc.A.element) * m / 8) * k +
-    int64_t(library::sizeof_bits(operation_desc.B.element) * n / 8) * k +
-    int64_t(library::sizeof_bits(operation_desc.C.element) * m / 8) * n;
+    int64_t(library::sizeof_bits(operation_desc.A.element) * problem_.m / 8) * problem_.k +
+    int64_t(library::sizeof_bits(operation_desc.B.element) * problem_.n / 8) * problem_.k +
+    int64_t(library::sizeof_bits(operation_desc.C.element) * problem_.m / 8) * problem_.n;
   bytes *= batch_count;
   return bytes;
 }
 
 /// Total number of flops computed
 int64_t GemmOperationProfiler::flops() const {
-  int64_t flops_ = (int64_t(m) * n * k + m * n) * 2 * batch_count;
+  int64_t flops_ = (problem_.m * problem_.n * problem_.k + problem_.m * problem_.n) * 2 * batch_count;
   return flops_;
 }
 
