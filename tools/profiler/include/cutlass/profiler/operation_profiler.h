@@ -68,8 +68,8 @@ public:
 
   ~OperationProfiler();
 
-  library::OperationKind kind() const { return kind_; }
-  ArgumentDescriptionVector const &arguments() const { return arguments_; }
+  //library::OperationKind kind() const { return kind_; }
+  //ArgumentDescriptionVector const &arguments() const { return arguments_; }
 
   static void set_argument(  
     PerformanceResult &result,
