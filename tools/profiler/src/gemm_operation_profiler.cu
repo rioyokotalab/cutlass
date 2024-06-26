@@ -93,6 +93,9 @@ int64_t GemmOperationProfiler::GemmProblem::bytes(library::GemmDescription const
     int64_t(library::sizeof_bits(operation_desc.B.element) * n / 8) * k +
     int64_t(library::sizeof_bits(operation_desc.C.element) * m / 8) * n;
 
+  printf("%d %d %d\n",library::sizeof_bits(operation_desc.A.element),
+	 library::sizeof_bits(operation_desc.B.element),
+	 library::sizeof_bits(operation_desc.C.element));
   // Set is_beta_zero true if beta is zero
   bool is_beta_zero = std::all_of(beta.begin(), beta.end(), [](uint8_t i) { return i==0; });
 
@@ -362,7 +365,7 @@ bool GemmOperationProfiler::profile( //used
   }
   timer.stop_and_wait();
   results_.back().runtime = timer.duration(iteration);
-  return true;
+  return status;
 }
 
 } // namespace profiler
