@@ -187,8 +187,8 @@ void GemmOperationProfiler::initialize_configuration(
   set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
   set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
   set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
-  result.bytes = bytes(operation_desc);
-  result.flops = flops();
+  result.bytes = GemmOperationProfiler::bytes(operation_desc);
+  result.flops = GemmOperationProfiler::flops();
   result.runtime = 0;
 }
 
@@ -202,7 +202,7 @@ void GemmOperationProfiler::initialize_workspace(
 
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
-  int64_t bytes = bytes(operation_desc);
+  int64_t bytes = GemmOperationProfiler::bytes(operation_desc);
   gemm_workspace_.problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
   int seed_shift = 0;
