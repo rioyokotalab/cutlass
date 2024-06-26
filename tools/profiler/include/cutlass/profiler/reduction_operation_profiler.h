@@ -143,15 +143,6 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  /// Verifies CUTLASS against references
-  virtual bool verify_cutlass(
-    Options const &options,  
-    PerformanceReport &report,
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem);
-
   /// Measures performance results
   virtual bool profile(
     Options const &options, 
