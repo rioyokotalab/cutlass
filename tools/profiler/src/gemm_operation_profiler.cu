@@ -327,27 +327,7 @@ bool GemmOperationProfiler::profile( //used
   gemm_workspace_.arguments.batch_stride_B = gemm_workspace_.B->batch_stride();
   gemm_workspace_.arguments.batch_stride_C = gemm_workspace_.C->batch_stride();
   gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
-  results_.back().status = profile_cutlass_(
-    results_.back().runtime,
-    options,
-    operation,
-    &gemm_workspace_.arguments,
-    gemm_workspace_.host_workspace.data(),
-    gemm_workspace_.device_workspace.data()
-    );
-  return true;
-}
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Method to profile a CUTLASS Operation
-Status GemmOperationProfiler::profile_cutlass_( // used 
-  double &runtime,
-  Options const &options,
-  library::Operation const *operation,
-  void *arguments,
-  void *host_workspace,
-  void *device_workspace) {
   GpuTimer timer;
   library::Operation const * underlying_operation = operation;
   sleep(options.profiling.sleep_duration);
@@ -361,15 +341,14 @@ Status GemmOperationProfiler::profile_cutlass_( // used
     gemm_workspace_.arguments.D = gemm_workspace_.Computed->batch_data(problem_idx);
     status = underlying_operation->run(
       &gemm_workspace_.arguments,
-      host_workspace,
-      device_workspace);
+      gemm_workspace_.host_workspace.data(),
+      gemm_workspace_.device_workspace.data());
   }
 
   timer.start();
   int Iterations = options.profiling.iterations;
   int iteration = 0;
   for (; iteration < Iterations; ++iteration) {
-    printf("it: %d\n",iteration);
     int workspace_idx = options.profiling.warmup_iterations + iteration;
     int problem_idx = (workspace_idx % gemm_workspace_.problem_count) * problem_.batch_count;
     gemm_workspace_.arguments.A = gemm_workspace_.A->batch_data(problem_idx);
@@ -377,18 +356,15 @@ Status GemmOperationProfiler::profile_cutlass_( // used
     gemm_workspace_.arguments.C = gemm_workspace_.C->batch_data(problem_idx);
     gemm_workspace_.arguments.D = gemm_workspace_.Computed->batch_data(problem_idx);
     status = underlying_operation->run(
-      arguments,
-      host_workspace,
-      device_workspace);
+      &gemm_workspace_.arguments,
+      gemm_workspace_.host_workspace.data(),
+      gemm_workspace_.device_workspace.data());
   }
   timer.stop_and_wait();
-  runtime = timer.duration(iteration);
-  return status;
+  results_.back().runtime = timer.duration(iteration);
+  return true;
 }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace profiler
 } // namespace cutlass
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
