@@ -75,10 +75,7 @@ GemmOperationProfiler::GemmOperationProfiler():
       {ArgumentTypeID::kInteger, {"batch_count", "batch-count"}, "Number of GEMMs computed in one batch"},
       {ArgumentTypeID::kEnumerated, {"raster_order", "raster-order"}, "Raster order (heuristic, along_n, along_m)"},
     }
-  ) {
-
-  description_ = "      General matrix-matrix product. D = alpha * A*B + beta * C";
-}
+  ) {}
 
 /// Destructor
 GemmOperationProfiler::~GemmOperationProfiler() {}

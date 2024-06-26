@@ -52,10 +52,6 @@ OperationProfiler::OperationProfiler(
 
 OperationProfiler::~OperationProfiler() {}
 
-std::string const & OperationProfiler::description() const {
-  return description_;
-}
-
 void OperationProfiler::set_argument(
   PerformanceResult &result,
   char const *name,

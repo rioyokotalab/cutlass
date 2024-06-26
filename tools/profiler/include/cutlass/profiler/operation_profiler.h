@@ -58,7 +58,6 @@ class OperationProfiler {
 
 public:
   library::OperationKind kind_;
-  std::string description_;
   ArgumentDescriptionVector arguments_;
   PerformanceResult model_result_;
   PerformanceResultVector results_;
@@ -70,7 +69,6 @@ public:
   ~OperationProfiler();
 
   library::OperationKind kind() const { return kind_; }
-  std::string const &description() const;
   ArgumentDescriptionVector const &arguments() const { return arguments_; }
 
   static void set_argument(  
