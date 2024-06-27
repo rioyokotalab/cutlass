@@ -109,9 +109,9 @@ public:
 
   GemmProblem const& problem() const { return problem_; }
 
-  int64_t bytes(library::GemmDescription const &operation_desc) const;
+  int64_t bytes(library::GemmDescription const &operation_desc, GemmProblem &problem) const;
 
-  int64_t flops() const;
+  int64_t flops(GemmProblem &problem) const;
 
   static void set_argument(  
     PerformanceResult &result,
