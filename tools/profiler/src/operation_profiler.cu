@@ -41,6 +41,7 @@
 #include "cutlass/profiler/gpu_timer.h"
 #include "cutlass/trace.h"
 
+/*
 namespace cutlass {
 namespace profiler {
 
@@ -50,3 +51,4 @@ OperationProfiler::~OperationProfiler() {}
 
 } // namespace profiler
 } // namespace cutlass
+*/

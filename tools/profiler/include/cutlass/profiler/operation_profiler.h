@@ -51,6 +51,7 @@
 #include "problem_space.h"
 #include "debug.h"
 
+/*
 namespace cutlass {
 namespace profiler {
 
@@ -65,3 +66,4 @@ public:
 
 } // namespace profiler
 } // namespace cutlass
+*/
