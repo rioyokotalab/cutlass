@@ -46,32 +46,14 @@
 #include "operation_profiler.h"
 #include "performance_result.h"
 #include "problem_space.h"
-#if CUTLASS_ENABLE_CUDNN
-#endif //#if CUTLASS_ENABLE_CUDNN
 #include "debug.h"
 
-
+/*
 namespace cutlass {
 namespace profiler {
 
 class ReductionOperationProfiler : public OperationProfiler {
 public:
-
-  /*
-  struct ReductionWorkspace {
-    DeviceAllocation *Workspace;
-    DeviceAllocation *Source;
-    DeviceAllocation *Destination;
-    DeviceAllocation *Reference;
-    library::ReductionConfiguration configuration;
-    library::ReductionArguments arguments;
-    std::vector<uint8_t> host_workspace;
-    DeviceAllocation device_workspace;
-
-    ReductionWorkspace(): 
-      Workspace(nullptr), Source(nullptr), Destination(nullptr), Reference(nullptr) { }
-  };
-  */
 
   //MatrixCoord problem_;
   //ReductionWorkspace conv_workspace_;
@@ -82,10 +64,7 @@ public:
 
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace profiler
 } // namespace cutlass
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
+:?
