@@ -41,7 +41,7 @@
 #include <unordered_map>
 
 // CUTLASS Library includes
-#include "cutlass/trace.h"
+//#include "cutlass/trace.h"
 #include "cutlass/library/library.h"
 #include "cutlass/library/util.h"
 #include "cutlass/library/manifest.h"
