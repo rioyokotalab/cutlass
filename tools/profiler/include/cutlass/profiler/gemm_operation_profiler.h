@@ -128,7 +128,6 @@ public:
 
   void initialize_configuration(
     Options const &options,
-    PerformanceReport &report,
     DeviceContext &device_context,
     library::Operation const *operation,
     ProblemSpace const &problem_space,
@@ -136,7 +135,6 @@ public:
 
   void initialize_workspace(
     Options const &options,
-    PerformanceReport &report,
     DeviceContext &device_context,
     library::Operation const *operation,
     ProblemSpace const &problem_space,
@@ -144,7 +142,6 @@ public:
 
   void profile(
     Options const &options,
-    PerformanceReport &report,
     DeviceContext &device_context,
     library::Operation const *operation,
     ProblemSpace const &problem_space,

@@ -95,7 +95,6 @@ void GemmOperationProfiler::set_argument(
 
 void GemmOperationProfiler::initialize_configuration(
   Options const &options,
-  PerformanceReport &report,
   DeviceContext &device_context,
   library::Operation const *operation,
   ProblemSpace const &problem_space,
@@ -190,7 +189,6 @@ void GemmOperationProfiler::initialize_configuration(
 
 void GemmOperationProfiler::initialize_workspace(
   Options const &options,
-  PerformanceReport &report,
   DeviceContext &device_context,
   library::Operation const *operation,
   ProblemSpace const &problem_space,
@@ -282,7 +280,6 @@ void GemmOperationProfiler::initialize_workspace(
 
 void GemmOperationProfiler::profile(
   Options const &options,
-  PerformanceReport &report,
   DeviceContext &device_context,
   library::Operation const *operation,
   ProblemSpace const &problem_space,

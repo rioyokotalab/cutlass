@@ -65,7 +65,6 @@ int main(int argc, char const *arg[]) {
   profiler->arguments_.insert(profiler->arguments_.end(), tile_description_arguments.begin(), tile_description_arguments.end());
   const library::Manifest &manifest = library::Singleton::get().manifest;
   profiler::ProblemSpace problem_space(profiler->arguments_, options.cmdline);
-  profiler::PerformanceReport report(options, problem_space.argument_names(), profiler->kind_);
   profiler::ProblemSpace::Iterator problem_it = problem_space.begin();
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   profiler::ProblemSpace::Problem problem = problem_it.at();
@@ -74,11 +73,11 @@ int main(int argc, char const *arg[]) {
   device_context.free();
   std::string operation_name(operation->description().name);
 
-  profiler->initialize_configuration(options, report, device_context, operation, problem_space, problem);
+  profiler->initialize_configuration(options, device_context, operation, problem_space, problem);
 
-  profiler->initialize_workspace(options, report, device_context, operation, problem_space, problem);
+  profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
 
-  profiler->profile(options, report, device_context, operation, problem_space, problem);
+  profiler->profile(options, device_context, operation, problem_space, problem);
 
   profiler::PerformanceResult result = profiler->results_.front();
   std::cout
