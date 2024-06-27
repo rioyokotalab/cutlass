@@ -48,23 +48,3 @@
 #include "problem_space.h"
 #include "debug.h"
 
-/*
-namespace cutlass {
-namespace profiler {
-
-class ReductionOperationProfiler : public OperationProfiler {
-public:
-
-  //MatrixCoord problem_;
-  //ReductionWorkspace conv_workspace_;
-
-  ReductionOperationProfiler(Options const &options);
-
-  virtual ~ReductionOperationProfiler();
-
-};
-
-
-} // namespace profiler
-} // namespace cutlass
-:?
