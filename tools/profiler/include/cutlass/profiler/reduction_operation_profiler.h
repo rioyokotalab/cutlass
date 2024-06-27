@@ -57,55 +57,29 @@ namespace profiler {
 class ReductionOperationProfiler : public OperationProfiler {
 public:
 
+  /*
   struct ReductionWorkspace {
-
     DeviceAllocation *Workspace;
     DeviceAllocation *Source;
     DeviceAllocation *Destination;
     DeviceAllocation *Reference;
     library::ReductionConfiguration configuration;
     library::ReductionArguments arguments;
-
     std::vector<uint8_t> host_workspace;
-
     DeviceAllocation device_workspace;
 
     ReductionWorkspace(): 
       Workspace(nullptr), Source(nullptr), Destination(nullptr), Reference(nullptr) { }
   };
+  */
 
-  MatrixCoord problem_;
-  ReductionWorkspace conv_workspace_;
+  //MatrixCoord problem_;
+  //ReductionWorkspace conv_workspace_;
 
   ReductionOperationProfiler(Options const &options);
 
   virtual ~ReductionOperationProfiler();
 
-  /*
-  virtual Status initialize_configuration(
-    Options const &options, 
-    PerformanceReport &report, 
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem);
-
-  virtual Status initialize_workspace(
-    Options const &options, 
-    PerformanceReport &report, 
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem);
-
-  virtual bool profile(
-    Options const &options, 
-    PerformanceReport &report, 
-    DeviceContext &device_context,
-    library::Operation const *operation,
-    ProblemSpace const &problem_space,
-    ProblemSpace::Problem const &problem);
-*/  
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
