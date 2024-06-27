@@ -226,10 +226,7 @@ void GemmOperationProfiler::initialize_workspace(
     &gemm_workspace_.configuration,
     gemm_workspace_.host_workspace.data(),
     gemm_workspace_.device_workspace.data());
-  results_.push_back(this->model_result_);
-  //results_.back().provider = library::Provider::kCUTLASS;
-  //results_.back().op_kind = library::OperationKind::kGemm;
-  //results_.back().disposition = Disposition::kNotRun;
+  //results_.push_back(this->model_result_);
 }
 
 void GemmOperationProfiler::profile(

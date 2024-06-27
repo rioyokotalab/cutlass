@@ -84,8 +84,7 @@ int main(int argc, char const *arg[]) {
     static_cast<library::GemmDescription const &>(operation->description());
 
   result.provider = library::Provider::kCUTLASS;
-  result.disposition = profiler::Disposition::kNotRun;
-  result.status = Status::kSuccess;
+  result.op_kind = library::OperationKind::kGemm;
   result.operation_name = operation_desc.name;
   result.arguments.resize(problem_space.rank());
   profiler->set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
