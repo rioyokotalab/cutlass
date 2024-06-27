@@ -42,113 +42,17 @@
 namespace cutlass {
 namespace profiler {
 
-#if defined(__unix__)
-
-#define SHELL_COLOR_BRIGHT()  "\033[1;37m"
-#define SHELL_COLOR_GREEN()   "\033[1;32m"
-#define SHELL_COLOR_RED()     "\033[1;31m"
-#define SHELL_COLOR_END()     "\033[0m"
-
-#else
-
-#define SHELL_COLOR_BRIGHT()  ""
-#define SHELL_COLOR_GREEN()   ""
-#define SHELL_COLOR_RED()     ""
-#define SHELL_COLOR_END()     ""
-
-#endif
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-PerformanceReport::PerformanceReport( //used
+PerformanceReport::PerformanceReport(
   Options const &options,
   std::vector<std::string> const &argument_names,
   library::OperationKind const &op_kind
 ):
-  options_(options), argument_names_(argument_names), good_(true), op_kind_(op_kind) {
-
-  // Strip '.csv' if present
-  std::string base_path = options_.report.output_path;
-  base_path = base_path.substr(0, base_path.rfind(".csv"));
-  op_file_name_ = base_path + "." + to_string(op_kind_) + ".csv";
-
-  base_path = options_.report.junit_output_path;
-  base_path = base_path.substr(0, base_path.rfind(".xml"));
-  base_path = base_path.substr(0, base_path.rfind(".junit"));
-  op_junit_file_name_ = base_path + "." + to_string(op_kind_) + ".junit.xml";
-
-  //
-  // Open output file for operation of PerformanceReport::op_kind
-  //
-  if (!options_.report.output_path.empty()) {
-
-    bool print_header = true;
-
-    if (options_.report.append) {
-
-      std::ifstream test_output_file(op_file_name_);
-      
-      if (test_output_file.is_open()) {
-        print_header = false;
-        test_output_file.close();
-      }
-
-      output_file_.open(op_file_name_, std::ios::app);
-    }
-    else {
-      output_file_.open(op_file_name_);
-    }
-
-    if (!output_file_.good()) {
-
-      std::cerr << "Could not open output file at path '"
-         << options_.report.output_path << "'" << std::endl;
-
-      good_ = false;
-    }
-
-    // if (print_header) {
-    //   print_csv_header_(output_file_) << std::endl;
-    // }
-  }
-
-  if (!options_.report.junit_output_path.empty()) {
-
-    junit_output_file_.open(op_junit_file_name_);
-
-    if (!junit_output_file_.good()) {
-
-      std::cerr << "Could not open junit output file at path '"
-         << options_.report.junit_output_path << "'" << std::endl;
-
-      good_ = false;
-    }
-
-    // print_junit_header_(junit_output_file_);
-  }
-}
-
-void PerformanceReport::append_result(PerformanceResult result) { //used
-  print_result_pretty_(std::cout, result) << std::flush; 
-}
-
-
-
-void PerformanceReport::append_results(PerformanceResultVector const &results) {
-  for (auto const & result : results) {
-    append_result(result);
-  }
-}
+  options_(options), argument_names_(argument_names), good_(true), op_kind_(op_kind) {}
 
 PerformanceReport::~PerformanceReport() {}
 
-/// Prints the result in human readable form
-std::ostream & PerformanceReport::print_result_pretty_( //used
-  std::ostream &out, 
-  PerformanceResult const &result,
-  bool use_shell_coloring) {
-
-  out
+void PerformanceReport::append_result(PerformanceResult result) {
+  std::cout
     << "=============================\n"
     << "        Provider: " << library::to_string(result.provider, true) << "\n"
     << "   OperationKind: " << library::to_string(result.op_kind) << "\n"
@@ -158,21 +62,19 @@ std::ostream & PerformanceReport::print_result_pretty_( //used
   int column_idx = 0;
   for (auto const &arg : result.arguments) {
     if (!arg.second.empty()) {
-      out << " --" << arg.first << "=" << arg.second; 
+      std::cout << " --" << arg.first << "=" << arg.second; 
       column_idx += int(4 + arg.first.size() + arg.second.size());
       if (column_idx > 98) {
-        out << "  \\\n                 ";
+	std::cout << "  \\\n                 ";
         column_idx = 0;
       }
     }
   }
-  out
+  std::cout
     << "\n"
     << "         Runtime: " << result.runtime << "  ms\n"
     << "          Memory: " << result.gbytes_per_sec() << " GiB/s\n"
     << "            Math: " << result.gflops_per_sec() << " GFLOP/s\n";
-
-  return out;
 }
 
 } // namespace profiler
