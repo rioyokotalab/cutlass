@@ -80,8 +80,11 @@ int main(int argc, char const *arg[]) {
   profiler->profile(options, device_context, operation, problem_space, problem);
 
   profiler::PerformanceResult result = profiler->results_.front();
+  library::GemmDescription const &operation_desc =
+    static_cast<library::GemmDescription const &>(operation->description());
+
   result.provider = library::Provider::kCUTLASS;
-  result.disposition = Disposition::kNotRun;
+  result.disposition = profiler::Disposition::kNotRun;
   result.status = Status::kSuccess;
   result.operation_name = operation_desc.name;
   result.arguments.resize(problem_space.rank());
