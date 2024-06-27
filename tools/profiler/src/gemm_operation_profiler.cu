@@ -34,13 +34,8 @@
 #include <ios>
 #include <vector>
 
-#include "cutlass/core_io.h"
-#include "cutlass/profiler/cublas_helpers.h"
 #include "cutlass/profiler/gemm_operation_profiler.h"
 #include "cutlass/profiler/gpu_timer.h"
-#include "cutlass/library/singleton.h"
-#include "cutlass/library/library.h"
-#include "cutlass/library/handle.h"
 
 namespace cutlass {
 namespace profiler {
