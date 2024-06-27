@@ -125,9 +125,9 @@ int main(int argc, char const *arg[]) {
   profiler->set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
   profiler->set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
   profiler->set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
-  result.bytes = profiler->bytes(operation_desc);
-  result.flops = profiler->flops();
-  result.runtime = 0;
+  //result.bytes = profiler->bytes(operation_desc);
+  //result.flops = profiler->flops();
+  //result.runtime = 0;
   std::cout
     << "=============================\n"
     << "        Provider: " << library::to_string(result.provider, true) << "\n"
