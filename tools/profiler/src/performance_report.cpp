@@ -143,21 +143,8 @@ void PerformanceReport::append_result(PerformanceResult result) { //used
 
   result.problem_index = problem_index_;
 
-  if (options_.report.verbose) {
-    std::cout << "\n";
-    print_result_pretty_(std::cout, result) << std::flush; 
-  }
+  print_result_pretty_(std::cout, result) << std::flush; 
 
-  if (junit_output_file_.is_open()) {
-    // print_junit_result_(junit_output_file_, result);
-  }
-
-  if (output_file_.is_open()) {
-    // print_result_csv_(output_file_, result) << std::endl;
-  }
-  else {
-    concatenated_results_.push_back(result);
-  }
 }
 
 

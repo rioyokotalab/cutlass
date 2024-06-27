@@ -49,7 +49,6 @@
 #include "performance_result.h"
 #include "performance_report.h"
 #include "problem_space.h"
-//#include "debug.h"
 
 namespace cutlass {
 namespace profiler {
