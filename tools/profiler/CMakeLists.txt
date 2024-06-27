@@ -35,7 +35,7 @@ cmake_policy(SET CMP0112 NEW)
 set(CUTLASS_TOOLS_PROFILER_SOURCES
   src/main.cpp
   src/options.cu
-  src/performance_report.cpp
+  #src/performance_report.cpp
   src/enumerated_types.cpp
   src/gpu_timer.cpp
   src/device_allocation.cu
