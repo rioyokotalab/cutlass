@@ -41,7 +41,7 @@ set(CUTLASS_TOOLS_PROFILER_SOURCES
   src/device_allocation.cu
   src/device_context.cu
   src/problem_space.cpp
-  src/operation_profiler.cu
+  #src/operation_profiler.cu
   src/gemm_operation_profiler.cu
 )
 
