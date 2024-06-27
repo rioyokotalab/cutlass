@@ -88,45 +88,45 @@ int main(int argc, char const *arg[]) {
   result.status = Status::kSuccess;
   result.operation_name = operation_desc.name;
   result.arguments.resize(problem_space.rank());
-  set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
-  set_argument(result, "A", problem_space,
+  profiler->set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
+  profiler->set_argument(result, "A", problem_space,
     std::string(library::to_string(operation_desc.A.element)) + ":" + library::to_string(operation_desc.A.layout));
-  set_argument(result, "B", problem_space,
+  profiler->set_argument(result, "B", problem_space,
     std::string(library::to_string(operation_desc.B.element)) + ":" + library::to_string(operation_desc.B.layout));
-  set_argument(result, "C", problem_space,
+  profiler->set_argument(result, "C", problem_space,
     std::string(library::to_string(operation_desc.C.element)) + ":" + library::to_string(operation_desc.C.layout));
-  set_argument(result, "D", problem_space,
+  profiler->set_argument(result, "D", problem_space,
     std::string(library::to_string(operation_desc.D.element)) + ":" + library::to_string(operation_desc.D.layout));
-  set_argument(result, "m", problem_space, problem_.m);
-  set_argument(result, "n", problem_space, problem_.n);
-  set_argument(result, "k", problem_space, problem_.k);
-  set_argument(result, "split_k_mode", problem_space, library::to_string(problem_.split_k_mode));
-  set_argument(result, "split_k_slices", problem_space, problem_.split_k_slices);
-  set_argument(result, "batch_count", problem_space, problem_.batch_count);
-  set_argument(result, "raster_order", problem_space, library::to_string(problem_.raster_order));
-  set_argument(result, "alpha", problem_space,
-    library::lexical_cast(problem_.alpha, operation_desc.element_epilogue));
-  set_argument(result, "beta", problem_space,
-    library::lexical_cast(problem_.beta, operation_desc.element_epilogue));
-  set_argument(result, "op_class", problem_space, library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
-  set_argument(result, "accum", problem_space, library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
-  set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
-  set_argument(result, "cta_n", problem_space, operation_desc.tile_description.threadblock_shape.n());
-  set_argument(result, "cta_k", problem_space, operation_desc.tile_description.threadblock_shape.k());
-  set_argument(result, "cluster_m", problem_space, operation_desc.tile_description.cluster_shape.m());
-  set_argument(result, "cluster_n", problem_space, operation_desc.tile_description.cluster_shape.n());
-  set_argument(result, "cluster_k", problem_space, operation_desc.tile_description.cluster_shape.k());
-  set_argument(result, "stages", problem_space, operation_desc.tile_description.threadblock_stages);
-  set_argument(result, "warps_m", problem_space, operation_desc.tile_description.warp_count.m());
-  set_argument(result, "warps_n", problem_space, operation_desc.tile_description.warp_count.n());
-  set_argument(result, "warps_k", problem_space, operation_desc.tile_description.warp_count.k());
-  set_argument(result, "inst_m", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.m());
-  set_argument(result, "inst_n", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.n());
-  set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
-  set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
-  set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
-  result.bytes = GemmOperationProfiler::bytes(operation_desc);
-  result.flops = GemmOperationProfiler::flops();
+  profiler->set_argument(result, "m", problem_space, problem.m);
+  profiler->set_argument(result, "n", problem_space, problem.n);
+  profiler->set_argument(result, "k", problem_space, problem.k);
+  profiler->set_argument(result, "split_k_mode", problem_space, library::to_string(problem.split_k_mode));
+  profiler->set_argument(result, "split_k_slices", problem_space, problem.split_k_slices);
+  profiler->set_argument(result, "batch_count", problem_space, problem.batch_count);
+  profiler->set_argument(result, "raster_order", problem_space, library::to_string(problem.raster_order));
+  profiler->set_argument(result, "alpha", problem_space,
+    library::lexical_cast(problem.alpha, operation_desc.element_epilogue));
+  profiler->set_argument(result, "beta", problem_space,
+    library::lexical_cast(problem.beta, operation_desc.element_epilogue));
+  profiler->set_argument(result, "op_class", problem_space, library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
+  profiler->set_argument(result, "accum", problem_space, library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
+  profiler->set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
+  profiler->set_argument(result, "cta_n", problem_space, operation_desc.tile_description.threadblock_shape.n());
+  profiler->set_argument(result, "cta_k", problem_space, operation_desc.tile_description.threadblock_shape.k());
+  profiler->set_argument(result, "cluster_m", problem_space, operation_desc.tile_description.cluster_shape.m());
+  profiler->set_argument(result, "cluster_n", problem_space, operation_desc.tile_description.cluster_shape.n());
+  profiler->set_argument(result, "cluster_k", problem_space, operation_desc.tile_description.cluster_shape.k());
+  profiler->set_argument(result, "stages", problem_space, operation_desc.tile_description.threadblock_stages);
+  profiler->set_argument(result, "warps_m", problem_space, operation_desc.tile_description.warp_count.m());
+  profiler->set_argument(result, "warps_n", problem_space, operation_desc.tile_description.warp_count.n());
+  profiler->set_argument(result, "warps_k", problem_space, operation_desc.tile_description.warp_count.k());
+  profiler->set_argument(result, "inst_m", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.m());
+  profiler->set_argument(result, "inst_n", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.n());
+  profiler->set_argument(result, "inst_k", problem_space, operation_desc.tile_description.math_instruction.instruction_shape.k());
+  profiler->set_argument(result, "min_cc", problem_space, operation_desc.tile_description.minimum_compute_capability);
+  profiler->set_argument(result, "max_cc", problem_space, operation_desc.tile_description.maximum_compute_capability);
+  result.bytes = profiler->bytes(operation_desc);
+  result.flops = profiler->flops();
   result.runtime = 0;
   std::cout
     << "=============================\n"
