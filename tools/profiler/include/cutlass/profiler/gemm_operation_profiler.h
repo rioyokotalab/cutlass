@@ -106,9 +106,7 @@ public:
   PerformanceResultVector results_;
   library::Operation const *reduction_op_;
 
-  GemmOperationProfiler(
-    library::OperationKind kind, 
-    ArgumentDescriptionVector const &arguments = ArgumentDescriptionVector());
+  GemmOperationProfiler();
 
   ~GemmOperationProfiler();
 
