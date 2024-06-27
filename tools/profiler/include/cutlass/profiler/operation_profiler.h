@@ -57,13 +57,8 @@ namespace profiler {
 class OperationProfiler {
 
 public:
-  library::OperationKind kind_;
-  ArgumentDescriptionVector arguments_;
 
-  OperationProfiler(
-    library::OperationKind kind, 
-    ArgumentDescriptionVector const &arguments = ArgumentDescriptionVector());
-
+  OperationProfiler();
   ~OperationProfiler();
 
 };

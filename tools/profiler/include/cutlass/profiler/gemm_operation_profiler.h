@@ -51,7 +51,6 @@
 #include "operation_profiler.h"
 #include "performance_result.h"
 #include "problem_space.h"
-//#include "reduction_operation_profiler.h"
 
 namespace cutlass {
 namespace profiler {
@@ -101,11 +100,15 @@ public:
   GemmProblem problem_;
   GemmWorkspace gemm_workspace_;
 
+  library::OperationKind kind_;
+  ArgumentDescriptionVector arguments_;
   PerformanceResult model_result_;
   PerformanceResultVector results_;
   library::Operation const *reduction_op_;
 
-  GemmOperationProfiler();
+  GemmOperationProfiler(
+    library::OperationKind kind, 
+    ArgumentDescriptionVector const &arguments = ArgumentDescriptionVector());
 
   ~GemmOperationProfiler();
 

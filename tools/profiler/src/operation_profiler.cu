@@ -44,12 +44,7 @@
 namespace cutlass {
 namespace profiler {
 
-OperationProfiler::OperationProfiler(
-  library::OperationKind kind,
-  ArgumentDescriptionVector const &arguments
-):
-  kind_(kind), arguments_(arguments) {}
-
+OperationProfiler::OperationProfiler() {}
 OperationProfiler::~OperationProfiler() {}
 
 
