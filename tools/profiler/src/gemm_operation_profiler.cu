@@ -63,18 +63,18 @@ GemmOperationProfiler::GemmOperationProfiler():
 
 GemmOperationProfiler::~GemmOperationProfiler() {}
 
-int64_t GemmOperationProfiler::bytes(library::GemmDescription const &operation_desc) const {
+int64_t GemmOperationProfiler::bytes(library::GemmDescription const &operation_desc, GemmProblem &problem) const {
   int64_t bytes =
-    int64_t(library::sizeof_bits(operation_desc.A.element) * problem_.m / 8) * problem_.k +
-    int64_t(library::sizeof_bits(operation_desc.B.element) * problem_.n / 8) * problem_.k +
-    int64_t(library::sizeof_bits(operation_desc.C.element) * problem_.m / 8) * problem_.n;
-  bytes *= problem_.batch_count;
+    int64_t(library::sizeof_bits(operation_desc.A.element) * problem.m / 8) * problem.k +
+    int64_t(library::sizeof_bits(operation_desc.B.element) * problem.n / 8) * problem.k +
+    int64_t(library::sizeof_bits(operation_desc.C.element) * problem.m / 8) * problem.n;
+  bytes *= problem.batch_count;
   return bytes;
 }
 
-int64_t GemmOperationProfiler::flops() const {
-  int64_t flops_ = (problem_.m * problem_.n * problem_.k + problem_.m * problem_.n) * 2 * problem_.batch_count;
-  return flops_;
+int64_t GemmOperationProfiler::flops(GemmProblem &problem) const {
+  int64_t flops = (problem.m * problem.n * problem.k + problem.m * problem.n) * 2 * problem.batch_count;
+  return flops;
 }
 
 void GemmOperationProfiler::set_argument(
@@ -150,7 +150,7 @@ void GemmOperationProfiler::initialize_workspace(
 
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
-  int64_t bytes = GemmOperationProfiler::bytes(operation_desc);
+  int64_t bytes = GemmOperationProfiler::bytes(operation_desc, problem_);
   gemm_workspace_.problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
   int seed_shift = 0;
