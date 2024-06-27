@@ -69,7 +69,6 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Iterator problem_it = problem_space.begin();
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   profiler::ProblemSpace::Problem problem = problem_it.at();
-  report.next_problem();
   auto operation_ptr = manifest.begin();
   library::Operation const *operation = operation_ptr->get();
   device_context.free();

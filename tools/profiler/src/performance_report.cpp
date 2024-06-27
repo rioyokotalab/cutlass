@@ -28,9 +28,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  **************************************************************************************************/
-/* \file
-   \brief Execution environment
-*/
 
 #include <iostream>
 #include <stdexcept>
@@ -39,9 +36,6 @@
 #include <cstring>
 
 #include "cutlass/library/util.h"
-
-#include "cutlass/library/util.h"
-
 #include "cutlass/profiler/performance_report.h"
 #include "cutlass/profiler/debug.h"
 namespace cutlass {
@@ -72,7 +66,7 @@ PerformanceReport::PerformanceReport( //used
   std::vector<std::string> const &argument_names,
   library::OperationKind const &op_kind
 ):
-  options_(options), argument_names_(argument_names), problem_index_(0), good_(true), op_kind_(op_kind) {
+  options_(options), argument_names_(argument_names), good_(true), op_kind_(op_kind) {
 
   // Strip '.csv' if present
   std::string base_path = options_.report.output_path;
@@ -135,16 +129,8 @@ PerformanceReport::PerformanceReport( //used
   }
 }
 
-void PerformanceReport::next_problem() { //used
-  ++problem_index_;
-}
-
 void PerformanceReport::append_result(PerformanceResult result) { //used
-
-  result.problem_index = problem_index_;
-
   print_result_pretty_(std::cout, result) << std::flush; 
-
 }
 
 
@@ -180,20 +166,7 @@ std::ostream & PerformanceReport::print_result_pretty_( //used
   PerformanceResult const &result,
   bool use_shell_coloring) {
 
-  out << "=============================\n"
-    << "  Problem ID: " << result.problem_index << "\n";
-
-  if (!options_.report.pivot_tags.empty()) {
-
-    out << "        Tags: ";
-
-    int column_idx = 0;
-    for (auto const & tag : options_.report.pivot_tags) {
-      out << (column_idx++ ? "," : "") << tag.first << ":" << tag.second;
-    } 
-
-    out << "\n";
-  }
+  out << "=============================\n";
 
   std::string shell_color_bright = use_shell_coloring ? SHELL_COLOR_BRIGHT() : "";
   std::string shell_color_end = use_shell_coloring ? SHELL_COLOR_END() : "";
@@ -252,32 +225,6 @@ std::ostream & PerformanceReport::print_result_pretty_( //used
 
   return out;
 }
-
-
-// namespace {
-//
-//   std::string escape_xml_special_chars(const std::string& src) {
-//     std::stringstream dst;
-//     for (char ch : src) {
-//       switch (ch) {
-//       case '&': dst << "&amp;"; break;
-//       case '\'': dst << "&apos;"; break;
-//       case '"': dst << "&quot;"; break;
-//       case '<': dst << "&lt;"; break;
-//       case '>': dst << "&gt;"; break;
-//       default: dst << ch; break;
-//       }
-//     }
-//     return dst.str();
-//   }
-//
-//   template<typename T>
-//   std::ostream & print_junit_result_property_(std::ostream & os, const std::string & name, const T & property) {
-//     return os << "    <property name=\"" << name << "\" value=\"" << property << "\" />" << std::endl;
-//   }
-// }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace profiler
 } // namespace cutlass
