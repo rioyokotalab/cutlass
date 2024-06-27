@@ -55,7 +55,7 @@
 namespace cutlass {
 namespace profiler {
 
-class GemmOperationProfiler : public OperationProfiler {
+class GemmOperationProfiler {
 public:
 
   struct GemmProblem {
