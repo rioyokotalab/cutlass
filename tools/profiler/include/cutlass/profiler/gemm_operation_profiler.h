@@ -42,7 +42,6 @@
 
 // CUTLASS Library includes
 #include "cutlass/library/library.h"
-//#include "cutlass/library/manifest.h"
 
 // Profiler includes
 #include "options.h"
@@ -50,7 +49,7 @@
 #include "performance_result.h"
 #include "performance_report.h"
 #include "problem_space.h"
-#include "debug.h"
+//#include "debug.h"
 
 namespace cutlass {
 namespace profiler {
