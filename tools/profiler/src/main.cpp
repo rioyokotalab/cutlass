@@ -97,17 +97,17 @@ int main(int argc, char const *arg[]) {
     std::string(library::to_string(operation_desc.C.element)) + ":" + library::to_string(operation_desc.C.layout));
   profiler->set_argument(result, "D", problem_space,
     std::string(library::to_string(operation_desc.D.element)) + ":" + library::to_string(operation_desc.D.layout));
-  profiler->set_argument(result, "m", problem_space, problem.m);
-  profiler->set_argument(result, "n", problem_space, problem.n);
-  profiler->set_argument(result, "k", problem_space, problem.k);
-  profiler->set_argument(result, "split_k_mode", problem_space, library::to_string(problem.split_k_mode));
-  profiler->set_argument(result, "split_k_slices", problem_space, problem.split_k_slices);
-  profiler->set_argument(result, "batch_count", problem_space, problem.batch_count);
-  profiler->set_argument(result, "raster_order", problem_space, library::to_string(problem.raster_order));
+  profiler->set_argument(result, "m", problem_space, profiler->problem_.m);
+  profiler->set_argument(result, "n", problem_space, profiler->problem_.n);
+  profiler->set_argument(result, "k", problem_space, profiler->problem_.k);
+  profiler->set_argument(result, "split_k_mode", problem_space, library::to_string(profiler->problem_.split_k_mode));
+  profiler->set_argument(result, "split_k_slices", problem_space, profiler->problem_.split_k_slices);
+  profiler->set_argument(result, "batch_count", problem_space, profiler->problem_.batch_count);
+  profiler->set_argument(result, "raster_order", problem_space, library::to_string(profiler->problem_.raster_order));
   profiler->set_argument(result, "alpha", problem_space,
-    library::lexical_cast(problem.alpha, operation_desc.element_epilogue));
+    library::lexical_cast(profiler->problem_.alpha, operation_desc.element_epilogue));
   profiler->set_argument(result, "beta", problem_space,
-    library::lexical_cast(problem.beta, operation_desc.element_epilogue));
+    library::lexical_cast(profiler->problem_.beta, operation_desc.element_epilogue));
   profiler->set_argument(result, "op_class", problem_space, library::to_string(operation_desc.tile_description.math_instruction.opcode_class));
   profiler->set_argument(result, "accum", problem_space, library::to_string(operation_desc.tile_description.math_instruction.element_accumulator));
   profiler->set_argument(result, "cta_m", problem_space, operation_desc.tile_description.threadblock_shape.m());
