@@ -39,31 +39,4 @@
 #include <memory>
 #include <unordered_map>
 
-#include "cutlass/trace.h"
-#include "cutlass/library/library.h"
-#include "cutlass/library/util.h"
-#include "cutlass/library/manifest.h"
 
-#include "options.h"
-#include "device_context.h"
-#include "performance_result.h"
-#include "performance_report.h"
-#include "problem_space.h"
-#include "debug.h"
-
-/*
-namespace cutlass {
-namespace profiler {
-
-class OperationProfiler {
-
-public:
-
-  OperationProfiler();
-  ~OperationProfiler();
-
-};
-
-} // namespace profiler
-} // namespace cutlass
-*/

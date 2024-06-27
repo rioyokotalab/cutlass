@@ -41,6 +41,7 @@
 #include <unordered_map>
 
 // CUTLASS Library includes
+#include "cutlass/trace.h"
 #include "cutlass/library/library.h"
 #include "cutlass/library/util.h"
 #include "cutlass/library/manifest.h"
@@ -50,7 +51,9 @@
 #include "device_context.h"
 //#include "operation_profiler.h"
 #include "performance_result.h"
+#include "performance_report.h"
 #include "problem_space.h"
+#include "debug.h"
 
 namespace cutlass {
 namespace profiler {
