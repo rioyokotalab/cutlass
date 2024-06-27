@@ -80,7 +80,30 @@ int main(int argc, char const *arg[]) {
 
   profiler->profile(options, report, device_context, operation, problem_space, problem);
 
-  report.append_result(profiler->results_.front());
+  profiler::PerformanceResult result = profiler->results_.front();
+  std::cout
+    << "=============================\n"
+    << "        Provider: " << library::to_string(result.provider, true) << "\n"
+    << "   OperationKind: " << library::to_string(result.op_kind) << "\n"
+    << "       Operation: " << result.operation_name << "\n\n"
+    << "       Arguments:";
+
+  int column_idx = 0;
+  for (auto const &arg : result.arguments) {
+    if (!arg.second.empty()) {
+      std::cout << " --" << arg.first << "=" << arg.second;
+      column_idx += int(4 + arg.first.size() + arg.second.size());
+      if (column_idx > 98) {
+        std::cout << "  \\\n                 ";
+        column_idx = 0;
+      }
+    }
+  }
+  std::cout
+    << "\n"
+    << "         Runtime: " << result.runtime << "  ms\n"
+    << "          Memory: " << result.gbytes_per_sec() << " GiB/s\n"
+    << "            Math: " << result.gflops_per_sec() << " GFLOP/s\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
