@@ -38,10 +38,9 @@
 #include "cutlass/library/util.h"
 #include "cutlass/profiler/performance_report.h"
 #include "cutlass/profiler/debug.h"
+
 namespace cutlass {
 namespace profiler {
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 #if defined(__unix__)
 
@@ -135,13 +134,7 @@ void PerformanceReport::append_result(PerformanceResult result) { //used
 
 
 
-void PerformanceReport::append_results(PerformanceResultVector const &results) {//used important part of output
-
-  if (options_.report.verbose) {
-    std::cout << "\n\n";
-  }
-
-  // For each result
+void PerformanceReport::append_results(PerformanceResultVector const &results) {
   for (auto const & result : results) {
     append_result(result);
   }
@@ -149,52 +142,18 @@ void PerformanceReport::append_results(PerformanceResultVector const &results) {
 
 PerformanceReport::~PerformanceReport() {}
 
-static const char *disposition_status_color(Disposition disposition) {//used
-  switch (disposition) {
-    case Disposition::kPassed: return SHELL_COLOR_GREEN();
-    case Disposition::kIncorrect: return SHELL_COLOR_RED();
-    case Disposition::kFailed: return SHELL_COLOR_RED();
-    default:
-    break;
-  }
-  return SHELL_COLOR_END();
-}
-
 /// Prints the result in human readable form
 std::ostream & PerformanceReport::print_result_pretty_( //used
   std::ostream &out, 
   PerformanceResult const &result,
   bool use_shell_coloring) {
 
-  out << "=============================\n";
-
-  std::string shell_color_bright = use_shell_coloring ? SHELL_COLOR_BRIGHT() : "";
-  std::string shell_color_end = use_shell_coloring ? SHELL_COLOR_END() : "";
-  auto _disposition_status_color = [&](Disposition d) -> const char * { 
-    return use_shell_coloring ? disposition_status_color(d) : "";
-  };
-
   out
-    << "\n"
-    << "        Provider: " << shell_color_bright << library::to_string(result.provider, true) << shell_color_end << "\n"
-    << "   OperationKind: " << shell_color_bright << library::to_string(result.op_kind) << shell_color_end << "\n"
+    << "=============================\n"
+    << "        Provider: " << library::to_string(result.provider, true) << "\n"
+    << "   OperationKind: " << library::to_string(result.op_kind) << "\n"
     << "       Operation: " << result.operation_name << "\n\n"
-    << "          Status: " << shell_color_bright << library::to_string(result.status, true) << shell_color_end << "\n"
-    << "    Verification: " << shell_color_bright << (options_.verification.enabled ? "ON":"OFF") << shell_color_end << "\n"
-    << "     Disposition: " << _disposition_status_color(result.disposition) << to_string(result.disposition, true) << shell_color_end << "\n\n";
-
-  // Display individual verification results for each verification-provider
-  if (options_.verification.enabled) {
-
-    static int const indent_spaces = 16;
-
-    for(auto & m : result.verification_map) {
-      out  << std::right << std::setw(indent_spaces) << library::to_string(m.first, true) << ": " << to_string(m.second, true) << "\n";  
-    }
-  }
-
-  out
-    << "\n       Arguments:";
+    << "       Arguments:";
 
   int column_idx = 0;
   for (auto const &arg : result.arguments) {
@@ -207,21 +166,11 @@ std::ostream & PerformanceReport::print_result_pretty_( //used
       }
     }
   }
-  out << "\n\n";
-
-  out 
-    << "           Bytes: " << result.bytes << "  bytes\n"
-    << "           FLOPs: " << result.flops << "  flops\n"
-    << "           FLOPs/Byte: " << (result.flops / result.bytes) << "\n\n";
-
-  if (result.good()) {
-
-    out
-      << "         Runtime: " << result.runtime << "  ms\n"
-      << "          Memory: " << result.gbytes_per_sec() << " GiB/s\n"
-      << "\n            Math: " << result.gflops_per_sec() << " GFLOP/s\n";
-
-  }
+  out
+    << "\n"
+    << "         Runtime: " << result.runtime << "  ms\n"
+    << "          Memory: " << result.gbytes_per_sec() << " GiB/s\n"
+    << "            Math: " << result.gflops_per_sec() << " GFLOP/s\n";
 
   return out;
 }
