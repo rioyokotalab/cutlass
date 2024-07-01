@@ -77,7 +77,7 @@ int main(int argc, char const *arg[]) {
 
   profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
 
-  profiler->profile(options, device_context, operation, problem_space, problem);
+  double runtime = profiler->profile(options, device_context, operation, problem_space, problem);
 
   profiler::PerformanceResult result = profiler->results_.front();
   library::GemmDescription const &operation_desc =
@@ -121,11 +121,11 @@ int main(int argc, char const *arg[]) {
   std::cout << " --min_cc=" << operation_desc.tile_description.minimum_compute_capability;
   std::cout << " --max_cc=" << operation_desc.tile_description.maximum_compute_capability;
   std::cout << "  \\\n                 ";
-  result.bytes = profiler->bytes(operation_desc, profiler->problem_);
-  result.flops = profiler->flops(profiler->problem_);
+  double bytes = profiler->bytes(operation_desc, profiler->problem_);
+  double flops = profiler->flops(profiler->problem_);
   std::cout
     << "\n"
-    << "         Runtime: " << result.runtime << "  ms\n"
-    << "          Memory: " << result.gbytes_per_sec() << " GiB/s\n"
-    << "            Math: " << result.gflops_per_sec() << " GFLOP/s\n";
+    << "         Runtime: " << runtime << "  ms\n"
+    << "          Memory: " << bytes / double(1 << 30) / runtime * 1000.0 << " GiB/s\n"
+    << "            Math: " << flops / runtime / 1.0e6 << " GFLOP/s\n";
 }

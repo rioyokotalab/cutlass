@@ -229,7 +229,7 @@ void GemmOperationProfiler::initialize_workspace(
   results_.push_back(this->model_result_);
 }
 
-void GemmOperationProfiler::profile(
+double GemmOperationProfiler::profile(
   Options const &options,
   DeviceContext &device_context,
   library::Operation const *operation,
@@ -277,7 +277,7 @@ void GemmOperationProfiler::profile(
       gemm_workspace_.device_workspace.data());
   }
   timer.stop_and_wait();
-  results_.back().runtime = timer.duration(iteration);
+  return timer.duration(iteration);
 }
 
 } // namespace profiler

@@ -139,7 +139,7 @@ public:
     ProblemSpace const &problem_space,
     ProblemSpace::Problem const &problem);
 
-  void profile(
+  double profile(
     Options const &options,
     DeviceContext &device_context,
     library::Operation const *operation,
