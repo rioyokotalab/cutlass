@@ -89,10 +89,10 @@ int main(int argc, char const *arg[]) {
   std::cout << " --m=" << profiler->problem_.m;
   std::cout << " --n=" << profiler->problem_.n;
   std::cout << " --k=" << profiler->problem_.k;
-  std::cout << " --A=" << std::string(library::to_string(operation_desc.A.element)) + ":" + library::to_string(operation_desc.A.layout);
-  std::cout << " --B=" << std::string(library::to_string(operation_desc.B.element)) + ":" + library::to_string(operation_desc.B.layout);
-  std::cout << " --C=" << std::string(library::to_string(operation_desc.C.element)) + ":" + library::to_string(operation_desc.C.layout);
-  std::cout << " --D=" << std::string(library::to_string(operation_desc.D.element)) + ":" + library::to_string(operation_desc.D.layout);
+  std::cout << " --A=" << library::to_string(operation_desc.A.element) << ":" << library::to_string(operation_desc.A.layout);
+  std::cout << " --B=" << library::to_string(operation_desc.B.element) << ":" << library::to_string(operation_desc.B.layout);
+  std::cout << " --C=" << library::to_string(operation_desc.C.element) << ":" << library::to_string(operation_desc.C.layout);
+  std::cout << " --D=" << library::to_string(operation_desc.D.element) << ":" << library::to_string(operation_desc.D.layout);
   std::cout << "  \\\n                 ";
   std::cout << " --alpha=" << library::lexical_cast(profiler->problem_.alpha, operation_desc.element_epilogue);
   std::cout << " --beta=" << library::lexical_cast(profiler->problem_.beta, operation_desc.element_epilogue);
