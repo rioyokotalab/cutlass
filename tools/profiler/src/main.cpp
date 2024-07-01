@@ -83,11 +83,6 @@ int main(int argc, char const *arg[]) {
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
 
-  result.op_kind = library::OperationKind::kGemm;
-  result.provider = library::Provider::kCUTLASS;
-  result.disposition = profiler::Disposition::kNotRun;
-  result.status = Status::kSuccess;
-  result.operation_name = operation_desc.name;
   result.arguments.resize(problem_space.rank());
   profiler->set_argument(result, "gemm_kind", problem_space, library::to_string(operation_desc.gemm_kind));
   profiler->set_argument(result, "A", problem_space,
@@ -130,11 +125,7 @@ int main(int argc, char const *arg[]) {
   result.flops = profiler->flops(profiler->problem_);
   std::cout
     << "=============================\n"
-    << "        Provider: " << library::to_string(result.provider, true) << "\n"
-    << "   OperationKind: " << library::to_string(result.op_kind) << "\n"
-    << "       Operation: " << result.operation_name << "\n\n"
     << "       Arguments:";
-
   int column_idx = 0;
   for (auto const &arg : result.arguments) {
     if (!arg.second.empty()) {
