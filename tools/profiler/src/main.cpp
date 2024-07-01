@@ -73,7 +73,7 @@ int main(int argc, char const *arg[]) {
   device_context.free();
   std::string operation_name(operation->description().name);
 
-  profiler->initialize_configuration(options, device_context, operation, problem_space, problem);
+  profiler->initialize_configuration(device_context, operation, problem_space, problem);
 
   profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
 

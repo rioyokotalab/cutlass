@@ -78,7 +78,6 @@ int64_t GemmOperationProfiler::flops(GemmProblem &problem) const {
 }
 
 void GemmOperationProfiler::initialize_configuration(
-  Options const &options,
   DeviceContext &device_context,
   library::Operation const *operation,
   ProblemSpace const &problem_space,
@@ -122,7 +121,6 @@ void GemmOperationProfiler::initialize_configuration(
   gemm_workspace_.arguments.beta = problem_.beta.data();
   gemm_workspace_.arguments.pointer_mode = library::ScalarPointerMode::kHost;
   gemm_workspace_.arguments.raster_order = problem_.raster_order;
-
 }
 
 void GemmOperationProfiler::initialize_workspace(

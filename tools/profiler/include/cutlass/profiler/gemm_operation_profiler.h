@@ -110,7 +110,6 @@ public:
   GemmProblem const& problem() const { return problem_; }
 
   void initialize_configuration(
-    Options const &options,
     DeviceContext &device_context,
     library::Operation const *operation,
     ProblemSpace const &problem_space,
