@@ -46,7 +46,6 @@
 // Profiler includes
 #include "options.h"
 #include "device_context.h"
-#include "performance_result.h"
 #include "problem_space.h"
 
 namespace cutlass {
@@ -73,7 +72,6 @@ public:
     std::vector<uint8_t> beta_zero;
 
     void initialize_result(
-      PerformanceResult &result,
       library::GemmDescription const &operation_desc,
       ProblemSpace const &problem_space);
   };
@@ -99,31 +97,17 @@ public:
 
   library::OperationKind kind_;
   ArgumentDescriptionVector arguments_;
-  PerformanceResult model_result_;
-  PerformanceResultVector results_;
   library::Operation const *reduction_op_;
 
   GemmOperationProfiler();
 
   ~GemmOperationProfiler();
 
-  GemmProblem const& problem() const { return problem_; }
-
   int64_t bytes(library::GemmDescription const &operation_desc, GemmProblem &problem) const;
 
   int64_t flops(GemmProblem &problem) const;
 
-  static void set_argument(  
-    PerformanceResult &result,
-    char const *name,
-    ProblemSpace const &problem_space,
-    std::string const &value);
-
-  static void set_argument(  
-    PerformanceResult &result,
-    char const *name,
-    ProblemSpace const &problem_space,
-    int64_t value);
+  GemmProblem const& problem() const { return problem_; }
 
   void initialize_configuration(
     Options const &options,

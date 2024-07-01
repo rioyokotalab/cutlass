@@ -44,7 +44,6 @@
 #include "options.h"
 #include "device_context.h"
 #include "operation_profiler.h"
-#include "performance_result.h"
 #include "problem_space.h"
 #include "debug.h"
 

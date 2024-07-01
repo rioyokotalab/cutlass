@@ -79,7 +79,6 @@ int main(int argc, char const *arg[]) {
 
   double runtime = profiler->profile(options, device_context, operation, problem_space, problem);
 
-  profiler::PerformanceResult result = profiler->results_.front();
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
 

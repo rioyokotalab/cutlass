@@ -77,22 +77,6 @@ int64_t GemmOperationProfiler::flops(GemmProblem &problem) const {
   return flops;
 }
 
-void GemmOperationProfiler::set_argument(
-  PerformanceResult &result,
-  char const *name,
-  ProblemSpace const &problem_space,
-  std::string const &value) {
-  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), value);
-}
-
-void GemmOperationProfiler::set_argument(
-  PerformanceResult &result,
-  char const *name,
-  ProblemSpace const &problem_space,
-  int64_t value) {
-  result.arguments.at(problem_space.argument_index(name)) = make_pair(std::string(name), library::lexical_cast(value));
-}
-
 void GemmOperationProfiler::initialize_configuration(
   Options const &options,
   DeviceContext &device_context,
@@ -226,7 +210,6 @@ void GemmOperationProfiler::initialize_workspace(
     &gemm_workspace_.configuration,
     gemm_workspace_.host_workspace.data(),
     gemm_workspace_.device_workspace.data());
-  results_.push_back(this->model_result_);
 }
 
 double GemmOperationProfiler::profile(
