@@ -82,88 +82,10 @@ DeviceAllocation *DeviceContext::allocate_tensor( //used
   DeviceAllocation *allocation = 
     allocate_tensor(name, type, layout_id, extent, stride, batch_count);
 
-  if (options.initialization.enabled) { // todo:print the value and replace here
+  if (options.initialization.enabled) { // print the value and replace here
     Distribution data_distribution = options.initialization.data_distribution; 
- // std::cout << options.initialization.fix_data_distribution << std::endl;
-    //fix_data_distribution = 0
-    // check if data distribution is allowed to change
     data_distribution.set_uniform(-3, 3, 0);
-    // if(!options.initialization.fix_data_distribution) {
-    //   // change data distribution based on bit width
-    //   switch(type) {
-    //     // case library::NumericTypeID::kFE4M3: //unused
-    //     //   data_distribution.set_uniform(-1, 1, 0);
-    //     //   break;
-    //     // case library::NumericTypeID::kFE5M2://unused
-    //     //   data_distribution.set_uniform(-1, 1, 0);
-    //     //   break;
-    //     case library::NumericTypeID::kF16: //used
-    //       data_distribution.set_uniform(-3, 3, 0);
-    //       break;
-    //     // case library::NumericTypeID::kB1:
-    //     //   data_distribution.set_uniform(0, 1, 0);
-    //     //   break;
-    //     // case library::NumericTypeID::kS2:
-    //     //   data_distribution.set_uniform(-1, 1, 0);
-    //     //   break;
-    //     // case library::NumericTypeID::kS4:
-    //     //   data_distribution.set_uniform(-2, 2, 0);
-    //     //   break;
-    //     // case library::NumericTypeID::kU2:
-    //     //   data_distribution.set_uniform(0, 2, 0);
-    //     //   break;
-    //     // case library::NumericTypeID::kU4:
-    //     //   data_distribution.set_uniform(0, 2, 0);
-    //     //   break;
-    //     // case library::NumericTypeID::kS8:
-    //     //   data_distribution.set_uniform(-3, 3, 0);
-    //     //   break;
-    //     // case library::NumericTypeID::kU8: //unused
-    //     //   data_distribution.set_uniform(0, 4, 0);
-    //     //   break;
-    //     default: break;
-    //   }
-    // }
 
-    // Override pnz for the A/B/C tensors if overridden for Gaussian distributions
-    // if (data_distribution.kind == Distribution::Gaussian) {
-    //   double mean = data_distribution.gaussian.mean;
-    //   double stddev = data_distribution.gaussian.stddev;
-    //   int scale = data_distribution.int_scale;
-    //   printf("used");
-    //   if (name == "A" && data_distribution.gaussian.pnzA != 100.0) {
-    //     data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzA);
-    //   }
-    //   else if (name == "B" && data_distribution.gaussian.pnzB != 100.0) {
-    //     data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzB);
-    //   }
-    //   else if (name == "C" && data_distribution.gaussian.pnzC != 100.0) {
-    //     data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzC);
-    //   }
-    // }
-
-    // if (options.initialization.provider == library::Provider::kReferenceDevice) {
-    //   // if (data_distribution.kind == Distribution::Sequential) {
-    //   //   allocation->initialize_sequential_device(
-    //   //     data_distribution);
-    //   // }
-    //   // else {
-    //   //   allocation->initialize_random_device(
-    //   //     options.initialization.seed + seed_shift, 
-    //   //     data_distribution);
-    //   // }
-    // }
-    // else if (options.initialization.provider == library::Provider::kReferenceHost) {
-    //   if (data_distribution.kind == Distribution::Sequential) {
-    //     allocation->initialize_sequential_host(
-    //       data_distribution);
-    //   }
-    //   else {
-    //     // allocation->initialize_random_host(
-    //     //   options.initialization.seed + seed_shift, 
-    //     //   data_distribution);
-    //   }
-    // }
   }
 
   return allocation;
@@ -183,29 +105,8 @@ DeviceAllocation *DeviceContext::allocate_sparsemeta_tensor(
 
   DeviceAllocation *allocation = 
     allocate_tensor(name, type, layout_id, extent, stride, batch_count);
-
-  // if (options.initialization.enabled) {
-  //   // TF32 has 4bit meta data.  The rest has 2bit.
-  //   int MetaSizeInBits = (cutlass::library::sizeof_bits(type_a) == 32) ? 4 : 2;
-  //
-  //   if (options.initialization.provider == library::Provider::kReferenceDevice) {
-  //     // allocation->initialize_random_sparsemeta_device(
-  //     //   options.initialization.seed + seed_shift, 
-  //     //   MetaSizeInBits);
-  //   }
-  //   else if (options.initialization.provider == library::Provider::kReferenceHost) {
-  //     allocation->initialize_random_sparsemeta_host(
-  //       options.initialization.seed + seed_shift, 
-  //       MetaSizeInBits);
-  //   }
-  // }
-  //
   return allocation;
 }
-/// Clears named allocations (but does not necessarily free memory)
-// void DeviceContext::clear() {
-//   allocations_.clear();
-// }
 
 /// Frees all device memory allocations
 void DeviceContext::free() { //used
@@ -213,22 +114,6 @@ void DeviceContext::free() { //used
   device_memory_.clear();
 }
 
-/// Gets the allocation by name
-// DeviceAllocation &DeviceContext::at(std::string const &name) {
-//   return *allocations_.at(name);
-// }
-
-// size_t DeviceContext::size() const {
-//   return allocations_.size();
-// }
-
-// DeviceContext::AllocationMap::iterator DeviceContext::begin() {
-//   return allocations_.begin();
-// }
-
-// DeviceContext::AllocationMap::iterator DeviceContext::end() {
-//   return allocations_.end();
-// }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
