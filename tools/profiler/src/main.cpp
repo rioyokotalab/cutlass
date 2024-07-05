@@ -37,6 +37,8 @@
 
 using namespace cutlass;
 
+   // library::GemmUniversalArguments arguments;
+
 int main(int argc, char const *arg[]) {
   CommandLine cmdline(argc, arg);
   profiler::Options options(cmdline);
@@ -76,8 +78,8 @@ int main(int argc, char const *arg[]) {
   profiler->initialize_configuration(device_context, operation, problem_space, problem);
 
   profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
-
-  double runtime = profiler->profile(options, device_context, operation, problem_space, problem);
+  //options, problem_space, problem
+  double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
 
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
@@ -86,7 +88,7 @@ int main(int argc, char const *arg[]) {
     << "=============================\n"
     << "       Arguments:";
   std::cout << " --gemm_kind=" << library::to_string(operation_desc.gemm_kind);
-  std::cout << " --m=" << profiler->problem_.m;
+  std::cout << " --m=" << profiler->problem_.m; //todo:arguments.m put everything printed to arguments
   std::cout << " --n=" << profiler->problem_.n;
   std::cout << " --k=" << profiler->problem_.k;
   std::cout << " --A=" << library::to_string(operation_desc.A.element) << ":" << library::to_string(operation_desc.A.layout);

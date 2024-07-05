@@ -240,7 +240,7 @@ TensorArgument::TensorValueIterator::TensorValueIterator(
   }
 }
 
-void TensorArgument::TensorValueIterator::operator++() {
+void TensorArgument::TensorValueIterator::operator++() {//calling
   if (this->null_argument) {
     this->null_argument = false;
   }

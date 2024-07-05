@@ -235,7 +235,7 @@ double GemmOperationProfiler::profile(
     gemm_workspace_.arguments.B = gemm_workspace_.B->batch_data(problem_idx);
     gemm_workspace_.arguments.C = gemm_workspace_.C->batch_data(problem_idx);
     gemm_workspace_.arguments.D = gemm_workspace_.Computed->batch_data(problem_idx);
-    operation->run(
+    operation->run( //todo:move to main
       &gemm_workspace_.arguments,
       gemm_workspace_.host_workspace.data(),
       gemm_workspace_.device_workspace.data());

@@ -82,63 +82,65 @@ DeviceAllocation *DeviceContext::allocate_tensor( //used
   DeviceAllocation *allocation = 
     allocate_tensor(name, type, layout_id, extent, stride, batch_count);
 
-  if (options.initialization.enabled) {
+  if (options.initialization.enabled) { // todo:print the value and replace here
     Distribution data_distribution = options.initialization.data_distribution; 
-
+ // std::cout << options.initialization.fix_data_distribution << std::endl;
+    //fix_data_distribution = 0
     // check if data distribution is allowed to change
-    if(!options.initialization.fix_data_distribution) {
-      // change data distribution based on bit width
-      switch(type) {
-        case library::NumericTypeID::kFE4M3:
-          data_distribution.set_uniform(-1, 1, 0);
-          break;
-        case library::NumericTypeID::kFE5M2:
-          data_distribution.set_uniform(-1, 1, 0);
-          break;
-        case library::NumericTypeID::kF16:
-          data_distribution.set_uniform(-3, 3, 0);
-          break;
-        case library::NumericTypeID::kB1:
-          data_distribution.set_uniform(0, 1, 0);
-          break;
-        case library::NumericTypeID::kS2:
-          data_distribution.set_uniform(-1, 1, 0);
-          break;
-        case library::NumericTypeID::kS4:
-          data_distribution.set_uniform(-2, 2, 0);
-          break;
-        case library::NumericTypeID::kU2:
-          data_distribution.set_uniform(0, 2, 0);
-          break;
-        case library::NumericTypeID::kU4:
-          data_distribution.set_uniform(0, 2, 0);
-          break;
-        case library::NumericTypeID::kS8:
-          data_distribution.set_uniform(-3, 3, 0);
-          break;
-        case library::NumericTypeID::kU8:
-          data_distribution.set_uniform(0, 4, 0);
-          break;
-        default: break;
-      }
-    }
+    data_distribution.set_uniform(-3, 3, 0);
+    // if(!options.initialization.fix_data_distribution) {
+    //   // change data distribution based on bit width
+    //   switch(type) {
+    //     // case library::NumericTypeID::kFE4M3: //unused
+    //     //   data_distribution.set_uniform(-1, 1, 0);
+    //     //   break;
+    //     // case library::NumericTypeID::kFE5M2://unused
+    //     //   data_distribution.set_uniform(-1, 1, 0);
+    //     //   break;
+    //     case library::NumericTypeID::kF16: //used
+    //       data_distribution.set_uniform(-3, 3, 0);
+    //       break;
+    //     // case library::NumericTypeID::kB1:
+    //     //   data_distribution.set_uniform(0, 1, 0);
+    //     //   break;
+    //     // case library::NumericTypeID::kS2:
+    //     //   data_distribution.set_uniform(-1, 1, 0);
+    //     //   break;
+    //     // case library::NumericTypeID::kS4:
+    //     //   data_distribution.set_uniform(-2, 2, 0);
+    //     //   break;
+    //     // case library::NumericTypeID::kU2:
+    //     //   data_distribution.set_uniform(0, 2, 0);
+    //     //   break;
+    //     // case library::NumericTypeID::kU4:
+    //     //   data_distribution.set_uniform(0, 2, 0);
+    //     //   break;
+    //     // case library::NumericTypeID::kS8:
+    //     //   data_distribution.set_uniform(-3, 3, 0);
+    //     //   break;
+    //     // case library::NumericTypeID::kU8: //unused
+    //     //   data_distribution.set_uniform(0, 4, 0);
+    //     //   break;
+    //     default: break;
+    //   }
+    // }
 
     // Override pnz for the A/B/C tensors if overridden for Gaussian distributions
-    if (data_distribution.kind == Distribution::Gaussian) {
-      double mean = data_distribution.gaussian.mean;
-      double stddev = data_distribution.gaussian.stddev;
-      int scale = data_distribution.int_scale;
-
-      if (name == "A" && data_distribution.gaussian.pnzA != 100.0) {
-        data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzA);
-      }
-      else if (name == "B" && data_distribution.gaussian.pnzB != 100.0) {
-        data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzB);
-      }
-      else if (name == "C" && data_distribution.gaussian.pnzC != 100.0) {
-        data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzC);
-      }
-    }
+    // if (data_distribution.kind == Distribution::Gaussian) {
+    //   double mean = data_distribution.gaussian.mean;
+    //   double stddev = data_distribution.gaussian.stddev;
+    //   int scale = data_distribution.int_scale;
+    //   printf("used");
+    //   if (name == "A" && data_distribution.gaussian.pnzA != 100.0) {
+    //     data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzA);
+    //   }
+    //   else if (name == "B" && data_distribution.gaussian.pnzB != 100.0) {
+    //     data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzB);
+    //   }
+    //   else if (name == "C" && data_distribution.gaussian.pnzC != 100.0) {
+    //     data_distribution.set_gaussian(mean, stddev, scale, data_distribution.gaussian.pnzC);
+    //   }
+    // }
 
     // if (options.initialization.provider == library::Provider::kReferenceDevice) {
     //   // if (data_distribution.kind == Distribution::Sequential) {
