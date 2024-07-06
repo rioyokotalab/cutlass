@@ -97,12 +97,12 @@ void GemmOperationProfiler::initialize_configuration(
   problem_.raster_order = library::RasterOrder::kHeuristic;
   cast_from_double(problem_.alpha, operation_desc.element_epilogue, 1);
   cast_from_double(problem_.beta, operation_desc.element_epilogue, 0);
-  // problem_.lda = DeviceAllocation::get_packed_layout(
-    // operation_desc.A.layout, {int(problem_.m), int(problem_.k)}).front();
-  problem_.lda = 3456;
+  problem_.lda = DeviceAllocation::get_packed_layout(
+    operation_desc.A.layout, {int(problem_.m), int(problem_.k)}).front();
+  // problem_.lda = 3456; //equal to m
   problem_.ldb = DeviceAllocation::get_packed_layout(
     operation_desc.B.layout, {int(problem_.k), int(problem_.n)}).front();
-  std::cout << problem_.ldb << std::endl;
+  // std::cout << problem_.ldb << std::endl;
   problem_.ldc = DeviceAllocation::get_packed_layout(
     operation_desc.C.layout, {int(problem_.m), int(problem_.n)}).front();
 

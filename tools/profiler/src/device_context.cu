@@ -69,11 +69,16 @@ DeviceAllocation *DeviceContext::allocate_tensor( //used
   DeviceAllocation *allocation = 
     allocate_tensor(name, type, layout_id, extent, stride, batch_count);
 
-  if (options.initialization.enabled) { // print the value and replace here
-    Distribution data_distribution = options.initialization.data_distribution; 
-    data_distribution.set_uniform(-3, 3, 0);
+  // if (options.initialization.enabled) { // print the value and replace here  options.initialization.enabled = 1
+    // Distribution data_distribution = options.initialization.data_distribution; 
+    // data_distribution.set_uniform(-3, 3, 0);
 
-  }
+  // }
+
+  // std::cout << options.initialization.enabled << std::endl;
+   // Distribution data_distribution = options.initialization.data_distribution; 
+  Distribution data_distribution;
+   data_distribution.set_uniform(-3, 3, 0);
 
   return allocation;
 }
