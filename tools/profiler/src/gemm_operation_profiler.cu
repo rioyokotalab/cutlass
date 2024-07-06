@@ -138,40 +138,30 @@ void GemmOperationProfiler::initialize_workspace(
   int64_t bytes = GemmOperationProfiler::bytes(operation_desc, problem_);
   gemm_workspace_.problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
-  int seed_shift = 0;
   gemm_workspace_.A = device_context.allocate_tensor(
-    options,
     "A",
     operation_desc.A.element,
     operation_desc.A.layout,
     {int(problem_.m), int(problem_.k)},
     //{int(problem_.lda)},
     {int(gemm_workspace_.configuration.lda)},
-    problem_.batch_count * gemm_workspace_.problem_count,
-    seed_shift++
-  );
+    problem_.batch_count * gemm_workspace_.problem_count);
 
   gemm_workspace_.B = device_context.allocate_tensor(
-    options,
     "B",
     operation_desc.B.element,
     operation_desc.B.layout,
     {int(problem_.k), int(problem_.n)},
     {int(problem_.ldb)},
-    problem_.batch_count * gemm_workspace_.problem_count,
-    seed_shift++
-  );
+    problem_.batch_count * gemm_workspace_.problem_count);
 
   gemm_workspace_.C = device_context.allocate_tensor(
-    options,
     "C",
     operation_desc.C.element,
     operation_desc.C.layout,
     {int(problem_.m), int(problem_.n)},
     {int(problem_.ldc)},
-    problem_.batch_count * gemm_workspace_.problem_count,
-    seed_shift++
-  );
+    problem_.batch_count * gemm_workspace_.problem_count);
 
   gemm_workspace_.Computed = device_context.allocate_tensor(
     "D",
@@ -179,8 +169,7 @@ void GemmOperationProfiler::initialize_workspace(
     operation_desc.D.layout,
     {int(problem_.m), int(problem_.n)},
     {int(problem_.ldc)},
-    problem_.batch_count * gemm_workspace_.problem_count
-  );
+    problem_.batch_count * gemm_workspace_.problem_count);
 
   gemm_workspace_.Reference = device_context.allocate_tensor(
     "Reference",
@@ -188,8 +177,7 @@ void GemmOperationProfiler::initialize_workspace(
     operation_desc.D.layout,
     {int(problem_.m), int(problem_.n)},
     {int(problem_.ldc)},
-    problem_.batch_count * gemm_workspace_.problem_count
-  );
+    problem_.batch_count * gemm_workspace_.problem_count);
 
   gemm_workspace_.arguments.problem_size = {int(problem_.m), int(problem_.n), int(problem_.k)};
   gemm_workspace_.arguments.batch_count = problem_.batch_count;

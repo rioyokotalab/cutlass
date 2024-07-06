@@ -87,27 +87,27 @@ public:
     int batch_count = 1);
 
   /// Allocates memory of a given type, capacity (elements), and name
-  DeviceAllocation *allocate_tensor(
-    Options const &options,
-    std::string const &name,
-    library::NumericTypeID type, 
-    library::LayoutTypeID layout_id, 
-    std::vector<int> const &extent, 
-    std::vector<int64_t> const &stride,
-    int batch_count,
-    int seed_shift = 0);
-
-  /// Allocates memory for sparse meta data 
-  DeviceAllocation *allocate_sparsemeta_tensor(
-    Options const &options,
-    std::string const &name,
-    library::NumericTypeID type, 
-    library::LayoutTypeID layout_id, 
-    library::NumericTypeID type_a,
-    std::vector<int> const &extent, 
-    std::vector<int64_t> const &stride,
-    int batch_count,
-    int seed_shift = 0);
+  // DeviceAllocation *allocate_tensor(
+  //   Options const &options,
+  //   std::string const &name,
+  //   library::NumericTypeID type, 
+  //   library::LayoutTypeID layout_id, 
+  //   std::vector<int> const &extent, 
+  //   std::vector<int64_t> const &stride,
+  //   int batch_count,
+  //   int seed_shift = 0);
+  //
+  // /// Allocates memory for sparse meta data 
+  // DeviceAllocation *allocate_sparsemeta_tensor(
+  //   Options const &options,
+  //   std::string const &name,
+  //   library::NumericTypeID type, 
+  //   library::LayoutTypeID layout_id, 
+  //   library::NumericTypeID type_a,
+  //   std::vector<int> const &extent, 
+  //   std::vector<int64_t> const &stride,
+  //   int batch_count,
+  //   int seed_shift = 0);
 
   /// Clears named allocations (but does not necessarily free memory)
   void clear();
