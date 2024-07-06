@@ -40,19 +40,6 @@ namespace profiler {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /// Allocates memory of a given type, capacity (elements), and name
-// DeviceAllocation *DeviceContext::allocate_block(
-//   std::string const &name,
-//   library::NumericTypeID type, 
-//   size_t capacity) {
-//
-//   device_memory_.emplace_back(type, capacity);
-//   DeviceAllocation *allocation = &device_memory_.back();
-//   
-//   allocations_[name] = allocation;
-//   return allocation;
-// }
-
-/// Allocates memory of a given type, capacity (elements), and name
 DeviceAllocation *DeviceContext::allocate_tensor(//used
   std::string const &name,
   library::NumericTypeID type, 

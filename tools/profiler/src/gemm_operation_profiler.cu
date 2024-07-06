@@ -97,10 +97,12 @@ void GemmOperationProfiler::initialize_configuration(
   problem_.raster_order = library::RasterOrder::kHeuristic;
   cast_from_double(problem_.alpha, operation_desc.element_epilogue, 1);
   cast_from_double(problem_.beta, operation_desc.element_epilogue, 0);
-  problem_.lda = DeviceAllocation::get_packed_layout(
-    operation_desc.A.layout, {int(problem_.m), int(problem_.k)}).front();
+  // problem_.lda = DeviceAllocation::get_packed_layout(
+    // operation_desc.A.layout, {int(problem_.m), int(problem_.k)}).front();
+  problem_.lda = 3456;
   problem_.ldb = DeviceAllocation::get_packed_layout(
     operation_desc.B.layout, {int(problem_.k), int(problem_.n)}).front();
+  std::cout << problem_.ldb << std::endl;
   problem_.ldc = DeviceAllocation::get_packed_layout(
     operation_desc.C.layout, {int(problem_.m), int(problem_.n)}).front();
 
@@ -109,6 +111,7 @@ void GemmOperationProfiler::initialize_configuration(
   gemm_workspace_.configuration.problem_size.n() = int(problem_.n);
   gemm_workspace_.configuration.problem_size.k() = int(problem_.k);
   gemm_workspace_.configuration.lda = problem_.lda;
+  //gemm_workspace_.configuration.lda 
   gemm_workspace_.configuration.ldb = problem_.ldb;
   gemm_workspace_.configuration.ldc = problem_.ldc;
   gemm_workspace_.configuration.ldd = problem_.ldc;
@@ -142,7 +145,8 @@ void GemmOperationProfiler::initialize_workspace(
     operation_desc.A.element,
     operation_desc.A.layout,
     {int(problem_.m), int(problem_.k)},
-    {int(problem_.lda)},
+    //{int(problem_.lda)},
+    {int(gemm_workspace_.configuration.lda)},
     problem_.batch_count * gemm_workspace_.problem_count,
     seed_shift++
   );
