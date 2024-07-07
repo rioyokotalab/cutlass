@@ -64,10 +64,6 @@ int main(int argc, char const *arg[]) {
     {profiler::ArgumentTypeID::kInteger, {"max_cc", "maximum-compute-capability"}, "Maximum device compute capability"}
   };
 
-  // profiler->arguments_.insert(profiler->arguments_.end(), tile_description_arguments.begin(), tile_description_arguments.end());
-
-  //cutlass::profiler::ArgumentDescriptionVector arguments;
-  //arguments
 
   cutlass::profiler::ArgumentDescriptionVector  arguments_(
     {
