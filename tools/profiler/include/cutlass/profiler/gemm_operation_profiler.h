@@ -96,7 +96,7 @@ public:
   GemmWorkspace gemm_workspace_;
 
   library::OperationKind kind_;
-  ArgumentDescriptionVector arguments_;
+  // ArgumentDescriptionVector arguments_;
   library::Operation const *reduction_op_;
 
   GemmOperationProfiler();

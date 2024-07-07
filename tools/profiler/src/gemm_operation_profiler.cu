@@ -41,25 +41,7 @@ namespace cutlass {
 namespace profiler {
 
 GemmOperationProfiler::GemmOperationProfiler():
-    kind_(library::OperationKind::kGemm),
-    arguments_(
-    {
-      {ArgumentTypeID::kEnumerated, {"gemm_kind"}, "Variant of GEMM (universal, gemm, planar_complex, planar_complex_array)"},
-      {ArgumentTypeID::kInteger, {"m", "problem-size::m"}, "M dimension of the GEMM problem space"},
-      {ArgumentTypeID::kInteger, {"n", "problem-size::n"}, "N dimension of the GEMM problem space"},
-      {ArgumentTypeID::kInteger, {"k", "problem-size::k"}, "K dimension of the GEMM problem space"},
-      {ArgumentTypeID::kTensor, {"A"}, "Tensor storing the A operand"},
-      {ArgumentTypeID::kTensor, {"B"}, "Tensor storing the B operand"},
-      {ArgumentTypeID::kTensor, {"C"}, "Tensor storing the C operand"},
-      {ArgumentTypeID::kTensor, {"D"}, "Tensor storing the D output"},
-      {ArgumentTypeID::kScalar, {"alpha", "epilogue::alpha"}, "Epilogue scalar alpha"},
-      {ArgumentTypeID::kScalar, {"beta", "epilogue::beta"}, "Epilogue scalar beta"},
-      {ArgumentTypeID::kEnumerated, {"split_k_mode", "split-k-mode"}, "Variant of split K mode(serial, parallel)"},
-      {ArgumentTypeID::kInteger, {"split_k_slices", "split-k-slices"}, "Number of partitions of K dimension"},
-      {ArgumentTypeID::kInteger, {"batch_count", "batch-count"}, "Number of GEMMs computed in one batch"},
-      {ArgumentTypeID::kEnumerated, {"raster_order", "raster-order"}, "Raster order (heuristic, along_n, along_m)"},
-    }
-  ) {}
+    kind_(library::OperationKind::kGemm) {}
 
 GemmOperationProfiler::~GemmOperationProfiler() {}
 
