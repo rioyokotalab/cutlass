@@ -65,8 +65,43 @@ int main(int argc, char const *arg[]) {
   };
 
   profiler->arguments_.insert(profiler->arguments_.end(), tile_description_arguments.begin(), tile_description_arguments.end());
+
+  //cutlass::profiler::ArgumentDescriptionVector arguments;
+  //arguments
+
+  cutlass::profiler::ArgumentDescriptionVector  arguments_(
+    {
+      {profiler::ArgumentTypeID::kEnumerated, {"gemm_kind"}, "Variant of GEMM (universal, gemm, planar_complex, planar_complex_array)"},
+      {profiler::ArgumentTypeID::kInteger, {"m", "problem-size::m"}, "M dimension of the GEMM problem space"},
+      {profiler::ArgumentTypeID::kInteger, {"n", "problem-size::n"}, "N dimension of the GEMM problem space"},
+      {profiler::ArgumentTypeID::kInteger, {"k", "problem-size::k"}, "K dimension of the GEMM problem space"},
+      {profiler::ArgumentTypeID::kTensor, {"A"}, "Tensor storing the A operand"},
+      {profiler::ArgumentTypeID::kTensor, {"B"}, "Tensor storing the B operand"},
+      {profiler::ArgumentTypeID::kTensor, {"C"}, "Tensor storing the C operand"},
+      {profiler::ArgumentTypeID::kTensor, {"D"}, "Tensor storing the D output"},
+      {profiler::ArgumentTypeID::kScalar, {"alpha", "epilogue::alpha"}, "Epilogue scalar alpha"},
+      {profiler::ArgumentTypeID::kScalar, {"beta", "epilogue::beta"}, "Epilogue scalar beta"},
+      {profiler::ArgumentTypeID::kEnumerated, {"split_k_mode", "split-k-mode"}, "Variant of split K mode(serial, parallel)"},
+      {profiler::ArgumentTypeID::kInteger, {"split_k_slices", "split-k-slices"}, "Number of partitions of K dimension"},
+      {profiler::ArgumentTypeID::kInteger, {"batch_count", "batch-count"}, "Number of GEMMs computed in one batch"},
+      {profiler::ArgumentTypeID::kEnumerated, {"raster_order", "raster-order"}, "Raster order (heuristic, along_n, along_m)"},
+    });
+
+  arguments_.insert(arguments_.end(), tile_description_arguments.begin(), tile_description_arguments.end());
+
+
+   // arguments.A = nullptr;
+   // arguments.B = nullptr;
+   // arguments.C = nullptr;
+   // arguments.D = nullptr;
+   // arguments.alpha = profiler->problem_.alpha.data();
+   // arguments.beta = profiler->problem_.beta.data();
+   // arguments.pointer_mode = library::ScalarPointerMode::kHost;
+   // arguments.raster_order = profiler->problem_.raster_order;
+
   const library::Manifest &manifest = library::Singleton::get().manifest;
-  profiler::ProblemSpace problem_space(profiler->arguments_, options.cmdline);
+  // profiler::ProblemSpace problem_space(profiler->arguments_, options.cmdline);
+  profiler::ProblemSpace problem_space(arguments_, options.cmdline);
   profiler::ProblemSpace::Iterator problem_it = problem_space.begin();
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   profiler::ProblemSpace::Problem problem = problem_it.at();
