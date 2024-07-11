@@ -85,7 +85,6 @@ int main(int argc, char const *arg[]) {
 
   arguments_.insert(arguments_.end(), tile_description_arguments.begin(), tile_description_arguments.end());
 
-
    // arguments.A = nullptr;
    // arguments.B = nullptr;
    // arguments.C = nullptr;
@@ -103,17 +102,131 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Problem problem = problem_it.at();
   auto operation_ptr = manifest.begin();
   library::Operation const *operation = operation_ptr->get();
-  device_context.free();
+  device_context.free(); //??why
   std::string operation_name(operation->description().name);
-
+///---------------------------------------------------------------------//
+//    profiler::DeviceAllocation *A{nullptr};
+//    profiler::DeviceAllocation *B{nullptr};
+//    profiler::DeviceAllocation *C{nullptr};
+//    profiler::DeviceAllocation *Computed{nullptr};
+//    profiler::DeviceAllocation *Reference{nullptr};
+//   //int problem_count{1}; //maynot? check it
+//    library::GemmUniversalConfiguration configuration;
+//    library::GemmUniversalArguments arguments;
+//    std::vector<uint8_t> host_workspace;
+//    cutlass::profiler::DeviceAllocation device_workspace;
+//    library::ReductionConfiguration reduction_configuration;
+//    library::ReductionArguments reduction_arguments;
+//    std::vector<uint8_t> reduction_host_workspace;
+// //initial
+//    int m = 3456;  
+//    int n = 4096;
+//    int k = 4096;
+  library::GemmDescription const &operation_desc =
+    static_cast<library::GemmDescription const &>(operation->description());
+  double bytes = profiler->bytes(operation_desc, profiler->problem_);
+//   configuration.mode = library::GemmUniversalMode::kGemm;
+//   configuration.problem_size.m() = int(m);
+//   configuration.problem_size.n() = int(n);
+//   configuration.problem_size.k() = int(k);
+//   configuration.lda = cutlass::profiler::DeviceAllocation::get_packed_layout( //problem_.lda;
+//     operation_desc.A.layout, {int(m), int(k)}).front();
+//   //gemm_workspace_.configuration.lda 
+//   configuration.ldb = cutlass::profiler::DeviceAllocation::get_packed_layout( //problem_.ldb;
+//     operation_desc.B.layout, {int(k), int(n)}).front();
+//   configuration.ldc = cutlass::profiler::DeviceAllocation::get_packed_layout(//problem_.ldc;
+//     operation_desc.C.layout, {int(m), int(n)}).front();
+//
+//   configuration.ldd = configuration.ldc;//problem_.ldc;
+//   configuration.batch_count = 1;// problem_.split_k_slices;
+//   arguments.A = nullptr;
+//   arguments.B = nullptr;
+//   arguments.C = nullptr;
+//   arguments.D = nullptr;
+//   //arguments.alpha = 1;//problem_.alpha.data();
+//   arguments.alpha = reinterpret_cast<void*>(1);
+//   arguments.beta = reinterpret_cast<void*>(0);
+//   //= reinterpret_cast<void*>(1)
+//   //arguments.beta = 0;//problem_.beta.data();
+//   // cast_from_double(arguments.alpha, operation_desc.element_epilogue, 1);
+//   // cast_from_double(arguments.beta, operation_desc.element_epilogue, 0);
+//   arguments.pointer_mode = library::ScalarPointerMode::kHost;
+//   arguments.raster_order = library::RasterOrder::kHeuristic;//problem_.raster_order;
+//
+//   int problem_count =
+//     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
+//   int batch_count = 1;//problem_.batch_count = 1;
+//   A = device_context.allocate_tensor(
+//     "A",
+//     operation_desc.A.element,
+//     operation_desc.A.layout,
+//     {int(m), int(k)},
+//     //{int(problem_.lda)},
+//     {int(configuration.lda)},
+//     batch_count * problem_count);
+//
+//   B = device_context.allocate_tensor(
+//     "B",
+//     operation_desc.B.element,
+//     operation_desc.B.layout,
+//     {int(k), int(n)},
+//     {int(configuration.ldb)},
+//     batch_count * problem_count);
+//
+//   C = device_context.allocate_tensor(
+//     "C",
+//     operation_desc.C.element,
+//     operation_desc.C.layout,
+//     {int(m), int(n)},
+//     {int(configuration.ldc)},
+//     batch_count * problem_count);
+//
+//   Computed = device_context.allocate_tensor(
+//     "D",
+//     operation_desc.D.element,
+//     operation_desc.D.layout,
+//     {int(m), int(n)},
+//     {int(configuration.ldc)},
+//     batch_count * problem_count);
+//
+//   Reference = device_context.allocate_tensor(
+//     "Reference",
+//     operation_desc.D.element,
+//     operation_desc.D.layout,
+//     {int(m), int(n)},
+//     {int(configuration.ldc)},
+//     batch_count * problem_count);
+//
+//   arguments.problem_size = {int(m), int(n), int(k)};
+//   arguments.batch_count = batch_count;
+//   arguments.lda =configuration.lda;
+//   arguments.ldb =configuration.ldb;
+//   arguments.ldc =configuration.ldc;
+//   arguments.ldd =configuration.ldc;
+//   arguments.batch_stride_A = A->batch_stride();
+//   arguments.batch_stride_B = B->batch_stride();
+//   arguments.batch_stride_C = C->batch_stride();
+//   arguments.batch_stride_D = Computed->batch_stride();
+//   arguments.sm_count = options.device.properties.multiProcessorCount;
+//
+//   uint64_t workspace_size = operation->get_host_workspace_size(&configuration);
+//   host_workspace.resize(workspace_size, 0);
+//   workspace_size = operation->get_device_workspace_size(&configuration,
+// 							&arguments);
+//   device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
+//   operation->initialize(
+//     &configuration,
+//     host_workspace.data(),
+//     device_workspace.data());
+  //---------------------------------------------------------------------------//
   profiler->initialize_configuration(device_context, operation, problem_space, problem);
 
   profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
   //options, problem_space, problem
   double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
 
-  library::GemmDescription const &operation_desc =
-    static_cast<library::GemmDescription const &>(operation->description());
+  // library::GemmDescription const &operation_desc =
+  //   static_cast<library::GemmDescription const &>(operation->description());
 
   std::cout
     << "=============================\n"
@@ -153,7 +266,7 @@ int main(int argc, char const *arg[]) {
   std::cout << " --min_cc=" << operation_desc.tile_description.minimum_compute_capability;
   std::cout << " --max_cc=" << operation_desc.tile_description.maximum_compute_capability;
   std::cout << "  \\\n                 ";
-  double bytes = profiler->bytes(operation_desc, profiler->problem_);
+//  double bytes = profiler->bytes(operation_desc, profiler->problem_);
   double flops = profiler->flops(profiler->problem_);
   std::cout
     << "\n"
