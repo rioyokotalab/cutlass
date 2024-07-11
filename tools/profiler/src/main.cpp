@@ -105,65 +105,65 @@ int main(int argc, char const *arg[]) {
   device_context.free(); //??why
   std::string operation_name(operation->description().name);
 ///---------------------------------------------------------------------//
-//    profiler::DeviceAllocation *A{nullptr};
-//    profiler::DeviceAllocation *B{nullptr};
-//    profiler::DeviceAllocation *C{nullptr};
-//    profiler::DeviceAllocation *Computed{nullptr};
-//    profiler::DeviceAllocation *Reference{nullptr};
-//   //int problem_count{1}; //maynot? check it
-//    library::GemmUniversalConfiguration configuration;
-//    library::GemmUniversalArguments arguments;
-//    std::vector<uint8_t> host_workspace;
-//    cutlass::profiler::DeviceAllocation device_workspace;
-//    library::ReductionConfiguration reduction_configuration;
-//    library::ReductionArguments reduction_arguments;
-//    std::vector<uint8_t> reduction_host_workspace;
-// //initial
-//    int m = 3456;  
-//    int n = 4096;
-//    int k = 4096;
+   profiler::DeviceAllocation *A{nullptr};
+   profiler::DeviceAllocation *B{nullptr};
+   profiler::DeviceAllocation *C{nullptr};
+   profiler::DeviceAllocation *Computed{nullptr};
+   profiler::DeviceAllocation *Reference{nullptr};
+  //int problem_count{1}; //maynot? check it
+   library::GemmUniversalConfiguration configuration;
+   library::GemmUniversalArguments arguments;
+   std::vector<uint8_t> host_workspace;
+   cutlass::profiler::DeviceAllocation device_workspace;
+   library::ReductionConfiguration reduction_configuration;
+   library::ReductionArguments reduction_arguments;
+   std::vector<uint8_t> reduction_host_workspace;
+//initial
+   int m = 3456;  
+   int n = 4096;
+   int k = 4096;
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
   double bytes = profiler->bytes(operation_desc, profiler->problem_);
-//   configuration.mode = library::GemmUniversalMode::kGemm;
-//   configuration.problem_size.m() = int(m);
-//   configuration.problem_size.n() = int(n);
-//   configuration.problem_size.k() = int(k);
-//   configuration.lda = cutlass::profiler::DeviceAllocation::get_packed_layout( //problem_.lda;
-//     operation_desc.A.layout, {int(m), int(k)}).front();
-//   //gemm_workspace_.configuration.lda 
-//   configuration.ldb = cutlass::profiler::DeviceAllocation::get_packed_layout( //problem_.ldb;
-//     operation_desc.B.layout, {int(k), int(n)}).front();
-//   configuration.ldc = cutlass::profiler::DeviceAllocation::get_packed_layout(//problem_.ldc;
-//     operation_desc.C.layout, {int(m), int(n)}).front();
+  configuration.mode = library::GemmUniversalMode::kGemm;
+  configuration.problem_size.m() = int(m);
+  configuration.problem_size.n() = int(n);
+  configuration.problem_size.k() = int(k);
+  configuration.lda = cutlass::profiler::DeviceAllocation::get_packed_layout( //problem_.lda;
+    operation_desc.A.layout, {int(m), int(k)}).front();
+  //gemm_workspace_.configuration.lda 
+  configuration.ldb = cutlass::profiler::DeviceAllocation::get_packed_layout( //problem_.ldb;
+    operation_desc.B.layout, {int(k), int(n)}).front();
+  configuration.ldc = cutlass::profiler::DeviceAllocation::get_packed_layout(//problem_.ldc;
+    operation_desc.C.layout, {int(m), int(n)}).front();
 //
-//   configuration.ldd = configuration.ldc;//problem_.ldc;
-//   configuration.batch_count = 1;// problem_.split_k_slices;
-//   arguments.A = nullptr;
-//   arguments.B = nullptr;
-//   arguments.C = nullptr;
-//   arguments.D = nullptr;
-//   //arguments.alpha = 1;//problem_.alpha.data();
-//   arguments.alpha = reinterpret_cast<void*>(1);
-//   arguments.beta = reinterpret_cast<void*>(0);
-//   //= reinterpret_cast<void*>(1)
-//   //arguments.beta = 0;//problem_.beta.data();
-//   // cast_from_double(arguments.alpha, operation_desc.element_epilogue, 1);
-//   // cast_from_double(arguments.beta, operation_desc.element_epilogue, 0);
-//   arguments.pointer_mode = library::ScalarPointerMode::kHost;
-//   arguments.raster_order = library::RasterOrder::kHeuristic;//problem_.raster_order;
+  configuration.ldd = configuration.ldc;//problem_.ldc;
+  configuration.batch_count = 1;// problem_.split_k_slices;
+  arguments.A = nullptr;
+  arguments.B = nullptr;
+  arguments.C = nullptr;
+  arguments.D = nullptr;
+  //arguments.alpha = 1;//problem_.alpha.data();
+  arguments.alpha = reinterpret_cast<void*>(1);
+  arguments.beta = reinterpret_cast<void*>(0);
+  //= reinterpret_cast<void*>(1)
+  //arguments.beta = 0;//problem_.beta.data();
+  // cast_from_double(arguments.alpha, operation_desc.element_epilogue, 1);
+  // cast_from_double(arguments.beta, operation_desc.element_epilogue, 0);
+  arguments.pointer_mode = library::ScalarPointerMode::kHost;
+  arguments.raster_order = library::RasterOrder::kHeuristic;//problem_.raster_order;
 //
-//   int problem_count =
-//     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
-//   int batch_count = 1;//problem_.batch_count = 1;
-//   A = device_context.allocate_tensor(
-//     "A",
-//     operation_desc.A.element,
-//     operation_desc.A.layout,
-//     {int(m), int(k)},
-//     //{int(problem_.lda)},
-//     {int(configuration.lda)},
-//     batch_count * problem_count);
+  int problem_count =
+    1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
+  int batch_count = 1;//problem_.batch_count = 1;
+  // A = device_context.allocate_tensor(
+  //   "A",
+  //   operation_desc.A.element,
+  //   operation_desc.A.layout,
+  //   {int(m), int(k)},
+  //   //{int(problem_.lda)},
+  //   {int(configuration.lda)},
+  //   batch_count * problem_count);
 //
 //   B = device_context.allocate_tensor(
 //     "B",
