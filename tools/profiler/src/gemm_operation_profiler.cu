@@ -120,6 +120,7 @@ void GemmOperationProfiler::initialize_workspace(
   int64_t bytes = GemmOperationProfiler::bytes(operation_desc, problem_);
   gemm_workspace_.problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
+    printf("%d %d %d-------------\n", gemm_workspace_.problem_count, int64_t(options.device.properties.l2CacheSize), bytes);
   gemm_workspace_.A = device_context.allocate_tensor(
     "A",
     operation_desc.A.element,

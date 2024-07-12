@@ -124,7 +124,14 @@ int main(int argc, char const *arg[]) {
    int k = 4096;
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
-  double bytes = profiler->bytes(operation_desc, profiler->problem_);
+  // double bytes = profiler->bytes(operation_desc, profiler->problem_);//?why here is double
+
+  int batch_count = 1;//problem_.batch_count = 1;
+  int64_t bytes =
+    int64_t(library::sizeof_bits(operation_desc.A.element) * m / 8) * k +
+    int64_t(library::sizeof_bits(operation_desc.B.element) * n / 8) * k +
+    int64_t(library::sizeof_bits(operation_desc.C.element) * m / 8) * n;
+  bytes *= batch_count;
   configuration.mode = library::GemmUniversalMode::kGemm;
   configuration.problem_size.m() = int(m);
   configuration.problem_size.n() = int(n);
@@ -155,122 +162,133 @@ int main(int argc, char const *arg[]) {
 //
   int problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
-  int batch_count = 1;//problem_.batch_count = 1;
-  // A = device_context.allocate_tensor(
-  //   "A",
-  //   operation_desc.A.element,
-  //   operation_desc.A.layout,
-  //   {int(m), int(k)},
-  //   //{int(problem_.lda)},
-  //   {int(configuration.lda)},
-  //   batch_count * problem_count);
-//
-//   B = device_context.allocate_tensor(
-//     "B",
-//     operation_desc.B.element,
-//     operation_desc.B.layout,
-//     {int(k), int(n)},
-//     {int(configuration.ldb)},
-//     batch_count * problem_count);
-//
-//   C = device_context.allocate_tensor(
-//     "C",
-//     operation_desc.C.element,
-//     operation_desc.C.layout,
-//     {int(m), int(n)},
-//     {int(configuration.ldc)},
-//     batch_count * problem_count);
-//
-//   Computed = device_context.allocate_tensor(
-//     "D",
-//     operation_desc.D.element,
-//     operation_desc.D.layout,
-//     {int(m), int(n)},
-//     {int(configuration.ldc)},
-//     batch_count * problem_count);
-//
-//   Reference = device_context.allocate_tensor(
-//     "Reference",
-//     operation_desc.D.element,
-//     operation_desc.D.layout,
-//     {int(m), int(n)},
-//     {int(configuration.ldc)},
-//     batch_count * problem_count);
-//
-//   arguments.problem_size = {int(m), int(n), int(k)};
-//   arguments.batch_count = batch_count;
-//   arguments.lda =configuration.lda;
-//   arguments.ldb =configuration.ldb;
-//   arguments.ldc =configuration.ldc;
-//   arguments.ldd =configuration.ldc;
-//   arguments.batch_stride_A = A->batch_stride();
-//   arguments.batch_stride_B = B->batch_stride();
-//   arguments.batch_stride_C = C->batch_stride();
-//   arguments.batch_stride_D = Computed->batch_stride();
-//   arguments.sm_count = options.device.properties.multiProcessorCount;
-//
-//   uint64_t workspace_size = operation->get_host_workspace_size(&configuration);
-//   host_workspace.resize(workspace_size, 0);
-//   workspace_size = operation->get_device_workspace_size(&configuration,
-// 							&arguments);
-//   device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
-//   operation->initialize(
-//     &configuration,
-//     host_workspace.data(),
-//     device_workspace.data());
+    printf("%d %d %d-------------\n", problem_count, int64_t(options.device.properties.l2CacheSize), bytes);
+    // printf("type: %d\n", static_cast<int>(operation_desc.A.element));
+    // printf("layout_id: %d\n", static_cast<int>(operation_desc.A.layout));
+    // printf("extent: ");
+    // for (const auto& e : {int(m), int(k)}) {
+    //     printf("%d ", e);
+    // }
+    // printf("\nstride: ");
+    // for (const auto& s :{int(configuration.lda)}) {
+    //     printf("%ld ", s);
+    // }
+    // printf("\nbatch_count: %d\n", batch_count * problem_count);
+  A = device_context.allocate_tensor(
+    "A",
+    operation_desc.A.element,
+    operation_desc.A.layout,
+    {int(m), int(k)},
+    //{int(problem_.lda)},
+    {int(configuration.lda)},
+    batch_count * problem_count);
+
+  B = device_context.allocate_tensor(
+    "B",
+    operation_desc.B.element,
+    operation_desc.B.layout,
+    {int(k), int(n)},
+    {int(configuration.ldb)},
+    batch_count * problem_count);
+
+  C = device_context.allocate_tensor(
+    "C",
+    operation_desc.C.element,
+    operation_desc.C.layout,
+    {int(m), int(n)},
+    {int(configuration.ldc)},
+    batch_count * problem_count);
+
+  Computed = device_context.allocate_tensor(
+    "D",
+    operation_desc.D.element,
+    operation_desc.D.layout,
+    {int(m), int(n)},
+    {int(configuration.ldc)},
+    batch_count * problem_count);
+
+  Reference = device_context.allocate_tensor(
+    "Reference",
+    operation_desc.D.element,
+    operation_desc.D.layout,
+    {int(m), int(n)},
+    {int(configuration.ldc)},
+    batch_count * problem_count);
+
+  // arguments.problem_size = {int(m), int(n), int(k)};
+  // arguments.batch_count = batch_count;
+  // arguments.lda =configuration.lda;
+  // arguments.ldb =configuration.ldb;
+  // arguments.ldc =configuration.ldc;
+  // arguments.ldd =configuration.ldc;
+  // arguments.batch_stride_A = A->batch_stride();
+  // arguments.batch_stride_B = B->batch_stride();
+  // arguments.batch_stride_C = C->batch_stride();
+  // arguments.batch_stride_D = Computed->batch_stride();
+  // arguments.sm_count = options.device.properties.multiProcessorCount;
+
+  // uint64_t workspace_size = operation->get_host_workspace_size(&configuration);
+  // host_workspace.resize(workspace_size, 0);
+  // workspace_size = operation->get_device_workspace_size(&configuration,
+		// 					&arguments);
+  // device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
+  // operation->initialize(
+  //   &configuration,
+  //   host_workspace.data(),
+  //   device_workspace.data());
   //---------------------------------------------------------------------------//
-  profiler->initialize_configuration(device_context, operation, problem_space, problem);
-
-  profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
+  // profiler->initialize_configuration(device_context, operation, problem_space, problem);
+  //
+  // profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
   //options, problem_space, problem
-  double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
-
-  // library::GemmDescription const &operation_desc =
-  //   static_cast<library::GemmDescription const &>(operation->description());
-
-  std::cout
-    << "=============================\n"
-    << "       Arguments:";
-  std::cout << " --gemm_kind=" << library::to_string(operation_desc.gemm_kind);
-  std::cout << " --m=" << profiler->problem_.m; //todo:arguments.m put everything printed to arguments
-  std::cout << " --n=" << profiler->problem_.n;
-  std::cout << " --k=" << profiler->problem_.k;
-  std::cout << " --A=" << library::to_string(operation_desc.A.element) << ":" << library::to_string(operation_desc.A.layout);
-  std::cout << " --B=" << library::to_string(operation_desc.B.element) << ":" << library::to_string(operation_desc.B.layout);
-  std::cout << " --C=" << library::to_string(operation_desc.C.element) << ":" << library::to_string(operation_desc.C.layout);
-  std::cout << " --D=" << library::to_string(operation_desc.D.element) << ":" << library::to_string(operation_desc.D.layout);
-  std::cout << "  \\\n                 ";
-  std::cout << " --alpha=" << library::lexical_cast(profiler->problem_.alpha, operation_desc.element_epilogue);
-  std::cout << " --beta=" << library::lexical_cast(profiler->problem_.beta, operation_desc.element_epilogue);
-  std::cout << " --split_k_mode=" << library::to_string(profiler->problem_.split_k_mode);
-  std::cout << " --split_k_slices=" << profiler->problem_.split_k_slices;
-  std::cout << " --batch_count=" << profiler->problem_.batch_count;
-  std::cout << " --raster_order=" << library::to_string(profiler->problem_.raster_order);
-  std::cout << "  \\\n                 ";
-  std::cout << " --op_class=" << library::to_string(operation_desc.tile_description.math_instruction.opcode_class);
-  std::cout << " --accum=" << library::to_string(operation_desc.tile_description.math_instruction.element_accumulator);
-  std::cout << " --cta_m=" << operation_desc.tile_description.threadblock_shape.m();
-  std::cout << " --cta_n=" << operation_desc.tile_description.threadblock_shape.n();
-  std::cout << " --cta_k=" << operation_desc.tile_description.threadblock_shape.k();
-  std::cout << " --cluster_m=" << operation_desc.tile_description.cluster_shape.m();
-  std::cout << " --cluster_n=" << operation_desc.tile_description.cluster_shape.n();
-  std::cout << " --cluster_k=" << operation_desc.tile_description.cluster_shape.k();
-  std::cout << "  \\\n                 ";
-  std::cout << " --stages=" << operation_desc.tile_description.threadblock_stages;
-  std::cout << " --warps_m=" << operation_desc.tile_description.warp_count.m();
-  std::cout << " --warps_n=" << operation_desc.tile_description.warp_count.n();
-  std::cout << " --warps_k=" << operation_desc.tile_description.warp_count.k();
-  std::cout << " --inst_m=" << operation_desc.tile_description.math_instruction.instruction_shape.m();
-  std::cout << " --inst_n=" << operation_desc.tile_description.math_instruction.instruction_shape.n();
-  std::cout << " --inst_k=" << operation_desc.tile_description.math_instruction.instruction_shape.k();
-  std::cout << " --min_cc=" << operation_desc.tile_description.minimum_compute_capability;
-  std::cout << " --max_cc=" << operation_desc.tile_description.maximum_compute_capability;
-  std::cout << "  \\\n                 ";
-//  double bytes = profiler->bytes(operation_desc, profiler->problem_);
-  double flops = profiler->flops(profiler->problem_);
-  std::cout
-    << "\n"
-    << "         Runtime: " << runtime << "  ms\n"
-    << "          Memory: " << bytes / double(1 << 30) / runtime * 1000.0 << " GiB/s\n"
-    << "            Math: " << flops / runtime / 1.0e6 << " GFLOP/s\n";
+//   double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
+//
+//   // library::GemmDescription const &operation_desc =
+//   //   static_cast<library::GemmDescription const &>(operation->description());
+//
+//   std::cout
+//     << "=============================\n"
+//     << "       Arguments:";
+//   std::cout << " --gemm_kind=" << library::to_string(operation_desc.gemm_kind);
+//   std::cout << " --m=" << profiler->problem_.m; //todo:arguments.m put everything printed to arguments
+//   std::cout << " --n=" << profiler->problem_.n;
+//   std::cout << " --k=" << profiler->problem_.k;
+//   std::cout << " --A=" << library::to_string(operation_desc.A.element) << ":" << library::to_string(operation_desc.A.layout);
+//   std::cout << " --B=" << library::to_string(operation_desc.B.element) << ":" << library::to_string(operation_desc.B.layout);
+//   std::cout << " --C=" << library::to_string(operation_desc.C.element) << ":" << library::to_string(operation_desc.C.layout);
+//   std::cout << " --D=" << library::to_string(operation_desc.D.element) << ":" << library::to_string(operation_desc.D.layout);
+//   std::cout << "  \\\n                 ";
+//   std::cout << " --alpha=" << library::lexical_cast(profiler->problem_.alpha, operation_desc.element_epilogue);
+//   std::cout << " --beta=" << library::lexical_cast(profiler->problem_.beta, operation_desc.element_epilogue);
+//   std::cout << " --split_k_mode=" << library::to_string(profiler->problem_.split_k_mode);
+//   std::cout << " --split_k_slices=" << profiler->problem_.split_k_slices;
+//   std::cout << " --batch_count=" << profiler->problem_.batch_count;
+//   std::cout << " --raster_order=" << library::to_string(profiler->problem_.raster_order);
+//   std::cout << "  \\\n                 ";
+//   std::cout << " --op_class=" << library::to_string(operation_desc.tile_description.math_instruction.opcode_class);
+//   std::cout << " --accum=" << library::to_string(operation_desc.tile_description.math_instruction.element_accumulator);
+//   std::cout << " --cta_m=" << operation_desc.tile_description.threadblock_shape.m();
+//   std::cout << " --cta_n=" << operation_desc.tile_description.threadblock_shape.n();
+//   std::cout << " --cta_k=" << operation_desc.tile_description.threadblock_shape.k();
+//   std::cout << " --cluster_m=" << operation_desc.tile_description.cluster_shape.m();
+//   std::cout << " --cluster_n=" << operation_desc.tile_description.cluster_shape.n();
+//   std::cout << " --cluster_k=" << operation_desc.tile_description.cluster_shape.k();
+//   std::cout << "  \\\n                 ";
+//   std::cout << " --stages=" << operation_desc.tile_description.threadblock_stages;
+//   std::cout << " --warps_m=" << operation_desc.tile_description.warp_count.m();
+//   std::cout << " --warps_n=" << operation_desc.tile_description.warp_count.n();
+//   std::cout << " --warps_k=" << operation_desc.tile_description.warp_count.k();
+//   std::cout << " --inst_m=" << operation_desc.tile_description.math_instruction.instruction_shape.m();
+//   std::cout << " --inst_n=" << operation_desc.tile_description.math_instruction.instruction_shape.n();
+//   std::cout << " --inst_k=" << operation_desc.tile_description.math_instruction.instruction_shape.k();
+//   std::cout << " --min_cc=" << operation_desc.tile_description.minimum_compute_capability;
+//   std::cout << " --max_cc=" << operation_desc.tile_description.maximum_compute_capability;
+//   std::cout << "  \\\n                 ";
+// //  double bytes = profiler->bytes(operation_desc, profiler->problem_);
+//   double flops = profiler->flops(profiler->problem_);
+//   std::cout
+//     << "\n"
+//     << "         Runtime: " << runtime << "  ms\n"
+//     << "          Memory: " << (double)bytes / double(1 << 30) / runtime * 1000.0 << " GiB/s\n"
+//     << "            Math: " << flops / runtime / 1.0e6 << " GFLOP/s\n";
 }
