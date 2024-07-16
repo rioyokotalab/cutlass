@@ -215,37 +215,80 @@ int main(int argc, char const *arg[]) {
     {int(configuration.ldc)},
     batch_count * problem_count);
 
-  // arguments.problem_size = {int(m), int(n), int(k)};
-  // arguments.batch_count = batch_count;
-  // arguments.lda =configuration.lda;
-  // arguments.ldb =configuration.ldb;
-  // arguments.ldc =configuration.ldc;
-  // arguments.ldd =configuration.ldc;
-  // arguments.batch_stride_A = A->batch_stride();
-  // arguments.batch_stride_B = B->batch_stride();
-  // arguments.batch_stride_C = C->batch_stride();
-  // arguments.batch_stride_D = Computed->batch_stride();
-  // arguments.sm_count = options.device.properties.multiProcessorCount;
+  arguments.problem_size = {int(m), int(n), int(k)};
+  arguments.batch_count = batch_count;
+  arguments.lda =configuration.lda;
+  arguments.ldb =configuration.ldb;
+  arguments.ldc =configuration.ldc;
+  arguments.ldd =configuration.ldc;
+  arguments.batch_stride_A = A->batch_stride();
+  arguments.batch_stride_B = B->batch_stride();
+  arguments.batch_stride_C = C->batch_stride();
+  arguments.batch_stride_D = Computed->batch_stride();
+  arguments.sm_count = options.device.properties.multiProcessorCount;
 
-  // uint64_t workspace_size = operation->get_host_workspace_size(&configuration);
-  // host_workspace.resize(workspace_size, 0);
-  // workspace_size = operation->get_device_workspace_size(&configuration,
-		// 					&arguments);
+  uint64_t workspace_size = operation->get_host_workspace_size(&configuration);
+  host_workspace.resize(workspace_size, 0);
+  printf("workspacesize:%d \n", workspace_size);
+  workspace_size = operation->get_device_workspace_size(&configuration,&arguments); //Segmentation fault
+  // this line out 0 in gemm_operation so i set it to 0;
+  // workspace_size = 0;
+		// 					  printf("workspacesize:%d \n", workspace_size);
   // device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
   // operation->initialize(
   //   &configuration,
   //   host_workspace.data(),
   //   device_workspace.data());
   //---------------------------------------------------------------------------//
-  // profiler->initialize_configuration(device_context, operation, problem_space, problem);
-  //
-  // profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
+  profiler->initialize_configuration(device_context, operation, problem_space, problem);
+
+  profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
   //options, problem_space, problem
-//   double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
-//
-//   // library::GemmDescription const &operation_desc =
-//   //   static_cast<library::GemmDescription const &>(operation->description());
-//
+
+  //------------------------profiler part --------------------------//
+   // double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
+  //
+  // arguments.A = A->data();
+  // arguments.B = B->data();
+  // arguments.C = C->data();
+  // arguments.D = Computed->data();
+  // arguments.pointer_mode = library::ScalarPointerMode::kHost;
+  // arguments.batch_stride_A = A->batch_stride();
+  // arguments.batch_stride_B = B->batch_stride();
+  // arguments.batch_stride_C = C->batch_stride();
+  // arguments.batch_stride_D = Computed->batch_stride();
+  // //
+  // //printf("iteration:%d problem_count:%d batch_count:%d",options.profiling.warmup_iterations, problem_count, batch_count);
+  // for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
+  //   int problem_idx = (iteration % problem_count) * batch_count;
+  //   arguments.A = A->batch_data(problem_idx);
+  //   arguments.B = B->batch_data(problem_idx);
+  //   arguments.C = C->batch_data(problem_idx);
+  //   arguments.D = Computed->batch_data(problem_idx);
+  //   operation->run( //todo:move to main //Segmentation fault
+  //     &arguments,
+  //     host_workspace.data(),
+  //     device_workspace.data());
+  // }
+  //
+  // cutlass::profiler::GpuTimer timer;
+  // timer.start();
+  // int Iterations = options.profiling.iterations;
+  // int iteration = 0;
+  // for (; iteration < Iterations; ++iteration) {
+  //   int workspace_idx = options.profiling.warmup_iterations + iteration;
+  //   int problem_idx = (workspace_idx % problem_count) * batch_count;
+  //   arguments.A = A->batch_data(problem_idx);
+  //   arguments.B = B->batch_data(problem_idx);
+  //   arguments.C = C->batch_data(problem_idx);
+  //   arguments.D = Computed->batch_data(problem_idx);
+  //   operation->run(
+  //     &arguments,
+  //     host_workspace.data(),
+  //     device_workspace.data());
+  // }
+  // timer.stop_and_wait();
+  // double runtime = timer.duration(iteration);
 //   std::cout
 //     << "=============================\n"
 //     << "       Arguments:";

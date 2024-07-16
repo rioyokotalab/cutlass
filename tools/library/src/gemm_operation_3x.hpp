@@ -232,7 +232,6 @@ protected:
       arguments->problem_size.n(),
       arguments->problem_size.k(),
       arguments->batch_count);
-
     // update arguments
     operator_args.mainloop.ptr_A = static_cast<ElementA const *>(arguments->A);
     operator_args.mainloop.ptr_B = static_cast<ElementB const *>(arguments->B);
@@ -301,10 +300,12 @@ public:
   uint64_t get_device_workspace_size(
       void const *configuration_ptr,void const *arguments_ptr) const override {
 
+    printf("-------------run here1----------------");
     OperatorArguments args;
     auto status = update_arguments_(
       args, static_cast<GemmUniversalArguments const *>(arguments_ptr));
     if (status != Status::kSuccess) {
+    printf("-------------run here2----------------");
       return 0;
     }
 

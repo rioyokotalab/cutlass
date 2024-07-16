@@ -256,6 +256,7 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr = nullptr) const {
 
+    printf("---------run here-----------------");
     OperatorArguments args;
 
     Status status = construct_arguments_(
@@ -263,6 +264,7 @@ public:
       static_cast<GemmConfiguration const *>(configuration_ptr));
 
     if (status != Status::kSuccess) {
+    printf("---------run here2-----------------");
       return 0;
     }
 

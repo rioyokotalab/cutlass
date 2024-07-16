@@ -176,8 +176,10 @@ void GemmOperationProfiler::initialize_workspace(
 
   uint64_t workspace_size = operation->get_host_workspace_size(&gemm_workspace_.configuration);
   gemm_workspace_.host_workspace.resize(workspace_size, 0);
+  printf("workspacesize:%d \n", workspace_size);
   workspace_size = operation->get_device_workspace_size(&gemm_workspace_.configuration,
 							&gemm_workspace_.arguments);
+  printf("deivceworkspacesize:%d \n", workspace_size);
   gemm_workspace_.device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
   operation->initialize(
     &gemm_workspace_.configuration,
@@ -204,6 +206,7 @@ double GemmOperationProfiler::profile(
   gemm_workspace_.arguments.batch_stride_C = gemm_workspace_.C->batch_stride();
   gemm_workspace_.arguments.batch_stride_D = gemm_workspace_.Computed->batch_stride();
 
+  //printf("iteration:%d problem_count:%d batch_count:%d",options.profiling.warmup_iterations, gemm_workspace_.problem_count, problem_.batch_count);
   for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
     int problem_idx = (iteration % gemm_workspace_.problem_count) * problem_.batch_count;
     gemm_workspace_.arguments.A = gemm_workspace_.A->batch_data(problem_idx);

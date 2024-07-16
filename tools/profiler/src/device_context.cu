@@ -50,26 +50,17 @@ DeviceAllocation *DeviceContext::allocate_tensor(//used
 
   device_memory_.emplace_back(type, layout_id, extent, stride, batch_count);
   DeviceAllocation *allocation = &device_memory_.back();
-// std::cout << "type: " << type << std::endl;
-// std::cout << "layout_id: " << layout_id << std::endl;
-// std::cout << "extent: ";
-// for (const auto& e : extent) std::cout << e << " ";
-// std::cout << std::endl;
-// std::cout << "stride: ";
-// for (const auto& s : stride) std::cout << s << " ";
-// std::cout << std::endl;
-// std::cout << "batch_count: " << batch_count << std::endl;
-    printf("type: %d\n", static_cast<int>(type));
-    printf("layout_id: %d\n", static_cast<int>(layout_id));
-    printf("extent: ");
-    for (const auto& e : extent) {
-        printf("%d ", e);
-    }
-    printf("\nstride: ");
-    for (const auto& s : stride) {
-        printf("%ld ", s);
-    }
-    printf("\nbatch_count: %d\n", batch_count); 
+    // printf("type: %d\n", static_cast<int>(type));
+    // printf("layout_id: %d\n", static_cast<int>(layout_id));
+    // printf("extent: ");
+    // for (const auto& e : extent) {
+    //     printf("%d ", e);
+    // }
+    // printf("\nstride: ");
+    // for (const auto& s : stride) {
+    //     printf("%ld ", s);
+    // }
+    // printf("\nbatch_count: %d\n", batch_count); 
   allocations_[name] = allocation;
   return allocation;
 }
