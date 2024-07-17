@@ -256,7 +256,7 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr = nullptr) const {
 
-    printf("---------run here-----------------");
+    printf("0\n");
     OperatorArguments args;
 
     Status status = construct_arguments_(
@@ -264,7 +264,6 @@ public:
       static_cast<GemmConfiguration const *>(configuration_ptr));
 
     if (status != Status::kSuccess) {
-    printf("---------run here2-----------------");
       return 0;
     }
 
@@ -338,7 +337,6 @@ public:
 #endif
   }
 };
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename Operator_>
@@ -462,6 +460,7 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr = nullptr) const {
 
+    printf("1\n");
     OperatorArguments args;
 
     Status status = construct_arguments_(
@@ -671,6 +670,7 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr) const {
 
+    printf("2\n");
     OperatorArguments args;
 
     Status status = construct_arguments_(
@@ -888,6 +888,7 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr = nullptr) const {
 
+    printf("3\n");
     OperatorArguments args;
 
     Status status = construct_arguments_(
@@ -1091,6 +1092,7 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr = nullptr) const {
 
+    printf("4\n");
     OperatorArguments args;
 
     Status status = construct_arguments_(
@@ -1287,6 +1289,7 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr) const {
 
+    printf("5\n");
     OperatorArguments args;
 
     Status status = construct_arguments_(
