@@ -150,13 +150,21 @@ int main(int argc, char const *arg[]) {
   arguments.B = nullptr;
   arguments.C = nullptr;
   arguments.D = nullptr;
+  std::vector<uint8_t>alpha; 
+  std::vector<uint8_t>beta;
   //arguments.alpha = 1;//problem_.alpha.data();
-  arguments.alpha = reinterpret_cast<void*>(1);
-  arguments.beta = reinterpret_cast<void*>(0);
+  // arguments.alpha = reinterpret_cast<void*>(1);
+  // arguments.beta = reinterpret_cast<void*>(0);
+  // arguments.alpha = reinterpret_cast<int32_t*>(1);
+  // arguments.beta = reinterpret_cast<int32_t*>(0);
+  // *reinterpret_cast<int32_t *>(arguments.alpha)=static_cast<int32_t>(1);
+  // *reinterpret_cast<int32_t *>(arguments.beta)=static_cast<int32_t>(0);
   //= reinterpret_cast<void*>(1)
   //arguments.beta = 0;//problem_.beta.data();
-  // cast_from_double(arguments.alpha, operation_desc.element_epilogue, 1);
-  // cast_from_double(arguments.beta, operation_desc.element_epilogue, 0);
+  cast_from_double(alpha, operation_desc.element_epilogue, 1);
+  cast_from_double(beta, operation_desc.element_epilogue, 0);
+  arguments.alpha = alpha.data(); 
+  arguments.beta = beta.data();
   arguments.pointer_mode = library::ScalarPointerMode::kHost;
   arguments.raster_order = library::RasterOrder::kHeuristic;//problem_.raster_order;
 //
@@ -231,107 +239,108 @@ int main(int argc, char const *arg[]) {
   host_workspace.resize(workspace_size, 0);
   printf("workspacesize:%d \n", workspace_size);
   workspace_size = operation->get_device_workspace_size(&configuration,&arguments); //Segmentation fault
-  // this line out 0 in gemm_operation so i set it to 0;
-  // workspace_size = 0;
+  // //this line out 0 in gemm_operation so i set it to 0;
+  ////workspace output in gemm operation workspace_size = 0;
 		// 					  printf("workspacesize:%d \n", workspace_size);
-  // device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
-  // operation->initialize(
-  //   &configuration,
-  //   host_workspace.data(),
-  //   device_workspace.data());
+  device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
+  operation->initialize(
+    &configuration,
+    host_workspace.data(),
+    device_workspace.data());
   //---------------------------------------------------------------------------//
-  profiler->initialize_configuration(device_context, operation, problem_space, problem);
-
-  profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
-  //options, problem_space, problem
-
-  //------------------------profiler part --------------------------//
-   // double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
+  // profiler->initialize_configuration(device_context, operation, problem_space, problem);
   //
-  // arguments.A = A->data();
-  // arguments.B = B->data();
-  // arguments.C = C->data();
-  // arguments.D = Computed->data();
-  // arguments.pointer_mode = library::ScalarPointerMode::kHost;
-  // arguments.batch_stride_A = A->batch_stride();
-  // arguments.batch_stride_B = B->batch_stride();
-  // arguments.batch_stride_C = C->batch_stride();
-  // arguments.batch_stride_D = Computed->batch_stride();
-  // //
-  // //printf("iteration:%d problem_count:%d batch_count:%d",options.profiling.warmup_iterations, problem_count, batch_count);
-  // for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
-  //   int problem_idx = (iteration % problem_count) * batch_count;
-  //   arguments.A = A->batch_data(problem_idx);
-  //   arguments.B = B->batch_data(problem_idx);
-  //   arguments.C = C->batch_data(problem_idx);
-  //   arguments.D = Computed->batch_data(problem_idx);
-  //   operation->run( //todo:move to main //Segmentation fault
-  //     &arguments,
-  //     host_workspace.data(),
-  //     device_workspace.data());
-  // }
+  // profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
   //
-  // cutlass::profiler::GpuTimer timer;
-  // timer.start();
-  // int Iterations = options.profiling.iterations;
-  // int iteration = 0;
-  // for (; iteration < Iterations; ++iteration) {
-  //   int workspace_idx = options.profiling.warmup_iterations + iteration;
-  //   int problem_idx = (workspace_idx % problem_count) * batch_count;
-  //   arguments.A = A->batch_data(problem_idx);
-  //   arguments.B = B->batch_data(problem_idx);
-  //   arguments.C = C->batch_data(problem_idx);
-  //   arguments.D = Computed->batch_data(problem_idx);
-  //   operation->run(
-  //     &arguments,
-  //     host_workspace.data(),
-  //     device_workspace.data());
-  // }
-  // timer.stop_and_wait();
-  // double runtime = timer.duration(iteration);
-//   std::cout
-//     << "=============================\n"
-//     << "       Arguments:";
-//   std::cout << " --gemm_kind=" << library::to_string(operation_desc.gemm_kind);
-//   std::cout << " --m=" << profiler->problem_.m; //todo:arguments.m put everything printed to arguments
-//   std::cout << " --n=" << profiler->problem_.n;
-//   std::cout << " --k=" << profiler->problem_.k;
-//   std::cout << " --A=" << library::to_string(operation_desc.A.element) << ":" << library::to_string(operation_desc.A.layout);
-//   std::cout << " --B=" << library::to_string(operation_desc.B.element) << ":" << library::to_string(operation_desc.B.layout);
-//   std::cout << " --C=" << library::to_string(operation_desc.C.element) << ":" << library::to_string(operation_desc.C.layout);
-//   std::cout << " --D=" << library::to_string(operation_desc.D.element) << ":" << library::to_string(operation_desc.D.layout);
-//   std::cout << "  \\\n                 ";
-//   std::cout << " --alpha=" << library::lexical_cast(profiler->problem_.alpha, operation_desc.element_epilogue);
-//   std::cout << " --beta=" << library::lexical_cast(profiler->problem_.beta, operation_desc.element_epilogue);
-//   std::cout << " --split_k_mode=" << library::to_string(profiler->problem_.split_k_mode);
-//   std::cout << " --split_k_slices=" << profiler->problem_.split_k_slices;
-//   std::cout << " --batch_count=" << profiler->problem_.batch_count;
-//   std::cout << " --raster_order=" << library::to_string(profiler->problem_.raster_order);
-//   std::cout << "  \\\n                 ";
-//   std::cout << " --op_class=" << library::to_string(operation_desc.tile_description.math_instruction.opcode_class);
-//   std::cout << " --accum=" << library::to_string(operation_desc.tile_description.math_instruction.element_accumulator);
-//   std::cout << " --cta_m=" << operation_desc.tile_description.threadblock_shape.m();
-//   std::cout << " --cta_n=" << operation_desc.tile_description.threadblock_shape.n();
-//   std::cout << " --cta_k=" << operation_desc.tile_description.threadblock_shape.k();
-//   std::cout << " --cluster_m=" << operation_desc.tile_description.cluster_shape.m();
-//   std::cout << " --cluster_n=" << operation_desc.tile_description.cluster_shape.n();
-//   std::cout << " --cluster_k=" << operation_desc.tile_description.cluster_shape.k();
-//   std::cout << "  \\\n                 ";
-//   std::cout << " --stages=" << operation_desc.tile_description.threadblock_stages;
-//   std::cout << " --warps_m=" << operation_desc.tile_description.warp_count.m();
-//   std::cout << " --warps_n=" << operation_desc.tile_description.warp_count.n();
-//   std::cout << " --warps_k=" << operation_desc.tile_description.warp_count.k();
-//   std::cout << " --inst_m=" << operation_desc.tile_description.math_instruction.instruction_shape.m();
-//   std::cout << " --inst_n=" << operation_desc.tile_description.math_instruction.instruction_shape.n();
-//   std::cout << " --inst_k=" << operation_desc.tile_description.math_instruction.instruction_shape.k();
-//   std::cout << " --min_cc=" << operation_desc.tile_description.minimum_compute_capability;
-//   std::cout << " --max_cc=" << operation_desc.tile_description.maximum_compute_capability;
-//   std::cout << "  \\\n                 ";
-// //  double bytes = profiler->bytes(operation_desc, profiler->problem_);
-//   double flops = profiler->flops(profiler->problem_);
-//   std::cout
-//     << "\n"
-//     << "         Runtime: " << runtime << "  ms\n"
-//     << "          Memory: " << (double)bytes / double(1 << 30) / runtime * 1000.0 << " GiB/s\n"
-//     << "            Math: " << flops / runtime / 1.0e6 << " GFLOP/s\n";
+  // //------------------------profiler part --------------------------//
+  //  double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
+
+  arguments.A = A->data();
+  arguments.B = B->data();
+  arguments.C = C->data();
+  arguments.D = Computed->data();
+  arguments.pointer_mode = library::ScalarPointerMode::kHost;
+  arguments.batch_stride_A = A->batch_stride();
+  arguments.batch_stride_B = B->batch_stride();
+  arguments.batch_stride_C = C->batch_stride();
+  arguments.batch_stride_D = Computed->batch_stride();
+  //
+  //printf("iteration:%d problem_count:%d batch_count:%d",options.profiling.warmup_iterations, problem_count, batch_count);
+  for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
+    int problem_idx = (iteration % problem_count) * batch_count;
+    arguments.A = A->batch_data(problem_idx);
+    arguments.B = B->batch_data(problem_idx);
+    arguments.C = C->batch_data(problem_idx);
+    arguments.D = Computed->batch_data(problem_idx);
+    operation->run( //todo:move to main //Segmentation fault
+      &arguments,
+      host_workspace.data(),
+      device_workspace.data());
+  }
+  //
+  cutlass::profiler::GpuTimer timer;
+  timer.start();
+  int Iterations = options.profiling.iterations;
+  int iteration = 0;
+  for (; iteration < Iterations; ++iteration) {
+    int workspace_idx = options.profiling.warmup_iterations + iteration;
+    int problem_idx = (workspace_idx % problem_count) * batch_count;
+    arguments.A = A->batch_data(problem_idx);
+    arguments.B = B->batch_data(problem_idx);
+    arguments.C = C->batch_data(problem_idx);
+    arguments.D = Computed->batch_data(problem_idx);
+    operation->run(
+      &arguments,
+      host_workspace.data(),
+      device_workspace.data());
+  }
+  timer.stop_and_wait();
+  double runtime = timer.duration(iteration);
+  std::cout
+    << "=============================\n"
+    << "       Arguments:";
+  std::cout << " --gemm_kind=" << library::to_string(operation_desc.gemm_kind);
+  std::cout << " --m=" << profiler->problem_.m; //todo:arguments.m put everything printed to arguments
+  std::cout << " --n=" << profiler->problem_.n;
+  std::cout << " --k=" << profiler->problem_.k;
+  std::cout << " --A=" << library::to_string(operation_desc.A.element) << ":" << library::to_string(operation_desc.A.layout);
+  std::cout << " --B=" << library::to_string(operation_desc.B.element) << ":" << library::to_string(operation_desc.B.layout);
+  std::cout << " --C=" << library::to_string(operation_desc.C.element) << ":" << library::to_string(operation_desc.C.layout);
+  std::cout << " --D=" << library::to_string(operation_desc.D.element) << ":" << library::to_string(operation_desc.D.layout);
+  std::cout << "  \\\n                 ";
+  std::cout << " --alpha=" << library::lexical_cast(profiler->problem_.alpha, operation_desc.element_epilogue);
+  std::cout << " --beta=" << library::lexical_cast(profiler->problem_.beta, operation_desc.element_epilogue);
+  std::cout << " --split_k_mode=" << library::to_string(profiler->problem_.split_k_mode);
+  std::cout << " --split_k_slices=" << profiler->problem_.split_k_slices;
+  std::cout << " --batch_count=" << profiler->problem_.batch_count;
+  std::cout << " --raster_order=" << library::to_string(profiler->problem_.raster_order);
+  std::cout << "  \\\n                 ";
+  std::cout << " --op_class=" << library::to_string(operation_desc.tile_description.math_instruction.opcode_class);
+  std::cout << " --accum=" << library::to_string(operation_desc.tile_description.math_instruction.element_accumulator);
+  std::cout << " --cta_m=" << operation_desc.tile_description.threadblock_shape.m();
+  std::cout << " --cta_n=" << operation_desc.tile_description.threadblock_shape.n();
+  std::cout << " --cta_k=" << operation_desc.tile_description.threadblock_shape.k();
+  std::cout << " --cluster_m=" << operation_desc.tile_description.cluster_shape.m();
+  std::cout << " --cluster_n=" << operation_desc.tile_description.cluster_shape.n();
+  std::cout << " --cluster_k=" << operation_desc.tile_description.cluster_shape.k();
+  std::cout << "  \\\n                 ";
+  std::cout << " --stages=" << operation_desc.tile_description.threadblock_stages;
+  std::cout << " --warps_m=" << operation_desc.tile_description.warp_count.m();
+  std::cout << " --warps_n=" << operation_desc.tile_description.warp_count.n();
+  std::cout << " --warps_k=" << operation_desc.tile_description.warp_count.k();
+  std::cout << " --inst_m=" << operation_desc.tile_description.math_instruction.instruction_shape.m();
+  std::cout << " --inst_n=" << operation_desc.tile_description.math_instruction.instruction_shape.n();
+  std::cout << " --inst_k=" << operation_desc.tile_description.math_instruction.instruction_shape.k();
+  std::cout << " --min_cc=" << operation_desc.tile_description.minimum_compute_capability;
+  std::cout << " --max_cc=" << operation_desc.tile_description.maximum_compute_capability;
+  std::cout << "  \\\n                 ";
+//  double bytes = profiler->bytes(operation_desc, profiler->problem_);
+  // double flops = profiler->flops(profiler->problem_);
+  double flops = (m*n*k+m*n)*2*batch_count;
+  printf("flops = %lf\n", flops);
+  std::cout
+    << "\n"
+    << "         Runtime: " << runtime << "  ms\n"
+    << "          Memory: " << (double)bytes / double(1 << 30) / runtime * 1000.0 << " GiB/s\n"
+    << "            Math: " << flops / runtime / 1.0e6 << " GFLOP/s\n";
 }

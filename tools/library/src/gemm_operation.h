@@ -188,6 +188,7 @@ protected:
     OperatorArguments &operator_args,
     GemmArguments const *arguments) {
 
+    printf("update4\n");
     if (arguments->pointer_mode == ScalarPointerMode::kHost) {
       typename Operator::EpilogueOutputOp::Params params(
         *static_cast<ElementCompute const *>(arguments->alpha),
@@ -390,6 +391,7 @@ protected:
   static Status update_arguments_(
     OperatorArguments &operator_args,
     SparseGemmArguments const *arguments) {
+    printf("update5\n");
 
     if (arguments->pointer_mode == ScalarPointerMode::kHost) {
       typename Operator::EpilogueOutputOp::Params params(
@@ -596,11 +598,14 @@ protected:
     OperatorArguments &operator_args,
     GemmUniversalArguments const *arguments) {
     
-    if (arguments->pointer_mode == ScalarPointerMode::kHost) {
+    printf("update6\n");
+    //printf("%"
+    if (arguments->pointer_mode == ScalarPointerMode::kHost) {//segmentation here
       typename Operator::EpilogueOutputOp::Params params(
         *static_cast<ElementCompute const *>(arguments->alpha),
         *static_cast<ElementCompute const *>(arguments->beta)
       );
+      printf("enter if\n");
       operator_args.epilogue = params;
     }
     else if (arguments->pointer_mode == ScalarPointerMode::kDevice){
@@ -676,7 +681,6 @@ public:
     Status status = construct_arguments_(
       args, 
       static_cast<GemmUniversalConfiguration const *>(configuration_ptr));
-
     if (status != Status::kSuccess) {
       return 0;
     }
@@ -684,7 +688,8 @@ public:
     status = update_arguments_(
       args,
       static_cast<GemmUniversalArguments const *>(arguments_ptr));
-
+//Segmentation fault above
+printf("success\n");
     if (status != Status::kSuccess) {
       return 0;
     }
@@ -806,6 +811,7 @@ protected:
     OperatorArguments &operator_args,
     GemmPlanarComplexArguments const *arguments) {
     
+    printf("enter update");
     if (arguments->pointer_mode == ScalarPointerMode::kHost) {
       typename Operator::EpilogueOutputOp::Params params(
         *static_cast<cutlass::complex<ElementCompute> const *>(arguments->alpha),
@@ -1015,6 +1021,7 @@ protected:
     OperatorArguments &operator_args,
     GemmPlanarComplexArrayArguments const *arguments) {
     
+    printf("update2\n");
     if (arguments->pointer_mode == ScalarPointerMode::kHost) {
       typename Operator::EpilogueOutputOp::Params params(
         *static_cast<cutlass::complex<ElementCompute> const *>(arguments->alpha),
@@ -1210,6 +1217,7 @@ protected:
     OperatorArguments &op_args,
     GemmGroupedArguments const *arguments) {
 
+    printf("update3\n");
     if (arguments->pointer_mode == ScalarPointerMode::kHost) {
 
       typename Operator::EpilogueOutputOp::Params params(
