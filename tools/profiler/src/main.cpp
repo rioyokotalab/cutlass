@@ -253,7 +253,7 @@ int main(int argc, char const *arg[]) {
   // profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
   //
   // //------------------------profiler part --------------------------//
-  //  double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
+   // double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
 
   arguments.A = A->data();
   arguments.B = B->data();
@@ -335,8 +335,9 @@ int main(int argc, char const *arg[]) {
   std::cout << " --max_cc=" << operation_desc.tile_description.maximum_compute_capability;
   std::cout << "  \\\n                 ";
 //  double bytes = profiler->bytes(operation_desc, profiler->problem_);
-  // double flops = profiler->flops(profiler->problem_);
-  double flops = (m*n*k+m*n)*2*batch_count;
+  //double flops = profiler->flops(profiler->problem_);
+   double flops = (double)((double)m*n*k+m*n)*2*batch_count;
+  printf("%d %d %d\n",m, n, k);
   printf("flops = %lf\n", flops);
   std::cout
     << "\n"

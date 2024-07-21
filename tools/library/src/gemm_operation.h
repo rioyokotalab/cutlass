@@ -598,14 +598,14 @@ protected:
     OperatorArguments &operator_args,
     GemmUniversalArguments const *arguments) {
     
-    printf("update6\n");
+    // printf("update6\n");
     //printf("%"
     if (arguments->pointer_mode == ScalarPointerMode::kHost) {//segmentation here
       typename Operator::EpilogueOutputOp::Params params(
         *static_cast<ElementCompute const *>(arguments->alpha),
         *static_cast<ElementCompute const *>(arguments->beta)
       );
-      printf("enter if\n");
+      // printf("enter if\n");
       operator_args.epilogue = params;
     }
     else if (arguments->pointer_mode == ScalarPointerMode::kDevice){
