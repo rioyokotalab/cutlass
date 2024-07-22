@@ -65,51 +65,6 @@ DeviceAllocation *DeviceContext::allocate_tensor(//used
   return allocation;
 }
 
-/// Allocates memory of a given type, capacity (elements), and name
-// DeviceAllocation *DeviceContext::allocate_tensor( //used
-//   Options const &options,
-//   std::string const &name,
-//   library::NumericTypeID type, 
-//   library::LayoutTypeID layout_id, 
-//   std::vector<int> const &extent, 
-//   std::vector<int64_t> const &stride,
-//   int batch_count,
-//   int seed_shift) {
-//
-//   DeviceAllocation *allocation = 
-//     allocate_tensor(name, type, layout_id, extent, stride, batch_count);
-//
-//   // if (options.initialization.enabled) { // print the value and replace here  options.initialization.enabled = 1
-//     // Distribution data_distribution = options.initialization.data_distribution; 
-//     // data_distribution.set_uniform(-3, 3, 0);
-//
-//   // }
-//
-//   // std::cout << options.initialization.enabled << std::endl;
-//    // Distribution data_distribution = options.initialization.data_distribution; 
-//   // Distribution data_distribution;
-//   //  data_distribution.set_uniform(-3, 3, 0);
-//
-//   return allocation;
-// }
-
-/// Allocates memory for sparse meta data 
-// DeviceAllocation *DeviceContext::allocate_sparsemeta_tensor(
-//   Options const &options,
-//   std::string const &name,
-//   library::NumericTypeID type, 
-//   library::LayoutTypeID layout_id, 
-//   library::NumericTypeID type_a,
-//   std::vector<int> const &extent, 
-//   std::vector<int64_t> const &stride,
-//   int batch_count,
-//   int seed_shift) {
-//
-//   DeviceAllocation *allocation = 
-//     allocate_tensor(name, type, layout_id, extent, stride, batch_count);
-//   return allocation;
-// }
-
 /// Frees all device memory allocations
 void DeviceContext::free() { //used
   allocations_.clear();

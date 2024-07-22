@@ -31,10 +31,15 @@
 #include <iostream>
 #include "cutlass/profiler/options.h"
 #include "cutlass/library/singleton.h"
-#include "cutlass/profiler/gemm_operation_profiler.h"
+// #include "cutlass/profiler/gemm_operation_profiler.h"
 #include "cutlass/profiler/gpu_timer.h"
 #include "cutlass/trace.h"
 
+#include "cutlass/library/library.h"
+
+#include "cutlass/profiler/device_context.h"
+#include "cutlass/profiler/problem_space.h"
+// Profiler includes
 using namespace cutlass;
 
    // library::GemmUniversalArguments arguments;
@@ -43,7 +48,7 @@ int main(int argc, char const *arg[]) {
   CommandLine cmdline(argc, arg);
   profiler::Options options(cmdline);
   profiler::DeviceContext device_context;
-  auto profiler = new profiler::GemmOperationProfiler();
+  // auto profiler = new profiler::GemmOperationProfiler();
   profiler::ArgumentDescriptionVector tile_description_arguments{
     {profiler::ArgumentTypeID::kEnumerated, {"op_class", "opcode-class"}, "Class of math instruction (simt, tensorop, wmmatensorop, wmma)"},
     {profiler::ArgumentTypeID::kEnumerated, {"accum", "accumulator-type"}, "Math instruction accumulator data type"},
@@ -122,6 +127,8 @@ int main(int argc, char const *arg[]) {
    int m = 3456;  
    int n = 4096;
    int k = 4096;
+   int split_k_slices{1};
+   cutlass::library::SplitKMode  split_k_mode = library::SplitKMode::kSerial;//it was not used anywhere
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
   // double bytes = profiler->bytes(operation_desc, profiler->problem_);//?why here is double
@@ -300,20 +307,20 @@ int main(int argc, char const *arg[]) {
     << "=============================\n"
     << "       Arguments:";
   std::cout << " --gemm_kind=" << library::to_string(operation_desc.gemm_kind);
-  std::cout << " --m=" << profiler->problem_.m; //todo:arguments.m put everything printed to arguments
-  std::cout << " --n=" << profiler->problem_.n;
-  std::cout << " --k=" << profiler->problem_.k;
+  std::cout << " --m=" << m; //todo:arguments.m put everything printed to arguments
+  std::cout << " --n=" << n;
+  std::cout << " --k=" << k;
   std::cout << " --A=" << library::to_string(operation_desc.A.element) << ":" << library::to_string(operation_desc.A.layout);
   std::cout << " --B=" << library::to_string(operation_desc.B.element) << ":" << library::to_string(operation_desc.B.layout);
   std::cout << " --C=" << library::to_string(operation_desc.C.element) << ":" << library::to_string(operation_desc.C.layout);
   std::cout << " --D=" << library::to_string(operation_desc.D.element) << ":" << library::to_string(operation_desc.D.layout);
   std::cout << "  \\\n                 ";
-  std::cout << " --alpha=" << library::lexical_cast(profiler->problem_.alpha, operation_desc.element_epilogue);
-  std::cout << " --beta=" << library::lexical_cast(profiler->problem_.beta, operation_desc.element_epilogue);
-  std::cout << " --split_k_mode=" << library::to_string(profiler->problem_.split_k_mode);
-  std::cout << " --split_k_slices=" << profiler->problem_.split_k_slices;
-  std::cout << " --batch_count=" << profiler->problem_.batch_count;
-  std::cout << " --raster_order=" << library::to_string(profiler->problem_.raster_order);
+  std::cout << " --alpha=" << library::lexical_cast(alpha, operation_desc.element_epilogue);
+  std::cout << " --beta=" << library::lexical_cast(beta, operation_desc.element_epilogue);
+  // std::cout << " --split_k_mode=" << library::to_string(split_k_mode);  //not used 
+  std::cout << " --split_k_slices=" << split_k_slices;
+  std::cout << " --batch_count=" << batch_count;
+  std::cout << " --raster_order=" << library::to_string(arguments.raster_order);
   std::cout << "  \\\n                 ";
   std::cout << " --op_class=" << library::to_string(operation_desc.tile_description.math_instruction.opcode_class);
   std::cout << " --accum=" << library::to_string(operation_desc.tile_description.math_instruction.element_accumulator);
