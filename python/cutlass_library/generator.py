@@ -4438,13 +4438,13 @@ if __name__ == "__main__":
   manifest = Manifest(args)
 
   # GenerateSM50(manifest, args.cuda_version)
-  GenerateSM60(manifest, args.cuda_version)
-  GenerateSM61(manifest, args.cuda_version)
-  GenerateSM70(manifest, args.cuda_version)
-  GenerateSM75(manifest, args.cuda_version)
+  # GenerateSM60(manifest, args.cuda_version)
+  # GenerateSM61(manifest, args.cuda_version)
+  # GenerateSM70(manifest, args.cuda_version)
+  # GenerateSM75(manifest, args.cuda_version)
   GenerateSM80(manifest, args.cuda_version)
-  GenerateSM89(manifest, args.cuda_version)
-  GenerateSM90(manifest, args.cuda_version)
+  # GenerateSM89(manifest, args.cuda_version)
+  # GenerateSM90(manifest, args.cuda_version)
   if 'library' in args.generator_target.split(','):
     manifest.emit(GeneratorTarget.Library)
 
