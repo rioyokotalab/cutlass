@@ -169,7 +169,7 @@ def CreateGemmOperator(manifest, layouts, tile_descriptions, data_type, \
             operations.append(new_operation)
 
   return operations
-
+# todo remove
 # Generates 3.0 API based GemmUniversal API kernels. Alignment constraints are folded in with layouts
 def CreateGemmUniversal3xOperator(
     manifest, layouts, tile_descriptions, data_types,
@@ -219,7 +219,7 @@ def CreateGemmUniversal3xOperator(
 
   return operations
 
-#
+
 def CreateSparseGemmOperator(manifest, layouts, tile_descriptions, data_type, \
   alignment_constraints, complex_transforms = None, epilogue_functor = EpilogueFunctor.LinearCombination, \
   swizzling_functor = SwizzlingFunctor.Identity8):
@@ -4437,7 +4437,7 @@ if __name__ == "__main__":
 
   manifest = Manifest(args)
 
-  GenerateSM50(manifest, args.cuda_version)
+  # GenerateSM50(manifest, args.cuda_version)
   GenerateSM60(manifest, args.cuda_version)
   GenerateSM61(manifest, args.cuda_version)
   GenerateSM70(manifest, args.cuda_version)
