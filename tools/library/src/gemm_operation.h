@@ -724,7 +724,7 @@ printf("success\n");
   }
 
   /// Runs the kernel
-  virtual Status run(
+  virtual Status run(//used
     void const *arguments_ptr,
     void *host_workspace, 
     void *device_workspace = nullptr, 
