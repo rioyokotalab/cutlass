@@ -36,11 +36,11 @@
 #include "cutlass/cutlass.h"
 
 #include "cutlass/gemm/device/gemm.h"
-#include "cutlass/gemm/device/gemm_sparse.h"
-#include "cutlass/gemm/device/gemm_complex.h"
+// #include "cutlass/gemm/device/gemm_sparse.h"
+// #include "cutlass/gemm/device/gemm_complex.h"
 #include "cutlass/gemm/device/gemm_batched.h"
 #include "cutlass/gemm/device/gemm_array.h"
-#include "cutlass/gemm/device/gemm_universal_adapter.h"
+// #include "cutlass/gemm/device/gemm_universal_adapter.h"
 #include "cutlass/gemm/kernel/default_gemm_universal.h"
 #include "cutlass/gemm/kernel/default_gemm_planar_complex_universal.h"
 
