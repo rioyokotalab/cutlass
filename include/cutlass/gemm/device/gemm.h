@@ -738,12 +738,13 @@ public:
 
   /// Runs the kernel using initialized state.
   Status run(cudaStream_t stream = nullptr) {
-
+    printf("run in gemm.h \n");
     return underlying_operator_.run(stream);
   }
 
   /// Runs the kernel using initialized state.
   Status operator()(cudaStream_t stream = nullptr) {
+    printf("run in gemm.h \n");
     return run(stream);
   }
 

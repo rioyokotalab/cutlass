@@ -343,6 +343,7 @@ public:
     dim3 const block = GemmKernel::get_block_shape();
     dim3 const grid = get_grid_shape(params);
 
+    printf("run in gemm universal_adapter 1\n");
     // configure smem size and carveout
     int smem_size = GemmKernel::SharedStorageSize;
 
@@ -427,7 +428,7 @@ public:
     CudaHostAdapter *cuda_adapter = nullptr
   ) {
     Status status = initialize(args, workspace, stream, cuda_adapter);
-
+printf("run in gemm universal_adapter 2\n");
     if (Status::kSuccess == status) {
       status = run(params_, stream, cuda_adapter);
     }
@@ -447,6 +448,7 @@ public:
   /// Overload that allows a user to re-launch the same kernel without updating internal params struct.
   Status
   run(cudaStream_t stream = nullptr, CudaHostAdapter *cuda_adapter = nullptr) {
+    printf("run in gemm universal_adapter3\n");
     return run(params_, stream, cuda_adapter);
   }
 
@@ -592,10 +594,10 @@ public:
   }
 
   /// Runs the kernel using initialized state.
-  Status run(
+  Status run( //run here
     cudaStream_t stream = nullptr,
     CudaHostAdapter *cuda_adapter = nullptr) {
-
+    printf("run in gemm universal_adapter 5\n"); 
     return underlying_operator_.run(stream, cuda_adapter);
   }
 
