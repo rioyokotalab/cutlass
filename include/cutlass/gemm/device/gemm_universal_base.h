@@ -126,65 +126,23 @@ public:
   /// if necessary.
   static Status init_device_props()
   {
-    CUTLASS_TRACE_HOST("GemmUniversalBase::init_device_props()");
-
-    cudaError_t cudart_result;
-
-    // Get current device ordinal
     int current_ordinal;
-    cudart_result = cudaGetDevice(&current_ordinal);
-    if (cudart_result != cudaSuccess) {
-      CUTLASS_TRACE_HOST("  cudaGetDevice() returned error " << cudaGetErrorString(cudart_result));
-      return Status::kErrorInternal;
-    }
+    cudaGetDevice(&current_ordinal);
+    cudaDeviceGetAttribute (&device_sms_, cudaDevAttrMultiProcessorCount, current_ordinal);
 
-    // Done if matches the current static member
-    if (current_ordinal == device_ordinal_) {
-      // Already initialized
-      return Status::kSuccess;
-    }
+    cudaFuncSetAttribute(
+      Kernel2<GemmKernel>,
+      cudaFuncAttributeMaxDynamicSharedMemorySize,
+      kSharedStorageSize);
 
-    // Update SM count member
-    cudart_result = cudaDeviceGetAttribute (&device_sms_, cudaDevAttrMultiProcessorCount, current_ordinal);
-    if (cudart_result != cudaSuccess) {
-      CUTLASS_TRACE_HOST("  cudaDeviceGetAttribute() returned error " << cudaGetErrorString(cudart_result));
-      return Status::kErrorInternal;
-    }
-
-    // If requires more than 48KB: configure for extended, dynamic shared memory
-    if constexpr (kSharedStorageSize >= (48 << 10))
-    {
-      cudart_result = cudaFuncSetAttribute(
-        Kernel2<GemmKernel>,
-        cudaFuncAttributeMaxDynamicSharedMemorySize,
-        kSharedStorageSize);
-      if (cudart_result != cudaSuccess) {
-        CUTLASS_TRACE_HOST("  cudaFuncSetAttribute() returned error " << cudaGetErrorString(cudart_result));
-        return Status::kErrorInternal;
-      }
-    }
-
-    cudart_result = cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
+    cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
       &sm_occupancy_,
       Kernel2<GemmKernel>,
       GemmKernel::kThreadCount,
       kSharedStorageSize,
       cudaOccupancyDisableCachingOverride);
-    if (cudart_result != cudaSuccess) {
-      CUTLASS_TRACE_HOST("  cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags() returned error " << cudaGetErrorString(cudart_result));
-      return Status::kErrorInternal;
-    }
 
-    // Update device ordinal member on success
     device_ordinal_ = current_ordinal;
-
-    CUTLASS_TRACE_HOST("  "
-      "device_ordinal: (" << device_ordinal_ << "), "
-      "device_sms: (" << device_sms_ << "), "
-      "sm_occupancy: (" << sm_occupancy_ << ") "
-      "smem_size: (" << kSharedStorageSize << ") "
-      "GemmKernel::kThreadCount: (" << GemmKernel::kThreadCount << ")");
-
     return Status::kSuccess;
   }
 
@@ -265,52 +223,6 @@ public:
       << "  grid_dims: {" << grid_dims << "}");
 
     return grid_dims;
-  }
-
-
-  /// Returns the maximum number of active thread blocks per multiprocessor
-  static int maximum_active_blocks(CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    CUTLASS_TRACE_HOST("GemmUniversalBase::maximum_active_blocks()");
-
-    int32_t device_sms   = 0;
-    int32_t sm_occupancy = 0;
-
-
-    if constexpr (kEnableCudaHostAdapter) {
-      CUTLASS_ASSERT(cuda_adapter);
-
-      if (cuda_adapter) {
-
-        Status status = cuda_adapter->query_occupancy(
-          &device_sms,
-          &sm_occupancy,
-          kGemmKernelIndex,
-          GemmKernel::kThreadCount,
-          kSharedStorageSize);
-
-        CUTLASS_ASSERT(status == Status::kSuccess);
-
-        if (status != Status::kSuccess) {
-        return -1;
-        }
-      }
-      else {
-        return -1;
-      }
-    }
-    else {
-      CUTLASS_ASSERT(cuda_adapter == nullptr);
-      // Initialize static device properties, if necessary
-      if (init_device_props() != Status::kSuccess) {
-        return -1;
-      }
-
-      sm_occupancy = sm_occupancy_;
-    }
-
-    CUTLASS_TRACE_HOST("  max_active_blocks: " << sm_occupancy_);
-    return sm_occupancy;
   }
 
 
