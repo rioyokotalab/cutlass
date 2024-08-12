@@ -200,51 +200,8 @@ public:
   /// Initialize params member
   Status init_params(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
   {
-    int32_t device_sms = 0;
-    int32_t sm_occupancy = 0;
-
-    if constexpr (kEnableCudaHostAdapter) {
-      CUTLASS_ASSERT(cuda_adapter);
-
-      //
-      // Occupancy query using CudaHostAdapter::query_occupancy().
-      //
-
-      if (cuda_adapter) {
-
-        Status status = cuda_adapter->query_occupancy(
-          &device_sms,
-          &sm_occupancy,
-          kGemmKernelIndex,
-          GemmKernel::kThreadCount,
-          kSharedStorageSize);
-
-        CUTLASS_ASSERT(status == Status::kSuccess);
-
-        if (status != Status::kSuccess) {
-          return status;
-        }
-      }
-      else {
-        return Status::kErrorInternal;
-      }
-    }
-    else {
-      CUTLASS_ASSERT(cuda_adapter == nullptr);
-
-      // Initialize static device properties, if necessary
-      Status result = init_device_props();
-
-      if (result != Status::kSuccess) {
-        return result;
-      }
-
-      device_sms   = device_sms_;
-      sm_occupancy = sm_occupancy_;
-    }
-
-    // Initialize params member
-    params_ = typename GemmKernel::Params(args, device_sms, sm_occupancy);
+    Status result = init_device_props();
+    params_ = typename GemmKernel::Params(args, device_sms_, sm_occupancy_);
     return Status::kSuccess;
   }
 
