@@ -177,7 +177,7 @@ int main(int argc, char const *arg[]) {
 //
   int problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
-    printf("%d %d %d-------------\n", problem_count, int64_t(options.device.properties.l2CacheSize), bytes);
+    // printf("%d %d %d-------------\n", problem_count, int64_t(options.device.properties.l2CacheSize), bytes);
     // printf("type: %d\n", static_cast<int>(operation_desc.A.element));
     // printf("layout_id: %d\n", static_cast<int>(operation_desc.A.layout));
     // printf("extent: ");
@@ -244,7 +244,7 @@ int main(int argc, char const *arg[]) {
 
   uint64_t workspace_size = operation->get_host_workspace_size(&configuration);
   host_workspace.resize(workspace_size, 0);
-  printf("workspacesize:%d \n", workspace_size);
+  //printf("workspacesize:%d \n", workspace_size);
   workspace_size = operation->get_device_workspace_size(&configuration,&arguments); //Segmentation fault
   // //this line out 0 in gemm_operation so i set it to 0;
   ////workspace output in gemm operation workspace_size = 0;
@@ -344,8 +344,8 @@ int main(int argc, char const *arg[]) {
 //  double bytes = profiler->bytes(operation_desc, profiler->problem_);
   //double flops = profiler->flops(profiler->problem_);
    double flops = (double)((double)m*n*k+m*n)*2*batch_count;
-  printf("%d %d %d\n",m, n, k);
-  printf("flops = %lf\n", flops);
+  //printf("%d %d %d\n",m, n, k);
+  //printf("flops = %lf\n", flops);
   std::cout
     << "\n"
     << "         Runtime: " << runtime << "  ms\n"

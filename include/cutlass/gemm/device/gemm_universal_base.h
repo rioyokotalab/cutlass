@@ -325,21 +325,9 @@ public:
     cudaStream_t stream = nullptr,
     CudaHostAdapter *cuda_adapter = nullptr)
   {
-    CUTLASS_TRACE_HOST("GemmUniversalBase::initialize() - workspace "
-      << workspace << ", stream: " << (stream ? "non-null" : "null"));
-
-    // Initialize parameters from args
-    Status result = init_params(args, cuda_adapter);
-    if (result != Status::kSuccess) {
-      return result;
-    }
-
-    // Assign and prepare workspace memory
-    if (args.mode == GemmUniversalMode::kGemm) {
-      return params_.init_workspace(workspace, stream);
-    }
-
-    return Status::kSuccess;
+    init_device_props();
+    params_ = typename GemmKernel::Params(args, device_sms_, sm_occupancy_);
+    return params_.init_workspace(workspace, stream);
   }
 
 

@@ -675,7 +675,7 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr) const {
 
-    printf("2\n");
+    //printf("2\n");
     OperatorArguments args;
 
     Status status = construct_arguments_(
@@ -688,8 +688,6 @@ public:
     status = update_arguments_(
       args,
       static_cast<GemmUniversalArguments const *>(arguments_ptr));
-//Segmentation fault above
-printf("success\n");
     if (status != Status::kSuccess) {
       return 0;
     }
