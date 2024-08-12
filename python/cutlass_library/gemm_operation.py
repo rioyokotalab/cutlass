@@ -1181,23 +1181,11 @@ class EmitGemmConfigurationLibrary:
     self.configuration_path = os.path.join(operation_path, "%s.cu" % configuration_name).replace('\\', '/')
 
     self.instance_emitter = {
-      GemmKind.Gemm: EmitGemmInstance,
-      GemmKind.Sparse: EmitSparseGemmInstance,
-      GemmKind.Universal: EmitGemmUniversalInstance,
-      GemmKind.Universal3x: EmitGemmUniversal3xInstance,
-      GemmKind.PlanarComplex: EmitGemmPlanarComplexInstance,
-      GemmKind.PlanarComplexArray: EmitGemmPlanarComplexArrayInstance,
-      GemmKind.Grouped: EmitGemmGroupedInstance
+      GemmKind.Universal: EmitGemmUniversalInstance
     }
 
     self.gemm_kind_wrappers = {
-      GemmKind.Gemm: 'GemmOperation',
-      GemmKind.Sparse: 'GemmSparseOperation',
-      GemmKind.Universal: 'GemmUniversalOperation',
-      GemmKind.Universal3x: 'GemmUniversal3xOperation',
-      GemmKind.PlanarComplex: 'GemmPlanarComplexOperation',
-      GemmKind.PlanarComplexArray: 'GemmPlanarComplexArrayOperation',
-      GemmKind.Grouped: 'GemmGroupedOperation'
+      GemmKind.Universal: 'GemmUniversalOperation'
     }
 
     self.wmma_guard_start = "#if defined(CUTLASS_ARCH_WMMA_SM${sm_number}_ENABLED)"
