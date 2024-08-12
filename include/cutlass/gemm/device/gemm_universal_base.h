@@ -109,8 +109,6 @@ public:
   /// Update the kernel function's shared memory configuration for the current device
   static constexpr size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
 
-protected:
-
   //
   // Device properties (uniform across all instances of the current thread)
   //
@@ -123,8 +121,6 @@ protected:
 
   /// Kernel SM occupancy (in thread blocks)
   CUTLASS_THREAD_LOCAL static int sm_occupancy_;
-
-protected:
 
   /// Initialize static thread-local members for the thread's current device,
   /// if necessary.
@@ -168,7 +164,6 @@ protected:
       }
     }
 
-    // Update SM occupancy member
     cudart_result = cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
       &sm_occupancy_,
       Kernel2<GemmKernel>,
@@ -193,8 +188,6 @@ protected:
     return Status::kSuccess;
   }
 
-
-protected:
 
   //
   // Instance data members
@@ -246,11 +239,6 @@ protected:
         return result;
       }
 
-      //
-      // Use thread-local static members for occupancy query initialized by call to
-      // `init_device_props()`
-      //
-
       device_sms   = device_sms_;
       sm_occupancy = sm_occupancy_;
     }
@@ -259,8 +247,6 @@ protected:
     params_ = typename GemmKernel::Params(args, device_sms, sm_occupancy);
     return Status::kSuccess;
   }
-
-public:
 
   //---------------------------------------------------------------------------------------------
   // Stateless API
@@ -423,27 +409,15 @@ public:
       "block: (" << block << "), "
       "SMEM: (" << kSharedStorageSize << ")");
 
-    if constexpr (kEnableCudaHostAdapter) {
-      CUTLASS_ASSERT(cuda_adapter);
-      if (cuda_adapter) {
-        void* kernel_params[] = {&params_};
-        return cuda_adapter->launch(grid, block, kSharedStorageSize, stream, kernel_params, 0);
-      }
-      else {
-        return Status::kErrorInternal;
-      }
-    }
-    else {
-      CUTLASS_ASSERT(cuda_adapter == nullptr);
+    CUTLASS_ASSERT(cuda_adapter == nullptr);
 
-      Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(params_);
+    Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(params_);
 
       // Query for errors
-      cudaError_t result = cudaGetLastError();
-      if (result != cudaSuccess) {
-        CUTLASS_TRACE_HOST("  grid launch failed with error " << cudaGetErrorString(result));
-        return Status::kErrorInternal;
-      }
+    cudaError_t result = cudaGetLastError();
+    if (result != cudaSuccess) {
+      CUTLASS_TRACE_HOST("  grid launch failed with error " << cudaGetErrorString(result));
+      return Status::kErrorInternal;
     }
 
     return Status::kSuccess;

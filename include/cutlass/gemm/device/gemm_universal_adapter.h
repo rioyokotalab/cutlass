@@ -213,8 +213,19 @@ public:
   Status run( //run here
     cudaStream_t stream = nullptr,
     CudaHostAdapter *cuda_adapter = nullptr) {
-    printf("run in gemm universal_adapter 5\n"); 
-    return underlying_operator_.run(stream, cuda_adapter);
+
+    dim3 block(GemmKernel::kThreadCount, 1, 1);
+    dim3 grid = underlying_operator_.params_.get_grid_dims();
+    size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
+
+    Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(underlying_operator_.params_);
+
+    cudaError_t result = cudaGetLastError();
+    if (result != cudaSuccess) {
+      CUTLASS_TRACE_HOST("  grid launch failed with error " << cudaGetErrorString(result));
+      return Status::kErrorInternal;
+    }
+    return Status::kSuccess;
   }
 
   /// Runs the kernel using initialized state.
