@@ -146,39 +146,6 @@ def CreateGemmOperator(manifest, layouts, tile_descriptions, data_type, \
 
   return operations
 
-def CreateGemmPlanarComplexOperator(manifest, layouts, tile_descriptions, data_type, \
-  alignment_constraints, complex_transforms):
-
-  if complex_transforms is None:
-    complex_transforms = [(ComplexTransform.none, ComplexTransform.none),]
-
-  element_a, element_b, element_c, element_epilogue = data_type
-
-  gemm_kinds = [GemmKind.PlanarComplex, GemmKind.PlanarComplexArray]
-
-  # by default, only generate the largest tile and largest alignment
-  if manifest.kernel_filter == '':
-    tile_descriptions = [tile_descriptions[0],]
-    alignment_constraints = [alignment_constraints[0],]
-
-  for gemm_kind in gemm_kinds:
-    for layout in layouts:
-      for tile_description in tile_descriptions:
-        for alignment in alignment_constraints:
-          for complex_transform in complex_transforms:
-
-            alignment_c = min(8, alignment)
-
-            A = TensorDescription(element_a, layout[0], alignment, complex_transform[0])
-            B = TensorDescription(element_b, layout[1], alignment, complex_transform[1])
-            C = TensorDescription(element_c, layout[2], alignment_c)
-
-            manifest.append(GemmOperation(gemm_kind, \
-              tile_description.minimum_compute_capability, \
-              tile_description, A, B, C, element_epilogue))
-  return
-
-#
 def CreateGemmGroupedOperator(manifest, layouts, tile_descriptions, data_type, \
   alignment_constraints, complex_transforms = None, epilogue_functor = EpilogueFunctor.LinearCombination, \
   swizzling_functor = SwizzlingFunctor.Identity8):
