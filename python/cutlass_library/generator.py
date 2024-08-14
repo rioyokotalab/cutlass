@@ -46,17 +46,6 @@ from typing import Any, Optional, Sequence, Tuple
 
 _LOGGER = logging.getLogger(__name__)
 
-def logging_prefix(indent_level: int = 0) -> str:
-  """String prefix for start of each debug log entry"""
-  prefix = '*** '
-  indent = '  '
-  return f"{prefix}{indent_level * indent}"
-
-def log_debug_line(line: str, indent_level: int = 0) -> None:
-  """Log one line of debug output"""
-  prefix = logging_prefix(indent_level)
-  _LOGGER.debug(prefix + line)
-
 # Certain usecases of cutlass_library nearly always prefer to run as scripts with
 # relative imports, rather than via an installed Python package. An example of this
 # is using CUTLASS's CMake system to generate a library of kernels to be profiled.
@@ -113,19 +102,6 @@ def CudaToolkitVersionSatisfies(semantic_ver_string, major, minor, patch = 0):
 
 ###################################################################################################
 ###################################################################################################
-
-#
-def EpilogueAlignment(max_alignment, tile, epilogue_steps = 8):
-  ''' Helper to compute the maximum alignment of the epilogue '''
-
-  def product(X, identity = 1):
-    result = identity
-    for item in X:
-      result *= item
-    return result
-
-  elements_per_thread = product(tile.threadblock_shape[:-1]) // product(tile.warp_count) // 32 // epilogue_steps
-  return min(max_alignment, elements_per_thread)
 
 def DefaultSwizzlingFunctor():
     return SwizzlingFunctor.Identity8
