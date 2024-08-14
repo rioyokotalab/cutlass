@@ -31,7 +31,6 @@
 #include <iostream>
 #include "cutlass/profiler/options.h"
 #include "cutlass/library/singleton.h"
-// #include "cutlass/profiler/gemm_operation_profiler.h"
 #include "cutlass/profiler/gpu_timer.h"
 #include "cutlass/trace.h"
 
