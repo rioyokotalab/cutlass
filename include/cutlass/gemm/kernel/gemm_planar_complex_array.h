@@ -193,19 +193,6 @@ public:
       ldd_imag(ldd_imag)
     {}
 
-    /// Returns arguments for the transposed problem
-    Arguments transposed_problem() const {
-      Arguments args(*this);
-      
-      std::swap(args.problem_size.m(), args.problem_size.n());
-      std::swap(args.ptr_M, args.ptr_N);
-      std::swap(args.ptr_A_real, args.ptr_B_real);
-      std::swap(args.ptr_A_imag, args.ptr_B_imag);
-      std::swap(args.lda_real, args.ldb_real);
-      std::swap(args.lda_imag, args.ldb_imag);
-
-      return args;
-    }
   };
 
 

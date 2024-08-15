@@ -204,20 +204,6 @@ public:
       batch_stride_D_imag(batch_stride_D_imag)
     {}
 
-    /// Returns arguments for the transposed problem
-    Arguments transposed_problem() const {
-      Arguments args(*this);
-      
-      std::swap(args.problem_size.m(), args.problem_size.n());
-      std::swap(args.ptr_A_real, args.ptr_B_real);
-      std::swap(args.ptr_A_imag, args.ptr_B_imag);
-      std::swap(args.lda_real, args.ldb_real);
-      std::swap(args.lda_imag, args.ldb_imag);
-      std::swap(args.batch_stride_A, args.batch_stride_B);
-      std::swap(args.batch_stride_A_imag, args.batch_stride_B_imag);
-
-      return args;
-    }
   };
 
 

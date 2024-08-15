@@ -174,17 +174,6 @@ public:
       CUTLASS_TRACE_HOST("GemmUniversal::Arguments::Arguments() - problem_size: " << problem_size);
     }
 
-    /// Returns arguments for the transposed problem
-    Arguments transposed_problem() const {
-      Arguments args(*this);
-
-      std::swap(args.problem_size.m(), args.problem_size.n());
-      std::swap(args.ptr_A, args.ptr_B);
-      std::swap(args.lda, args.ldb);
-      std::swap(args.batch_stride_A, args.batch_stride_B);
-
-      return args;
-    }
   };
 
 

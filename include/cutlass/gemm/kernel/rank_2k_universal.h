@@ -180,17 +180,6 @@ public:
 
       }
 
-      /// Returns arguments for a the transposed problem
-      Arguments transposed_problem() const {
-        Arguments args(*this);
-        
-        std::swap(args.ptr_A, args.ptr_B);
-        std::swap(args.lda, args.ldb);
-        std::swap(args.batch_stride_A, args.batch_stride_B);
-
-        return args;
-      }
-
   };
 
   //
