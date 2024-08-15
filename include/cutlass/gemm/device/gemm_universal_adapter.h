@@ -151,11 +151,7 @@ public:
   using UnderlyingOperator = GemmUniversalBase<GemmKernel>;
   using Arguments = typename UnderlyingOperator::Arguments;
 
-private:
-
   UnderlyingOperator underlying_operator_;
-
-public:
 
   /// Constructs the GEMM.
   GemmUniversalAdapter() { }
