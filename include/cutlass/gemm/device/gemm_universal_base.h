@@ -158,7 +158,7 @@ public:
   /// Initialize params member
   Status init_params(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
   {
-    Status result = init_device_props();
+    init_device_props();
     params_ = typename GemmKernel::Params(args, device_sms_, sm_occupancy_);
     return Status::kSuccess;
   }
@@ -170,61 +170,17 @@ public:
   /// Determines whether the GEMM can execute the given problem.
   static Status can_implement(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
   {
-    CUTLASS_TRACE_HOST("GemmUniversalBase::can_implement()");
-
-    dim3 grid = get_grid_shape(args, cuda_adapter);
-
-    if (!(grid.y <= std::numeric_limits<uint16_t>::max() &&
-          grid.z <= std::numeric_limits<uint16_t>::max()))
-    {
-      return Status::kErrorInvalidProblem;
-    }
-
     return GemmKernel::can_implement(args);
   }
-
 
   /// Returns the workspace size (in bytes) needed for the problem
   /// geometry expressed by these arguments
   static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
   {
-    CUTLASS_TRACE_HOST("GemmUniversalBase::get_workspace_size()");
-
-    // Initialize parameters from args
     GemmUniversalBase base;
-    if (base.init_params(args, cuda_adapter) != Status::kSuccess) {
-      return 0;
-    }
-
-    // Get size from parameters
-    size_t workspace_bytes = base.params_.get_workspace_size();
-
-    CUTLASS_TRACE_HOST("  workspace_bytes: " << workspace_bytes);
-    return workspace_bytes;
+    base.init_params(args, cuda_adapter);
+    return base.params_.get_workspace_size();
   }
-
-
-  /// Returns the grid extents in thread blocks to launch
-  static dim3 get_grid_shape(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    CUTLASS_TRACE_HOST("GemmUniversalBase::get_grid_shape()");
-
-    // Initialize parameters from args
-    GemmUniversalBase base;
-    if (base.init_params(args, cuda_adapter) != Status::kSuccess) {
-      return dim3(0,0,0);
-    }
-
-    // Get dims from parameters
-    dim3 grid_dims = base.params_.get_grid_dims();
-
-    CUTLASS_TRACE_HOST(
-         "  tiled_shape: " << base.params_.get_tiled_shape()  << "\n"
-      << "  grid_dims: {" << grid_dims << "}");
-
-    return grid_dims;
-  }
-
 
   //---------------------------------------------------------------------------------------------
   // Stateful API

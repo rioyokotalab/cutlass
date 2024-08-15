@@ -174,11 +174,6 @@ public:
     return UnderlyingOperator::get_workspace_size(to_underlying_arguments(args), cuda_adapter);
   }
 
-  /// Computes the grid shape
-  static dim3 get_grid_shape(Arguments const &args) {
-    return UnderlyingOperator::get_grid_shape(to_underlying_arguments(args));
-  }
-
   /// Initializes GEMM state from arguments.
   Status initialize(
     Arguments const &args,
