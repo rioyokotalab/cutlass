@@ -45,7 +45,6 @@
 #endif // !defined(__CUDACC_RTC__)
 
 // 2.x
-#include "cutlass/gemm/device/gemm_universal_base.h"
 #include "cutlass/gemm/kernel/gemm_transpose_operands.h"
 #include "cutlass/gemm/threadblock/threadblock_swizzle.h"
 #include "cutlass/epilogue/threadblock/epilogue_with_visitor_callbacks.h"
