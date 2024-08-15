@@ -150,14 +150,6 @@ public:
   /// Kernel parameters
   typename GemmKernel::Params params_;
 
-  /// Lightweight update given a subset of arguments.
-  Status update(Arguments const &args)
-  {
-    CUTLASS_TRACE_HOST("GemmUniversalBase()::update()");
-    params_.update(args);
-    return Status::kSuccess;
-  }
-
   /// Runs the kernel using initialized state.
   Status run(cudaStream_t stream = nullptr, CudaHostAdapter *cuda_adapter = nullptr)
   {

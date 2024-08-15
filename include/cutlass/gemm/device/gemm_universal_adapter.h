@@ -192,8 +192,8 @@ public:
 
   /// Lightweight update given a subset of arguments.
   Status update(Arguments const &args) {
-
-    return underlying_operator_.update(to_underlying_arguments(args));
+    underlying_operator_.params_.update(to_underlying_arguments(args));
+    return Status::kSuccess;
   }
 
   /// Runs the kernel using initialized state.
