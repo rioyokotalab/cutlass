@@ -71,42 +71,6 @@ public:
 
   using GemmKernel = GemmKernel_;
 
-  /// Boolean indicating whether the CudaHostAdapter is enabled
-  //static bool const kEnableCudaHostAdapter = CUTLASS_ENABLE_CUDA_HOST_ADAPTER;
-
-  using ThreadblockShape = typename GemmKernel::Mma::Shape;
-
-  using ElementA = typename GemmKernel::ElementA;
-  using LayoutA = typename GemmKernel::LayoutA;
-  using TensorRefA = TensorRef<ElementA const, LayoutA>;
-  static ComplexTransform const kTransformA = GemmKernel::kTransformA;
-
-  using ElementB = typename GemmKernel::ElementB;
-  using LayoutB = typename GemmKernel::LayoutB;
-  using TensorRefB = TensorRef<ElementB const, LayoutB>;
-  static ComplexTransform const kTransformB = GemmKernel::kTransformB;
-
-  using ElementC = typename GemmKernel::ElementC;
-  using LayoutC = typename GemmKernel::LayoutC;
-  using TensorRefC = TensorRef<ElementC const, LayoutC>;
-  using TensorRefD = TensorRef<ElementC, LayoutC>;
-
-  /// Numerical accumulation element type
-  using ElementAccumulator = typename GemmKernel::Mma::ElementC;
-
-  using EpilogueOutputOp = typename GemmKernel::EpilogueOutputOp;
-  using ThreadblockSwizzle = typename GemmKernel::ThreadblockSwizzle;
-  using Operator = typename GemmKernel::Operator;
-
-  /// Argument structure
-  using Arguments = typename GemmKernel::Arguments;
-
-
-  /// Index of the GEMM Kernel within the CudaHostAdapter
-  static int32_t const kGemmKernelIndex = 0;
-
-  /// Kernel dynamic shared memory allocation requirement
-  /// Update the kernel function's shared memory configuration for the current device
   static constexpr size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
 
   /// Device SM count

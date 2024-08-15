@@ -145,7 +145,7 @@ public:
   using ElementAccumulator = typename EpilogueOutputOp::ElementAccumulator;
   using ThreadblockSwizzle = typename GemmKernel::ThreadblockSwizzle;
   using UnderlyingOperator = GemmUniversalBase<GemmKernel>;
-  using Arguments = typename UnderlyingOperator::Arguments;
+  using Arguments = typename GemmKernel::Arguments;
 
   typename GemmKernel::Params params_;
   UnderlyingOperator underlying_operator_;
