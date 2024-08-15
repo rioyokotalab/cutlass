@@ -147,6 +147,7 @@ public:
   using UnderlyingOperator = GemmUniversalBase<GemmKernel>;
   using Arguments = typename UnderlyingOperator::Arguments;
 
+  typename GemmKernel::Params params_;
   UnderlyingOperator underlying_operator_;
 
   /// Constructs the GEMM.
@@ -173,8 +174,8 @@ public:
   static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
     UnderlyingOperator base;
     base.init_device_props();
-    base.params_ = typename GemmKernel::Params(to_underlying_arguments(args), base.device_sms_, base.sm_occupancy_);
-    return base.params_.get_workspace_size();
+    typename GemmKernel::Params params = typename GemmKernel::Params(to_underlying_arguments(args), base.device_sms_, base.sm_occupancy_);
+    return params.get_workspace_size();
   }
 
   /// Initializes GEMM state from arguments.
@@ -186,13 +187,13 @@ public:
   ) {
 
     underlying_operator_.init_device_props();
-    underlying_operator_.params_ = typename GemmKernel::Params(to_underlying_arguments(args), underlying_operator_.device_sms_, underlying_operator_.sm_occupancy_);
-    return underlying_operator_.params_.init_workspace(workspace, stream);
+    params_ = typename GemmKernel::Params(to_underlying_arguments(args), underlying_operator_.device_sms_, underlying_operator_.sm_occupancy_);
+    return params_.init_workspace(workspace, stream);
   }
 
   /// Lightweight update given a subset of arguments.
   Status update(Arguments const &args) {
-    underlying_operator_.params_.update(to_underlying_arguments(args));
+    params_.update(to_underlying_arguments(args));
     return Status::kSuccess;
   }
 
@@ -202,10 +203,10 @@ public:
     CudaHostAdapter *cuda_adapter = nullptr) {
 
     dim3 block(GemmKernel::kThreadCount, 1, 1);
-    dim3 grid = underlying_operator_.params_.get_grid_dims();
+    dim3 grid = params_.get_grid_dims();
     size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
 
-    Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(underlying_operator_.params_);
+    Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(params_);
 
     cudaError_t result = cudaGetLastError();
     if (result != cudaSuccess) {

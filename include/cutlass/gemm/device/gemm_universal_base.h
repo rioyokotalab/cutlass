@@ -148,16 +148,6 @@ public:
   //
 
   /// Kernel parameters
-  typename GemmKernel::Params params_;
-
-  /// Runs the kernel using initialized state.
-  Status run(cudaStream_t stream = nullptr, CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    dim3 block(GemmKernel::kThreadCount, 1, 1);
-    dim3 grid = params_.get_grid_dims();
-    Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(params_);
-    return Status::kSuccess;
-  }
 
 };
 
