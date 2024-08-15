@@ -150,16 +150,6 @@ public:
   /// Kernel parameters
   typename GemmKernel::Params params_;
 
-  /// Returns the workspace size (in bytes) needed for the problem
-  /// geometry expressed by these arguments
-  static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    GemmUniversalBase base;
-    init_device_props();
-    base.params_ = typename GemmKernel::Params(args, device_sms_, sm_occupancy_);
-    return base.params_.get_workspace_size();
-  }
-
   /// Lightweight update given a subset of arguments.
   Status update(Arguments const &args)
   {
