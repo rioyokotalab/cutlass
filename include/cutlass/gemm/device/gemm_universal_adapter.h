@@ -72,17 +72,13 @@ namespace cutlass::gemm::device {
   on the two kernel API types, and thus, GemmUniversalAdapter's behaviour might
   differ between the two specializations.
 */
-template <class GemmKernel_, class Enable = void>
-class GemmUniversalAdapter;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// CUTLASS 2.x API /////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 template <class GemmKernel_>
-class GemmUniversalAdapter<
-  GemmKernel_,
-  cute::enable_if_t<not gemm::detail::IsCutlass3GemmKernel<GemmKernel_>::value>>
+class GemmUniversalAdapter
 {
 public:
 
@@ -144,14 +140,43 @@ public:
   using EpilogueOutputOp = typename GemmKernel::EpilogueOutputOp;
   using ElementAccumulator = typename EpilogueOutputOp::ElementAccumulator;
   using ThreadblockSwizzle = typename GemmKernel::ThreadblockSwizzle;
-  using UnderlyingOperator = GemmUniversalBase<GemmKernel>;
   using Arguments = typename GemmKernel::Arguments;
 
   typename GemmKernel::Params params_;
-  UnderlyingOperator underlying_operator_;
+
+  static constexpr size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
+
+  /// Device SM count
+  CUTLASS_THREAD_LOCAL static int device_sms_;
+
+  /// Kernel SM occupancy (in thread blocks)
+  CUTLASS_THREAD_LOCAL static int sm_occupancy_;
 
   /// Constructs the GEMM.
   GemmUniversalAdapter() { }
+
+  /// Initialize static thread-local members for the thread's current device,
+  /// if necessary.
+  static Status init_device_props()
+  {
+    int current_ordinal;
+    cudaGetDevice(&current_ordinal);
+    cudaDeviceGetAttribute (&device_sms_, cudaDevAttrMultiProcessorCount, current_ordinal);
+
+    cudaFuncSetAttribute(
+      Kernel2<GemmKernel>,
+      cudaFuncAttributeMaxDynamicSharedMemorySize,
+      kSharedStorageSize);
+
+    cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
+      &sm_occupancy_,
+      Kernel2<GemmKernel>,
+      GemmKernel::kThreadCount,
+      kSharedStorageSize,
+      cudaOccupancyDisableCachingOverride);
+
+    return Status::kSuccess;
+  }
 
   /// Helper to construct a transposed equivalent for the underying GEMM operator
   static Arguments to_underlying_arguments(Arguments const &args_) {
@@ -172,7 +197,7 @@ public:
 
   /// Gets the workspace size
   static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
-    UnderlyingOperator base;
+    GemmUniversalAdapter base;
     base.init_device_props();
     typename GemmKernel::Params params = typename GemmKernel::Params(to_underlying_arguments(args), base.device_sms_, base.sm_occupancy_);
     return params.get_workspace_size();
@@ -186,8 +211,8 @@ public:
     CudaHostAdapter *cuda_adapter = nullptr
   ) {
 
-    underlying_operator_.init_device_props();
-    params_ = typename GemmKernel::Params(to_underlying_arguments(args), underlying_operator_.device_sms_, underlying_operator_.sm_occupancy_);
+    init_device_props();
+    params_ = typename GemmKernel::Params(to_underlying_arguments(args), device_sms_, sm_occupancy_);
     return params_.init_workspace(workspace, stream);
   }
 
@@ -217,6 +242,18 @@ public:
   }
 
 };
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/// Static initializers
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// Device SM count
+template <typename GemmKernel_>
+CUTLASS_THREAD_LOCAL int GemmUniversalAdapter<GemmKernel_>::device_sms_ = -1;
+
+/// Kernel SM occupancy (in thread blocks)
+template <typename GemmKernel_>
+CUTLASS_THREAD_LOCAL int GemmUniversalAdapter<GemmKernel_>::sm_occupancy_ = -1;
 
 ////////////////////////////////////////////////////////////////////////////////
 
