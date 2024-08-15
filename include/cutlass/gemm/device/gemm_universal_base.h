@@ -72,7 +72,7 @@ public:
   using GemmKernel = GemmKernel_;
 
   /// Boolean indicating whether the CudaHostAdapter is enabled
-  static bool const kEnableCudaHostAdapter = CUTLASS_ENABLE_CUDA_HOST_ADAPTER;
+  //static bool const kEnableCudaHostAdapter = CUTLASS_ENABLE_CUDA_HOST_ADAPTER;
 
   using ThreadblockShape = typename GemmKernel::Mma::Shape;
 
@@ -109,10 +109,6 @@ public:
   /// Update the kernel function's shared memory configuration for the current device
   static constexpr size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
 
-  //
-  // Device properties (uniform across all instances of the current thread)
-  //
-
   /// Device SM count
   CUTLASS_THREAD_LOCAL static int device_sms_;
 
@@ -142,12 +138,6 @@ public:
     return Status::kSuccess;
   }
 
-
-  //
-  // Instance data members
-  //
-
-  /// Kernel parameters
 
 };
 
