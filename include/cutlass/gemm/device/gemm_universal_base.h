@@ -150,12 +150,6 @@ public:
   /// Kernel parameters
   typename GemmKernel::Params params_;
 
-  /// Determines whether the GEMM can execute the given problem.
-  static Status can_implement(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    return GemmKernel::can_implement(args);
-  }
-
   /// Returns the workspace size (in bytes) needed for the problem
   /// geometry expressed by these arguments
   static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
@@ -165,23 +159,6 @@ public:
     base.params_ = typename GemmKernel::Params(args, device_sms_, sm_occupancy_);
     return base.params_.get_workspace_size();
   }
-
-  //---------------------------------------------------------------------------------------------
-  // Stateful API
-  //---------------------------------------------------------------------------------------------
-
-  /// Initializes GEMM state from arguments and workspace memory
-  Status initialize(
-    Arguments const &args,
-    void *workspace = nullptr,
-    cudaStream_t stream = nullptr,
-    CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    init_device_props();
-    params_ = typename GemmKernel::Params(args, device_sms_, sm_occupancy_);
-    return params_.init_workspace(workspace, stream);
-  }
-
 
   /// Lightweight update given a subset of arguments.
   Status update(Arguments const &args)

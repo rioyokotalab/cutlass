@@ -166,12 +166,15 @@ public:
 
   /// Determines whether the GEMM can execute the given problem.
   static Status can_implement(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
-    return UnderlyingOperator::can_implement(to_underlying_arguments(args), cuda_adapter);
+    return GemmKernel::can_implement(to_underlying_arguments(args));
   }
 
   /// Gets the workspace size
   static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
-    return UnderlyingOperator::get_workspace_size(to_underlying_arguments(args), cuda_adapter);
+    UnderlyingOperator base;
+    base.init_device_props();
+    base.params_ = typename GemmKernel::Params(to_underlying_arguments(args), base.device_sms_, base.sm_occupancy_);
+    return base.params_.get_workspace_size();
   }
 
   /// Initializes GEMM state from arguments.
