@@ -182,7 +182,9 @@ public:
     CudaHostAdapter *cuda_adapter = nullptr
   ) {
 
-    return underlying_operator_.initialize(to_underlying_arguments(args), workspace, stream, cuda_adapter);
+    underlying_operator_.init_device_props();
+    underlying_operator_.params_ = typename GemmKernel::Params(to_underlying_arguments(args), underlying_operator_.device_sms_, underlying_operator_.sm_occupancy_);
+    return underlying_operator_.params_.init_workspace(workspace, stream);
   }
 
   /// Lightweight update given a subset of arguments.

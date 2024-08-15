@@ -113,9 +113,6 @@ public:
   // Device properties (uniform across all instances of the current thread)
   //
 
-  // Device ordinal
-  CUTLASS_THREAD_LOCAL static int device_ordinal_;
-
   /// Device SM count
   CUTLASS_THREAD_LOCAL static int device_sms_;
 
@@ -142,7 +139,6 @@ public:
       kSharedStorageSize,
       cudaOccupancyDisableCachingOverride);
 
-    device_ordinal_ = current_ordinal;
     return Status::kSuccess;
   }
 
@@ -153,19 +149,6 @@ public:
 
   /// Kernel parameters
   typename GemmKernel::Params params_;
-
-
-  /// Initialize params member
-  Status init_params(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    init_device_props();
-    params_ = typename GemmKernel::Params(args, device_sms_, sm_occupancy_);
-    return Status::kSuccess;
-  }
-
-  //---------------------------------------------------------------------------------------------
-  // Stateless API
-  //---------------------------------------------------------------------------------------------
 
   /// Determines whether the GEMM can execute the given problem.
   static Status can_implement(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
@@ -178,7 +161,8 @@ public:
   static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr)
   {
     GemmUniversalBase base;
-    base.init_params(args, cuda_adapter);
+    init_device_props();
+    base.params_ = typename GemmKernel::Params(args, device_sms_, sm_occupancy_);
     return base.params_.get_workspace_size();
   }
 
@@ -210,29 +194,9 @@ public:
   /// Runs the kernel using initialized state.
   Status run(cudaStream_t stream = nullptr, CudaHostAdapter *cuda_adapter = nullptr)
   {
-    CUTLASS_TRACE_HOST("GemmUniversalBase::run()");
-
-    // Configure grid and block dimensions
     dim3 block(GemmKernel::kThreadCount, 1, 1);
     dim3 grid = params_.get_grid_dims();
-
-    // Launch kernel
-    CUTLASS_TRACE_HOST("  "
-      "grid: (" << grid << "), "
-      "block: (" << block << "), "
-      "SMEM: (" << kSharedStorageSize << ")");
-
-    CUTLASS_ASSERT(cuda_adapter == nullptr);
-
     Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(params_);
-
-      // Query for errors
-    cudaError_t result = cudaGetLastError();
-    if (result != cudaSuccess) {
-      CUTLASS_TRACE_HOST("  grid launch failed with error " << cudaGetErrorString(result));
-      return Status::kErrorInternal;
-    }
-
     return Status::kSuccess;
   }
 
@@ -265,10 +229,6 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /// Static initializers
 /////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Device ordinal
-template <typename GemmKernel_>
-CUTLASS_THREAD_LOCAL int GemmUniversalBase<GemmKernel_>::device_ordinal_ = -1;
 
 /// Device SM count
 template <typename GemmKernel_>
