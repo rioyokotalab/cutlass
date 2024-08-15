@@ -88,10 +88,6 @@ public:
 
   using GemmKernel = GemmKernel_;
 
-  static bool const kInternalTranspose =
-    !cutlass::epilogue::threadblock::detail::is_2x_evt_v<typename GemmKernel::Epilogue> &&  // 2.x EVT does not require internal transpose
-    cute::is_same<typename GemmKernel::LayoutC, cutlass::layout::RowMajor>::value;
-
   using ThreadblockShape = typename GemmKernel::Mma::Shape;
   using WarpShape = typename GemmKernel::WarpShape;
   using InstructionShape = typename GemmKernel::InstructionShape;
@@ -117,7 +113,7 @@ public:
     GemmKernel::kTransformB,
     GemmKernel::kAlignmentB,
     typename GemmKernel::LayoutC,
-    kInternalTranspose
+    true
   >;
 
   using ElementA = typename MapArguments::ElementA;
@@ -157,25 +153,24 @@ public:
   GemmUniversalAdapter() { }
 
   /// Helper to construct a transposed equivalent for the underying GEMM operator
-  static Arguments to_underlying_arguments(Arguments const &args) {
-    if (kInternalTranspose) {
-      return args.transposed_problem();
-    }
-    else {
-      printf("0\n");
-      return args;
-    }
+  static Arguments to_underlying_arguments(Arguments const &args_) {
+    Arguments args(args_);
+    std::swap(args.problem_size.m(), args.problem_size.n());
+    std::swap(args.ptr_A, args.ptr_B);
+    std::swap(args.lda, args.ldb);
+    std::swap(args.stride_a, args.stride_b);
+    std::swap(args.batch_stride_A, args.batch_stride_B);
+    std::swap(args.ptr_gather_A_indices, args.ptr_gather_B_indices);
+    return args;
   }
 
   /// Determines whether the GEMM can execute the given problem.
   static Status can_implement(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
-
     return UnderlyingOperator::can_implement(to_underlying_arguments(args), cuda_adapter);
   }
 
   /// Gets the workspace size
   static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
-
     return UnderlyingOperator::get_workspace_size(to_underlying_arguments(args), cuda_adapter);
   }
 
