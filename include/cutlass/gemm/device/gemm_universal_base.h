@@ -159,29 +159,6 @@ public:
     return Status::kSuccess;
   }
 
-
-  /// Runs the kernel using initialized state.
-  Status operator()(cudaStream_t stream = nullptr, CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    return run(stream, cuda_adapter);
-  }
-
-
-  /// Runs the kernel using initialized state.
-  Status operator()(
-    Arguments const &args, 
-    void *workspace = nullptr, 
-    cudaStream_t stream = nullptr,
-    CudaHostAdapter *cuda_adapter = nullptr)
-  {
-    Status status = initialize(args, workspace, stream, cuda_adapter);
-
-    if (status == Status::kSuccess) {
-      status = run(stream, cuda_adapter);
-    }
-
-    return status;
-  }
 };
 
 
