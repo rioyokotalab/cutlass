@@ -44,13 +44,9 @@
 #include "cutlass/trace.h"
 #endif // !defined(__CUDACC_RTC__)
 
-// 2.x
 #include "cutlass/gemm/kernel/gemm_transpose_operands.h"
 #include "cutlass/gemm/threadblock/threadblock_swizzle.h"
 #include "cutlass/epilogue/threadblock/epilogue_with_visitor_callbacks.h"
-
-// 3.x
-#include "cutlass/gemm/kernel/gemm_universal.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -128,12 +124,6 @@ public:
   // C and D same type for 2.x kernel
   using ElementD = ElementC;
   using LayoutD = LayoutC;
-
-  using TensorRefA = TensorRef<ElementA const, LayoutA>;
-  using TensorRefB = TensorRef<ElementB const, LayoutB>;
-  using TensorRefC = TensorRef<ElementC const, LayoutC>;
-  using TensorRefD = TensorRef<ElementD, LayoutD>;
-
   static int const kStages = GemmKernel::Mma::kStages;
 
   using EpilogueOutputOp = typename GemmKernel::EpilogueOutputOp;
