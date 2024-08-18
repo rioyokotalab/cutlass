@@ -39,7 +39,6 @@
 #include "cutlass/gemm/device/gemm_batched.h"
 #include "cutlass/gemm/device/gemm_array.h"
 #include "cutlass/gemm/kernel/default_gemm_universal.h"
-#include "cutlass/gemm/kernel/default_gemm_planar_complex_universal.h"
 
 #include "cutlass/library/library.h"
 #include "library_internal.h"
