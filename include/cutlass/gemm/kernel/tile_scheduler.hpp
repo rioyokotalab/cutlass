@@ -85,21 +85,6 @@ template <
   class ClusterShape
 >
 struct TileSchedulerSelector<
-  PersistentScheduler,
-  ArchTag,
-  TileShape,
-  ClusterShape
-  > {
-  using Scheduler = PersistentTileSchedulerSm90;
-};
-
-// Default (void) for Sm90 maps to PersistentTileSchedulerSm90
-template <
-  class ArchTag,
-  class TileShape,
-  class ClusterShape
->
-struct TileSchedulerSelector<
   void,
   ArchTag,
   TileShape,
@@ -112,21 +97,6 @@ struct TileSchedulerSelector<
     ClusterShape
   >::Scheduler;
 };
-
-/*
-template <
-  class TileShape,
-  class ClusterShape
->
-struct TileSchedulerSelector<
-  StreamKScheduler,
-  arch::Sm90,
-  TileShape,
-  ClusterShape
-  > {
-  using Scheduler = PersistentTileSchedulerSm90StreamK<TileShape, ClusterShape>;
-};
-*/
 
 ////////////////////////////////////////////////////////////////////////////////
 
