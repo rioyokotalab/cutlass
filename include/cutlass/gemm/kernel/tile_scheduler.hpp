@@ -113,6 +113,7 @@ struct TileSchedulerSelector<
   >::Scheduler;
 };
 
+/*
 template <
   class TileShape,
   class ClusterShape
@@ -124,22 +125,6 @@ struct TileSchedulerSelector<
   ClusterShape
   > {
   using Scheduler = PersistentTileSchedulerSm90StreamK<TileShape, ClusterShape>;
-};
-
-/*
-template <
-  class TileShape,
-  class ClusterShape
-  , class GroupProblemShape
->
-struct TileSchedulerSelector<
-  GroupScheduler,
-  arch::Sm90,
-  TileShape,
-  ClusterShape
-  , GroupProblemShape
-  > {
-  using Scheduler = PersistentTileSchedulerSm90Group<GroupProblemShape>;
 };
 */
 
