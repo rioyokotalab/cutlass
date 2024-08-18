@@ -265,7 +265,6 @@ public:
     void const *configuration_ptr,
     void const *arguments_ptr) const {
 
-    //printf("2\n");
     OperatorArguments args;
 
     Status status = construct_arguments_(
