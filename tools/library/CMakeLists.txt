@@ -29,8 +29,6 @@
 include(GNUInstallDirs)
 
 add_library(cutlass_library_includes INTERFACE)
-#add_library(nvidia::cutlass::library::includes ALIAS cutlass_library_includes)
-#set_target_properties(cutlass_library_includes PROPERTIES EXPORT_NAME library::includes)
 
 target_include_directories(
   cutlass_library_includes
@@ -57,7 +55,6 @@ install(
   )
 
 add_library(cutlass_library_internal_interface INTERFACE)
-add_library(nvidia::cutlass::library::obj_interface ALIAS cutlass_library_internal_interface)
 
 target_include_directories(
   cutlass_library_internal_interface
