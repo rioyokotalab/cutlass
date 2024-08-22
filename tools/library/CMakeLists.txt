@@ -125,8 +125,8 @@ function(cutlass_add_cutlass_library)
     # If we're only building a single monolithic library then we
     # simply link the generated object files to the default library. 
 
-    target_link_libraries(${DEFAULT_NAME} PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>)
-    target_link_libraries(${DEFAULT_NAME}_static PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>)
+#    target_link_libraries(${DEFAULT_NAME} PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>)
+#    target_link_libraries(${DEFAULT_NAME}_static PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>)
 
   else()
 
@@ -218,10 +218,6 @@ cutlass_add_cutlass_library(
 # For backward compatibility with the old name
 add_library(cutlass_lib ALIAS cutlass_library)
 add_library(cutlass_lib_static ALIAS cutlass_library_static)
-
-################################################################################
-
-#file(GLOB_RECURSE GENERATOR_PYTHON_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/*.py)
 
 execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../python/cutlass_library
