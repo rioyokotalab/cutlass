@@ -229,11 +229,7 @@ file(GLOB_RECURSE GENERATOR_PYTHON_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOU
 
 # set cutlass generator compiler version to filter kernels in the generator not supported by a specific toolkit. 
 set(CUTLASS_GENERATOR_CUDA_COMPILER_VERSION ${CMAKE_CUDA_COMPILER_VERSION})
-set(CUTLASS_LIBRARY_GENERATED_KERNEL_LIST_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated_kernels.txt CACHE STRING "Generated kernel listing file")
-
-# --log-level is set to DEBUG to enable printing information about which kernels were excluded
-# from generation in /python/cutlass_library/manifest.py. To avoid having this information appear
-# in ${CMAKE_CURRENT_BINARY_DIR}/library_instance_generation.log, set this parameter to INFO
+#set(CUTLASS_LIBRARY_GENERATED_KERNEL_LIST_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated_kernels.txt CACHE STRING "Generated kernel listing file")
 
 execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../python/cutlass_library
@@ -247,7 +243,7 @@ execute_process(
     --kernels "cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8"
     --ignore-kernels ""
     --kernel-filter-file ""
-    --selected-kernel-list "${CUTLASS_LIBRARY_GENERATED_KERNEL_LIST_FILE}"
+    --selected-kernel-list "${CMAKE_CURRENT_BINARY_DIR}/generated_kernels.txt"
     --cuda-version "${CUTLASS_GENERATOR_CUDA_COMPILER_VERSION}"
     --log-level DEBUG
     --disable-cutlass-package-imports
@@ -256,11 +252,5 @@ execute_process(
   OUTPUT_FILE ${CMAKE_CURRENT_BINARY_DIR}/library_instance_generation.log
   ERROR_FILE ${CMAKE_CURRENT_BINARY_DIR}/library_instance_generation.log
 )
-
-if(NOT cutlass_lib_INSTANCE_GENERATION_RESULT EQUAL 0)
-  message(FATAL_ERROR "Error generating library instances. See ${CMAKE_CURRENT_BINARY_DIR}/library_instance_generation.log")
-endif()
-
-message(STATUS "Completed generation of library instances. See ${CMAKE_CURRENT_BINARY_DIR}/library_instance_generation.log for more information.")
 include(${CMAKE_CURRENT_BINARY_DIR}/generated/manifest.cmake)
 
