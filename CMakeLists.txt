@@ -28,6 +28,7 @@
 
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 cmake_policy(SET CMP0112 NEW)
+cmake_policy(SET CMP0104 NEW)
 project(CUTLASS VERSION 3.5.0 LANGUAGES CXX)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CUDA.cmake)
 set(CMAKE_INSTALL_PREFIX install CACHE PATH "Default installation location." FORCE)
@@ -37,91 +38,12 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS --expt-relaxed-constexpr)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_LEVEL=0)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1)
+list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-Wconversion)
+list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-fno-strict-aliasing)
 
 list(APPEND CUTLASS_CUDA_FLAGS -DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
 
 ###################################################################################################
-
-#if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=implicit-int-conversion ")
-#  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=implicit-int-conversion" )
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=pass-failed ")
-#  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=pass-failed" )
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=inconsistent-missing-override ")
-#  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=inconsistent-missing-override" )
-#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-conversion ")
-#  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-sign-conversion" )
-#endif()
-
-if (CUTLASS_ENABLE_OPENMP_TESTS)
-  find_package(OpenMP)
-  if(OpenMP_CXX_FOUND)
-    list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=${OpenMP_CXX_FLAGS})
-  else()
-    message(WARNING "CUTLASS_ENABLE_OPENMP_TESTS set but OpenMP not found.")
-  endif()
-endif()
-
-if(UNIX)
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-Wconversion)
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-fno-strict-aliasing)
-endif()
-
-#Report CUDA build flags
-if(CUTLASS_CUDA_NVCC_FLAGS)
-  message(STATUS "Using NVCC flags: ${CUTLASS_CUDA_NVCC_FLAGS}")
-endif()
-
-if(CUDA_COMPILER MATCHES "[Cc]lang")
-  if( NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
-    message(FATAL_ERROR "Clang CUDA compilation requires Clang CXX compilation. Currently CMAKE_CXX_COMPILER is ${CMAKE_CXX_COMPILER_ID}" )
-  endif()
-
-  # There are numerous Clang versions that can work with each CUDA toolkit and the 
-  # the checks are not very useful so we are turning them off and using testing to 
-  # ensure the various combinations work properly.
-
-  string(REPLACE "." ";" CUDA_VERSION_PARTS ${CMAKE_CUDA_COMPILER_VERSION})
-  list(GET CUDA_VERSION_PARTS 0 CUDA_VERSION_MAJOR)
-  list(GET CUDA_VERSION_PARTS 1 CUDA_VERSION_MINOR)
-
-  link_libraries(nvidia::cudart)
-  link_libraries(nvidia::cuda_driver)
-endif()
-
-# Support for 128-bit integers if using NVIDIA C++ compiler 
-if (${CMAKE_CXX_COMPILER_ID} MATCHES "PGI" OR ${CMAKE_CXX_COMPILER_ID} MATCHES "NVHPC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Mint128 ")
-endif()
-
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.18)
-  # CMake 3.18 added support for CUDA_ARCHITECTURES target property. We will use this
-  # property for CMake 3.18+, so we request the NEW behavior for correct compatibility.
-  # https://cmake.org/cmake/help/v3.18/policy/CMP0104.html#policy:CMP0104 
-  cmake_policy(SET CMP0104 NEW)
-endif()
-
-if (MSVC)
-  
-  # MSVC by default does not apply the correct __cplusplus version as specified by the C++ standard
-  # because MSVC is not a completely compliant implementation. This option forces MSVC to use the 
-  # appropriate value given the requested --std option. This fixes a compilation issue mismatch
-  # between GCC/Clang and MSVC.
-  #
-  # error : a constexpr function cannot have a nonliteral return type "dim3"
-  # 
-  # See https://developercommunity.visualstudio.com/t/msvc-incorrectly-defines-cplusplus/139261
-
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
-  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler  /Zc:__cplusplus")
-  
-endif()
-
-# Some tests require this build option in order to link.
-if (MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler /bigobj")
-endif()
 
 function(cutlass_apply_cuda_gencode_flags TARGET)
   set(options)
