@@ -38,55 +38,20 @@ list(APPEND CUTLASS_CUDA_NVCC_FLAGS --expt-relaxed-constexpr)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_LEVEL=0)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1)
 
-###################################################################################################
-
-#set(CUTLASS_DEBUG_TRACE_LEVEL "0" CACHE STRING "Level of debug tracing to perform.")
-#list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_DEBUG_TRACE_LEVEL=${CUTLASS_DEBUG_TRACE_LEVEL})
-
-set(CUTLASS_ENABLE_TENSOR_CORE_MMA ON CACHE BOOL
-  "Enable PTX mma instruction for collective matrix multiply operations.")
-
-#
-# NOTE: running with asan and CUDA requires the following environment variable:
-#
-#  ASAN_OPTIONS=protect_shadow_gap=0:replace_intrin=0:detect_leaks=0
-#
-# without the above environment setting, an error like the following may be generated:
-#
-#  *** Error: Could not detect active GPU device ID [out of memory]
-#  ...
-#  ==9149==ERROR: LeakSanitizer: detected memory leaks
-#  ...
-#
-if(ENABLE_ASAN)  # https://github.com/google/sanitizers/wiki/AddressSanitizer
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS --compiler-options=-fsanitize=address --compiler-options=-fno-omit-frame-pointer)
-  string(APPEND CMAKE_EXE_LINKER_FLAGS " -fsanitize=address")
-endif()
+list(APPEND CUTLASS_CUDA_FLAGS -DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
 
 ###################################################################################################
-#
-# Configure CUDA build options
-#
-###################################################################################################
 
-if (CUTLASS_ENABLE_TENSOR_CORE_MMA)
-  list(APPEND CUTLASS_CUDA_FLAGS -DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
-endif()
-
-
-
-
-# Warnings-as-error exceptions and warning suppressions for Clang builds
-if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=implicit-int-conversion ")
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=implicit-int-conversion" )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=pass-failed ")
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=pass-failed" )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=inconsistent-missing-override ")
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=inconsistent-missing-override" )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-conversion ")
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-sign-conversion" )
-endif()
+#if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=implicit-int-conversion ")
+#  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=implicit-int-conversion" )
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=pass-failed ")
+#  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=pass-failed" )
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=inconsistent-missing-override ")
+#  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-error=inconsistent-missing-override" )
+#  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-sign-conversion ")
+#  list(APPEND CUTLASS_CUDA_NVCC_FLAGS "-Wno-sign-conversion" )
+#endif()
 
 if (CUTLASS_ENABLE_OPENMP_TESTS)
   find_package(OpenMP)

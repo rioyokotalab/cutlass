@@ -104,12 +104,6 @@ namespace cutlass {
 #define CUTLASS_CONV_UNIT_TEST_RIGOROUS_SIZE_ENABLED 0
 #endif
 
-
-// CUDA 10.1 introduces the mma instruction
-#if !defined(CUTLASS_ENABLE_TENSOR_CORE_MMA)
-#define CUTLASS_ENABLE_TENSOR_CORE_MMA 0
-#endif
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define CUTLASS_ASSERT(x) assert(x)
