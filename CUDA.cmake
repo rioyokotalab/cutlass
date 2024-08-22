@@ -26,6 +26,14 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+function(cutlass_apply_cuda_gencode_flags TARGET)
+  set_property(TARGET ${TARGET} PROPERTY CUDA_ARCHITECTURES 90a-real;90a-virtual)
+endfunction()
+
+function(cutlass_apply_standard_compile_options TARGET)
+  target_compile_options(${TARGET} PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr;-DCUTLASS_TEST_LEVEL=0;-DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1;-Xcompiler=-Wconversion;-Xcompiler=-fno-strict-aliasing;-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1>)
+endfunction()
+
 if(CUDA_COMPILER MATCHES "[Cc]lang")
   set(CUTLASS_NATIVE_CUDA_INIT ON)
 elseif(CMAKE_VERSION VERSION_LESS 3.12.4)
