@@ -152,19 +152,6 @@ function(cutlass_add_cutlass_library)
 
   target_compile_features(${__NAME}_static INTERFACE cxx_std_17)
     
-  if (WIN32)
-    set(STATIC_OUTPUT_NAME ${__OUTPUT_NAME}.static)
-  else()
-    set(STATIC_OUTPUT_NAME ${__OUTPUT_NAME})
-  endif()
-    
-#  set_target_properties(
-#    ${__NAME}_static
-#    PROPERTIES
-#    OUTPUT_NAME ${STATIC_OUTPUT_NAME}
-#    WINDOWS_EXPORT_ALL_SYMBOLS 1
-#    )
-    
   target_link_libraries(
     ${__NAME}_static
     PUBLIC cutlass_library_includes
