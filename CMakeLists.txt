@@ -50,64 +50,15 @@ set(CUTLASS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE PATH "CUTLASS 
 set(CUTLASS_GENERATOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/library CACHE INTERNAL "Location of generator scripts")
 set(CUTLASS_TOOLS_UTIL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/util/include CACHE INTERNAL "")
 include_directories(${CUTLASS_INCLUDE_DIR})
-
-install(
-  TARGETS CUTLASS
-  EXPORT NvidiaCutlass
-  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  )
-
-###################################################################################################
-
-include(CTest)
-enable_testing()
-
-if (NOT TARGET test_all)
-  add_custom_target(test_all)
-endif()
-
-set(CUTLASS_INSTALL_TESTS ON CACHE BOOL "Install test executables")
-set(CUTLASS_TEST_EXECUTION_ENVIRONMENT "" CACHE BOOL "Environment in which to invoke unit test executables")
-
-set(CMAKE_TEST_INSTALL_PREFIX test CACHE STRING "Test root install location, relative to CMAKE_INSTALL_PREFIX.")
-set(CUTLASS_TEST_INSTALL_PREFIX ${CMAKE_TEST_INSTALL_PREFIX}/cutlass CACHE STRING "Test root install location, relative to CMAKE_INSTALL_PREFIX.")
-set(CUTLASS_TEST_INSTALL_BINDIR ${CUTLASS_TEST_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR} CACHE STRING "Test root install location, relative to CMAKE_INSTALL_PREFIX.")
-set(CUTLASS_TEST_INSTALL_LIBDIR ${CUTLASS_TEST_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR} CACHE STRING "Test root install location, relative to CMAKE_INSTALL_PREFIX.")
-
-install(DIRECTORY DESTINATION ${CUTLASS_TEST_INSTALL_PREFIX})
-install(DIRECTORY DESTINATION ${CUTLASS_TEST_INSTALL_BINDIR})
-install(DIRECTORY DESTINATION ${CUTLASS_TEST_INSTALL_LIBDIR})
-install(DIRECTORY DESTINATION ${CUTLASS_TEST_INSTALL_PREFIX}/ctest)
-
-################################################################################
-
-set(CUTLASS_ENABLE_CUBLAS OFF CACHE BOOL "cuBLAS usage for tests")
-set(CUTLASS_ENABLE_CUDNN OFF CACHE BOOL "cuDNN usage for tests")
+#install(
+#  TARGETS CUTLASS
+#  EXPORT NvidiaCutlass
+#  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#  )
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cuBLAS.cmake)
 
-if (CUTLASS_ENABLE_CUBLAS)
-  target_compile_definitions(CUTLASS INTERFACE CUTLASS_ENABLE_CUBLAS=1)
-endif()
-
-
-if (CUTLASS_ENABLE_CUDNN)
-  target_compile_definitions(CUTLASS INTERFACE CUTLASS_ENABLE_CUDNN=1)
-endif()
-
-################################################################################
-
-set(CUTLASS_DEFAULT_ACTIVE_TEST_SETS "default" CACHE STRING "Default
-  activated test sets. In `make test` mode, this string determines the
-  active set of tests. In `ctest` mode, this value can be overriden
-  with CUTLASS_TEST_SETS environment variable when running the ctest
-  executable.")
-
-set(CUTLASS_CTEST_TEMPLATE_FILE ${CMAKE_CURRENT_LIST_DIR}/cmake/CTestTestfile.configure.cmake)
-set(CUTLASS_CTEST_GENERATED_FILES "" CACHE INTERNAL "")
-
 add_subdirectory(tools)
-
 
 ################################################################################
 
@@ -128,13 +79,6 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfig.cmake  
     ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfigVersion.cmake 
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NvidiaCutlass/
-  )
-
-install(
-  EXPORT NvidiaCutlass
-  NAMESPACE nvidia::cutlass::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NvidiaCutlass/
-  FILE NvidiaCutlassTargets.cmake
   )
 
 ################################################################################
