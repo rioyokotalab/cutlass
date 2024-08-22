@@ -223,14 +223,6 @@ add_library(cutlass_lib_static ALIAS cutlass_library_static)
 
 file(GLOB_RECURSE GENERATOR_PYTHON_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/scripts/*.py)
 
-#
-# auto-instantiation of CUTLASS kernels
-#
-
-# set cutlass generator compiler version to filter kernels in the generator not supported by a specific toolkit. 
-set(CUTLASS_GENERATOR_CUDA_COMPILER_VERSION ${CMAKE_CUDA_COMPILER_VERSION})
-#set(CUTLASS_LIBRARY_GENERATED_KERNEL_LIST_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated_kernels.txt CACHE STRING "Generated kernel listing file")
-
 execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../python/cutlass_library
   COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CUTLASS_LIBRARY_PACKAGE_DIR}
@@ -244,7 +236,7 @@ execute_process(
     --ignore-kernels ""
     --kernel-filter-file ""
     --selected-kernel-list "${CMAKE_CURRENT_BINARY_DIR}/generated_kernels.txt"
-    --cuda-version "${CUTLASS_GENERATOR_CUDA_COMPILER_VERSION}"
+    --cuda-version "${CMAKE_CUDA_COMPILER_VERSION}"
     --log-level DEBUG
     --disable-cutlass-package-imports
   RESULT_VARIABLE cutlass_lib_INSTANCE_GENERATION_RESULT
