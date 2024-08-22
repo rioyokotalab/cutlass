@@ -36,36 +36,14 @@ include(GNUInstallDirs)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS --expt-relaxed-constexpr)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_LEVEL=0)
-list(APPEND CUTLASS_CUDA_CLANG_FLAGS -DCUTLASS_TEST_LEVEL=0)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1)
 
 ###################################################################################################
 
-
-set(CUTLASS_CONV_UNIT_TEST_RIGOROUS_SIZE_ENABLED ON CACHE BOOL "Enable/Disable rigorous conv problem sizes in conv unit tests")
-
-if (CUTLASS_CONV_UNIT_TEST_RIGOROUS_SIZE_ENABLED)
-  message(STATUS "Enable rigorous conv problem sizes in conv unit tests")
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_CONV_UNIT_TEST_RIGOROUS_SIZE_ENABLED=1)
-endif()
-
-################################################################################
-
-#
-# CUDA 10.1 introduces "mma" in PTX performing collective matrix multiply operations.
-#
-
-if (CUDA_VERSION VERSION_LESS 10.1)
-  set(CUTLASS_ENABLE_TENSOR_CORE_MMA_DEFAULT OFF)
-else()
-  set(CUTLASS_ENABLE_TENSOR_CORE_MMA_DEFAULT ON)
-endif()
-
-# Trace levels for debugging
 set(CUTLASS_DEBUG_TRACE_LEVEL "0" CACHE STRING "Level of debug tracing to perform.")
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_DEBUG_TRACE_LEVEL=${CUTLASS_DEBUG_TRACE_LEVEL})
 
-set(CUTLASS_ENABLE_TENSOR_CORE_MMA ${CUTLASS_ENABLE_TENSOR_CORE_MMA_DEFAULT} CACHE BOOL
+set(CUTLASS_ENABLE_TENSOR_CORE_MMA ON CACHE BOOL
   "Enable PTX mma instruction for collective matrix multiply operations.")
 
 #
