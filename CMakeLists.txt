@@ -40,8 +40,7 @@ list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_LEVEL=0)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-Wconversion)
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-fno-strict-aliasing)
-
-list(APPEND CUTLASS_CUDA_FLAGS -DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
+list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
 
 ###################################################################################################
 
@@ -49,17 +48,13 @@ function(cutlass_apply_cuda_gencode_flags TARGET)
   set_property(TARGET ${TARGET} PROPERTY CUDA_ARCHITECTURES 90a-real;90a-virtual)
 endfunction()
 
-set(__CUTLASS_CUDA_FLAGS ${CUTLASS_CUDA_FLAGS} CACHE INTERNAL "")
-set(__CUTLASS_CUDA_NVCC_FLAGS ${CUTLASS_CUDA_NVCC_FLAGS} CACHE INTERNAL "")
-
 function(cutlass_apply_standard_compile_options TARGET)
   set(CUDA_COMPILE_LANGUAGE CUDA)
-  set(_FLAGS ${__CUTLASS_CUDA_FLAGS} ${__CUTLASS_CUDA_NVCC_FLAGS})
   target_link_libraries(${TARGET} PRIVATE CUTLASS)
   target_compile_options(
     ${TARGET}
     PRIVATE
-    $<$<COMPILE_LANGUAGE:${CUDA_COMPILE_LANGUAGE}>:${_FLAGS}>
+    $<$<COMPILE_LANGUAGE:${CUDA_COMPILE_LANGUAGE}>:${CUTLASS_CUDA_NVCC_FLAGS}>
     )
 
 endfunction()
