@@ -35,39 +35,20 @@ set(CMAKE_INSTALL_PREFIX install CACHE PATH "Default installation location." FOR
 find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 include(GNUInstallDirs)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-list(APPEND CUTLASS_CUDA_NVCC_FLAGS --expt-relaxed-constexpr)
-list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_LEVEL=0)
-list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1)
-list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-Wconversion)
-list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-fno-strict-aliasing)
-list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
-
-###################################################################################################
 
 function(cutlass_apply_cuda_gencode_flags TARGET)
   set_property(TARGET ${TARGET} PROPERTY CUDA_ARCHITECTURES 90a-real;90a-virtual)
 endfunction()
 
 function(cutlass_apply_standard_compile_options TARGET)
-  set(CUDA_COMPILE_LANGUAGE CUDA)
-  target_link_libraries(${TARGET} PRIVATE CUTLASS)
-  target_compile_options(
-    ${TARGET}
-    PRIVATE
-    $<$<COMPILE_LANGUAGE:${CUDA_COMPILE_LANGUAGE}>:${CUTLASS_CUDA_NVCC_FLAGS}>
-    )
-
+  target_compile_options(${TARGET} PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr;-DCUTLASS_TEST_LEVEL=0;-DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1;-Xcompiler=-Wconversion;-Xcompiler=-fno-strict-aliasing;-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1>)
 endfunction()
 
-#
-# The following items should eventually be pushed into cutlass/CMakeLists.txt
-#
+###################################################################################################
 
-# GLOB for CUTLASS header files. Should we use a static list instead?
 file(GLOB_RECURSE CUTLASS_INCLUDE RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/cutlass/*.h)
 file(GLOB_RECURSE CUTLASS_CUTLASS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/include include/cutlass/*.h include/cutlass/*.hpp include/cutlass/*.inl)
 file(GLOB_RECURSE CUTLASS_CUTE RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/include include/cute/*.h*)
-file(GLOB_RECURSE CUTLASS_NVRTC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/test test/unit/nvrtc/kernel/*.h)
 
 ###################################################################################################
 #
