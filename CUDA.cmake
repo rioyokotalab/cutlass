@@ -36,11 +36,6 @@ endfunction()
 
 set(CUTLASS_NATIVE_CUDA ON CACHE BOOL "Utilize the CMake native CUDA flow")
 
-#if(NOT DEFINED ENV{CUDACXX} AND NOT DEFINED ENV{CUDA_BIN_PATH} AND DEFINED ENV{CUDA_PATH})
-  # For backward compatibility, allow use of CUDA_PATH.
-#  set(ENV{CUDACXX} $ENV{CUDA_PATH}/bin/nvcc)
-#endif()
-
 if(CUTLASS_NATIVE_CUDA)
 
   enable_language(CUDA)
@@ -61,14 +56,6 @@ else()
     set(CMAKE_CUDA_COMPILER_VERSION ${CUDA_VERSION})
   endif()
 
-endif()
-
-if (CUDA_VERSION VERSION_LESS 9.2)
-  message(FATAL_ERROR "CUDA 9.2+ Required, Found ${CUDA_VERSION}.")
-endif()
-if(NOT CUTLASS_NATIVE_CUDA OR CUDA_COMPILER MATCHES "[Cc]lang")
-  set(CMAKE_CUDA_COMPILER ${CUDA_TOOLKIT_ROOT_DIR}/bin/nvcc)
-  message(STATUS "CUDA Compiler: ${CMAKE_CUDA_COMPILER}")
 endif()
 
 find_library(
@@ -307,13 +294,8 @@ function(cutlass_add_library NAME)
 
   cutlass_unify_source_files(TARGET_SOURCE_ARGS ${__UNPARSED_ARGUMENTS})
 
-  if(CUTLASS_NATIVE_CUDA OR CUDA_COMPILER MATCHES "clang")
-    cutlass_correct_source_file_language_property(${TARGET_SOURCE_ARGS})
-    add_library(${NAME} ${TARGET_SOURCE_ARGS} "")
-  else()
-    set(CUDA_LINK_LIBRARIES_KEYWORD PRIVATE)
-    cuda_add_library(${NAME} ${TARGET_SOURCE_ARGS} "")
-  endif()
+  cutlass_correct_source_file_language_property(${TARGET_SOURCE_ARGS})
+  add_library(${NAME} ${TARGET_SOURCE_ARGS} "")
 
   cutlass_apply_standard_compile_options(${NAME})
   if (NOT __SKIP_GENCODE_FLAGS)
@@ -359,13 +341,8 @@ function(cutlass_add_executable NAME)
 
   cutlass_unify_source_files(TARGET_SOURCE_ARGS ${__UNPARSED_ARGUMENTS})
 
-  if(CUTLASS_NATIVE_CUDA OR CUDA_COMPILER MATCHES "clang")
-    cutlass_correct_source_file_language_property(${TARGET_SOURCE_ARGS})
-    add_executable(${NAME} ${TARGET_SOURCE_ARGS})
-  else()
-    set(CUDA_LINK_LIBRARIES_KEYWORD PRIVATE)
-    cuda_add_executable(${NAME} ${TARGET_SOURCE_ARGS})
-  endif()
+  cutlass_correct_source_file_language_property(${TARGET_SOURCE_ARGS})
+  add_executable(${NAME} ${TARGET_SOURCE_ARGS})
 
   cutlass_apply_standard_compile_options(${NAME})
   cutlass_apply_cuda_gencode_flags(${NAME})
