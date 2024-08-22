@@ -62,19 +62,6 @@ message(STATUS "CUTLASS Revision: ${CUTLASS_REVISION}")
 
 ###################################################################################################
 
-#target_include_directories(
-#  CUTLASS
-#  SYSTEM INTERFACE
-#  $<BUILD_INTERFACE:${CUDA_TOOLKIT_ROOT_DIR}/include>
-#  )
-
-install(
-  DIRECTORY
-  ${CUTLASS_INCLUDE_DIR}/
-  ${CMAKE_CURRENT_BINARY_DIR}/include/
-  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-  )
-
 install(
   TARGETS CUTLASS
   EXPORT NvidiaCutlass
