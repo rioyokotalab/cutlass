@@ -30,10 +30,8 @@ cmake_policy(SET CMP0112 NEW)
 
 include(GNUInstallDirs)
 
-################################################################################
-
-set(CUTLASS_BUILD_MONO_LIBRARY OFF CACHE BOOL 
-  "Determines whether the cutlass library is generated as a single file or multiple files.")
+#set(CUTLASS_BUILD_MONO_LIBRARY OFF CACHE BOOL 
+#  "Determines whether the cutlass library is generated as a single file or multiple files.")
 
 ################################################################################
 
@@ -125,20 +123,6 @@ function(cutlass_add_cutlass_library)
     PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
     cuda_driver
     )
-    
-#  cutlass_add_library(
-#    ${__NAME}_static
-#    STATIC
-#    EXPORT_NAME ${__EXPORT_NAME}_static
-#    ""
-#    )
-
-#  target_link_libraries(
-#    ${__NAME}_static
-#    PUBLIC cutlass_library_includes
-#    PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
-#    cuda_driver
-#    )
     
   if (__SUFFIX)
     target_link_libraries(${DEFAULT_NAME} PUBLIC ${__NAME})
