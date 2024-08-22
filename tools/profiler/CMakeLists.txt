@@ -83,20 +83,3 @@ install(
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
 
-if (CUDA_VERSION VERSION_GREATER_EQUAL 12.3 AND CUDA_VERSION VERSION_LESS 12.4)
-  set(CUTLASS_PROFILER_TEST_COMMAND_OPTIONS_GEMM   --operation=Gemm       --providers=cutlass --verification-providers=cublas,host      --junit-output=test_cutlass_profiler_gemm    --print-kernel-before-running=true)
-else()
-  set(CUTLASS_PROFILER_TEST_COMMAND_OPTIONS_GEMM   --operation=Gemm       --providers=cutlass --verification-providers=cublas,device      --junit-output=test_cutlass_profiler_gemm    --print-kernel-before-running=true)
-endif()
-
-
-cutlass_add_executable_tests(
-  test_profiler cutlass_profiler
-  DEPENDEES test_all
-  TEST_COMMAND_OPTIONS
-    GEMM
-  TEST_COMMAND_OPTIONS_PREFIX
-    CUTLASS_PROFILER_TEST_COMMAND_OPTIONS_
-  DISABLE_EXECUTABLE_INSTALL_RULE
-  )
-

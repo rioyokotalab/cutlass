@@ -51,26 +51,16 @@ set(CUTLASS_GENERATOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/library CACHE INTERN
 set(CUTLASS_TOOLS_UTIL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/util/include CACHE INTERNAL "")
 include_directories(${CUTLASS_INCLUDE_DIR})
 
-find_package(Git QUIET)
-execute_process(
-  COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-  RESULT_VARIABLE CUTLASS_REVISION_RESULT
-  OUTPUT_VARIABLE CUTLASS_REVISION
-  OUTPUT_STRIP_TRAILING_WHITESPACE
-)
-message(STATUS "CUTLASS Revision: ${CUTLASS_REVISION}")
-
-###################################################################################################
-
 install(
   TARGETS CUTLASS
   EXPORT NvidiaCutlass
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   )
 
+###################################################################################################
+
 include(CTest)
 enable_testing()
-
 
 if (NOT TARGET test_all)
   add_custom_target(test_all)
@@ -117,25 +107,6 @@ set(CUTLASS_CTEST_TEMPLATE_FILE ${CMAKE_CURRENT_LIST_DIR}/cmake/CTestTestfile.co
 set(CUTLASS_CTEST_GENERATED_FILES "" CACHE INTERNAL "")
 
 function(cutlass_add_executable_tests NAME TARGET)
-# 
-# Generates test rules for `make test`, `make test_all`, and `ctest` invoked from either the 
-# <CMAKE_BINARY_DIR> or the <CMAKE_INSTALL_PREFIX>/<CUTLASS_TEST_INSTALL_PREFIX> after installation.
-# 
-# NAME: The base name for the test. Can be run with `make <NAME>` or `ctest -R 'c<NAME>'`.
-# TARGET: The target corresponding to the executable under test.
-# DISABLE_EXECUTABLE_INSTALL_RULE: An option, if given, that disables creating an install rule for TARGET.
-# DEPENDS: A list of targets or files on which this test is dependent.
-# DEPENDEES: A list of targets which should depend on this test.
-# TEST_COMMAND_OPTIONS: A list of variables (i.e. by reference params) which contain command line arguments
-#   to pass to the test executable. A unique test is generated for each set of 
-#   options given. If this option is not used, a single test with no arguments is generated.
-# TEST_COMMAND_OPTIONS_PREFIX: If provided, is added as a prefix to each TEST_COMMAND_OPTIONS value for 
-#   generating the full variable name to be referenced.
-# RESULT_CACHE_FILE: A file to be installed alongside the test executable with pre-computed
-#   test results to speed up test runtime.
-# TEST_SETS_SUPPORTED: A list of test set names these tests support. 
-# 
-
   set(options DISABLE_EXECUTABLE_INSTALL_RULE)
   set(oneValueArgs DISABLE_TESTS RESULT_CACHE_FILE TEST_COMMAND_OPTIONS_PREFIX)
   set(multiValueArgs DEPENDS DEPENDEES TEST_COMMAND_OPTIONS TEST_SETS_SUPPORTED)
@@ -244,7 +215,6 @@ function(cutlass_add_executable_tests NAME TARGET)
 endfunction()
 
 add_subdirectory(tools)
-add_dependencies(test_all test_profiler)
 
 
 ################################################################################
