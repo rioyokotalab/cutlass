@@ -27,8 +27,6 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
-cmake_policy(SET CMP0112 NEW)
-cmake_policy(SET CMP0104 NEW)
 project(CUTLASS VERSION 3.5.0 LANGUAGES CXX)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CUDA.cmake)
 set(CMAKE_INSTALL_PREFIX install CACHE PATH "Default installation location." FORCE)
@@ -36,7 +34,6 @@ find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 include(GNUInstallDirs)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_library(CUTLASS INTERFACE)
-add_library(nvidia::cutlass::cutlass ALIAS CUTLASS)
 set(CUTLASS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE PATH "CUTLASS Header Library")
 set(CUTLASS_GENERATOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/library CACHE INTERNAL "Location of generator scripts")
 set(CUTLASS_TOOLS_UTIL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/util/include CACHE INTERNAL "")
