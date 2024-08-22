@@ -54,18 +54,9 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/cuBLAS.cmake)
 add_subdirectory(tools)
 include(CMakePackageConfigHelpers)
 
-#configure_file(
-#  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/NvidiaCutlassConfig.cmake.in
-#  ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfig.cmake  
-#  @ONLY
+#install(
+#  FILES 
+#    ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfig.cmake  
+#    ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfigVersion.cmake 
+#  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NvidiaCutlass/
 #  )
-
-install(
-  FILES 
-    ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfig.cmake  
-    ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfigVersion.cmake 
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NvidiaCutlass/
-  )
-
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/NvidiaCutlassPackageConfig.cmake)
-
