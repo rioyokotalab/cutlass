@@ -158,12 +158,12 @@ function(cutlass_add_cutlass_library)
     set(STATIC_OUTPUT_NAME ${__OUTPUT_NAME})
   endif()
     
-  set_target_properties(
-    ${__NAME}_static
-    PROPERTIES
-    OUTPUT_NAME ${STATIC_OUTPUT_NAME}
-    WINDOWS_EXPORT_ALL_SYMBOLS 1
-    )
+#  set_target_properties(
+#    ${__NAME}_static
+#    PROPERTIES
+#    OUTPUT_NAME ${STATIC_OUTPUT_NAME}
+#    WINDOWS_EXPORT_ALL_SYMBOLS 1
+#    )
     
   target_link_libraries(
     ${__NAME}_static
@@ -171,14 +171,6 @@ function(cutlass_add_cutlass_library)
     PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
     cuda_driver
     )
-    
-#  install(
-#    TARGETS ${__NAME} ${__NAME}_static
-#    EXPORT NvidiaCutlass
-#    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-#    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#    )
     
   if (__SUFFIX)
     target_link_libraries(${DEFAULT_NAME} PUBLIC ${__NAME})
