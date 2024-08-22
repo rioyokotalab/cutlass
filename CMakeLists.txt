@@ -35,7 +35,6 @@ set(CMAKE_INSTALL_PREFIX install CACHE PATH "Default installation location." FOR
 find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 include(GNUInstallDirs)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 add_library(CUTLASS INTERFACE)
 add_library(nvidia::cutlass::cutlass ALIAS CUTLASS)
 set(CUTLASS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE PATH "CUTLASS Header Library")
