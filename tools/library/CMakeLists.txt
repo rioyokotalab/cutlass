@@ -153,8 +153,6 @@ function(cutlass_add_cutlass_library)
       cuda_driver
       )
     
-    set_target_properties(${__NAME} PROPERTIES DEBUG_POSTFIX "${CUTLASS_LIBRARY_DEBUG_POSTFIX}")
-    
     cutlass_add_library(
       ${__NAME}_static
       STATIC
@@ -183,8 +181,6 @@ function(cutlass_add_cutlass_library)
       PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
       cuda_driver
       )
-    
-    set_target_properties(${__NAME}_static PROPERTIES DEBUG_POSTFIX "${CUTLASS_LIBRARY_DEBUG_POSTFIX}")
     
     install(
       TARGETS ${__NAME} ${__NAME}_static

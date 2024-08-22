@@ -28,45 +28,18 @@
 
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 cmake_policy(SET CMP0112 NEW)
-
-message(STATUS "CMake Version: ${CMAKE_VERSION}")
 project(CUTLASS VERSION 3.5.0 LANGUAGES CXX)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CUDA.cmake)
-
 list(APPEND CUTLASS_CUDA_NVCC_FLAGS --expt-relaxed-constexpr)
-  
 set(CMAKE_INSTALL_PREFIX install CACHE PATH "Default installation location." FORCE)
-message(STATUS "Default Install Location: ${CMAKE_INSTALL_PREFIX}")
-
 find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
-
 include(GNUInstallDirs)
-
-#link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64/stubs)
-link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64)
-
-###################################################################################################
-#
-# Configure CMake variables
-#
-###################################################################################################
-
-if (NOT (CMAKE_BUILD_TYPE OR CONFIGURATION_TYPES))
-  # By default we want to build in Release mode to ensure that we're getting best performance.
-  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose build level" FORCE)
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "RelWithDebInfo" "Release")
-endif()
-
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-if (DEFINED CMAKE_DEBUG_POSTFIX)
-  set(CUTLASS_LIBRARY_DEBUG_POSTFIX_INIT ${CMAKE_DEBUG_POSTFIX})
-else()
-  set(CUTLASS_LIBRARY_DEBUG_POSTFIX_INIT .debug)
-endif()
-set(CUTLASS_LIBRARY_DEBUG_POSTFIX ${CUTLASS_LIBRARY_DEBUG_POSTFIX_INIT} CACHE STRING "Default postfix value for debug libraries")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCUTLASS_VERSIONS_GENERATED")
-set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -DCUTLASS_VERSIONS_GENERATED")
+###################################################################################################
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCUTLASS_VERSIONS_GENERATED")
+#set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -DCUTLASS_VERSIONS_GENERATED")
 
 if (${CUTLASS_NVCC_VERBOSE})
   list(APPEND CUTLASS_CUDA_NVCC_FLAGS -v)
@@ -230,12 +203,6 @@ endif()
 if(UNIX)
   list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-Wconversion)
   list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=-fno-strict-aliasing)
-endif()
-
-# Don't leak lineinfo in release builds
-if (NOT CMAKE_BUILD_TYPE MATCHES "Release")
-  list(APPEND CUTLASS_CUDA_CLANG_FLAGS -gmlt)
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS -lineinfo)
 endif()
 
 #Report CUDA build flags
