@@ -84,14 +84,6 @@ target_link_libraries(
 ################################################################################
 
 function(cutlass_add_cutlass_library)
-#
-# Generates static and shared libraries with the given SOURCES. The public CMake
-# targets produces will be cutlass_library(_${SUFFIX})? and 
-# cutlass_library(_${SUFFIX})?_static.
-# 
-# SUFFIX: An additional string to be joined to the default names. If suffix is given,
-#   the generated libraries will be linked as a dependency of the main cutlass library.
-
   set(options)
   set(oneValueArgs SUFFIX)
   set(multiValueArgs)
@@ -134,23 +126,22 @@ function(cutlass_add_cutlass_library)
     cuda_driver
     )
     
-  cutlass_add_library(
-    ${__NAME}_static
-    STATIC
-    EXPORT_NAME ${__EXPORT_NAME}_static
-    ""
-    )
+#  cutlass_add_library(
+#    ${__NAME}_static
+#    STATIC
+#    EXPORT_NAME ${__EXPORT_NAME}_static
+#    ""
+#    )
 
-  target_link_libraries(
-    ${__NAME}_static
-    PUBLIC cutlass_library_includes
-    PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
-    cuda_driver
-    )
+#  target_link_libraries(
+#    ${__NAME}_static
+#    PUBLIC cutlass_library_includes
+#    PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
+#    cuda_driver
+#    )
     
   if (__SUFFIX)
     target_link_libraries(${DEFAULT_NAME} PUBLIC ${__NAME})
-    target_link_libraries(${DEFAULT_NAME}_static PUBLIC ${__NAME}_static)
   endif()
 
 endfunction()
@@ -167,7 +158,6 @@ cutlass_add_cutlass_library(
 
 # For backward compatibility with the old name
 add_library(cutlass_lib ALIAS cutlass_library)
-#add_library(cutlass_lib_static ALIAS cutlass_library_static)
 
 execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../python/cutlass_library
