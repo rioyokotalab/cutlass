@@ -262,19 +262,5 @@ if(NOT cutlass_lib_INSTANCE_GENERATION_RESULT EQUAL 0)
 endif()
 
 message(STATUS "Completed generation of library instances. See ${CMAKE_CURRENT_BINARY_DIR}/library_instance_generation.log for more information.")
-
-# include auto-instantiated kernels in he CUTLASS Deliverables Library
-set(CUTLASS_LIBRARY_MANIFEST_CMAKE_FILE ${CMAKE_CURRENT_BINARY_DIR}/generated/manifest.cmake)
-if(EXISTS "${CUTLASS_LIBRARY_MANIFEST_CMAKE_FILE}")
-  include(${CUTLASS_LIBRARY_MANIFEST_CMAKE_FILE})
-else()
-  message(STATUS "auto-generated library manifest cmake file (${CUTLASS_LIBRARY_MANIFEST_CMAKE_FILE}) not found.")
-endif()
-
-################################################################################
-
-install(
-  FILES ${CUTLASS_LIBRARY_GENERATED_KERNEL_LIST_FILE}
-  DESTINATION ${CMAKE_INSTALL_INFODIR}/cutlass/
-  )
+include(${CMAKE_CURRENT_BINARY_DIR}/generated/manifest.cmake)
 

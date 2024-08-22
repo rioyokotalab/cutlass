@@ -63,12 +63,7 @@ set(CUTLASS_UNITY_BUILD_ENABLED OFF CACHE BOOL "Enable combined source compilati
 set(CUTLASS_UNITY_BUILD_BATCH_SIZE 16 CACHE STRING "Batch size for unified source files")
 
 function(cutlass_unify_source_files TARGET_ARGS_VAR)
-  set(options)
-  set(oneValueArgs BATCH_SOURCES BATCH_SIZE)
-  set(multiValueArgs)
-  cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-  set(TARGET_SOURCE_ARGS ${__UNPARSED_ARGUMENTS})
-  set(${TARGET_ARGS_VAR} ${TARGET_SOURCE_ARGS} PARENT_SCOPE)
+  set(${TARGET_ARGS_VAR} ${__UNPARSED_ARGUMENTS} PARENT_SCOPE)
 endfunction()
 
 function(cutlass_add_library NAME)
