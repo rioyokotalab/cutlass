@@ -234,6 +234,8 @@ set(CUTLASS_LIBRARY_GENERATED_KERNEL_LIST_FILE ${CMAKE_CURRENT_BINARY_DIR}/gener
 # --log-level is set to DEBUG to enable printing information about which kernels were excluded
 # from generation in /python/cutlass_library/manifest.py. To avoid having this information appear
 # in ${CMAKE_CURRENT_BINARY_DIR}/library_instance_generation.log, set this parameter to INFO
+message(STATUS "KERNEL_FILTER_FILE: ${KERNEL_FILTER_FILE}")
+
 execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../python/cutlass_library
   COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CUTLASS_LIBRARY_PACKAGE_DIR}
