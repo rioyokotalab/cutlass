@@ -172,13 +172,13 @@ function(cutlass_add_cutlass_library)
     cuda_driver
     )
     
-  install(
-    TARGETS ${__NAME} ${__NAME}_static
-    EXPORT NvidiaCutlass
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
+#  install(
+#    TARGETS ${__NAME} ${__NAME}_static
+#    EXPORT NvidiaCutlass
+#    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#    )
     
   if (__SUFFIX)
     target_link_libraries(${DEFAULT_NAME} PUBLIC ${__NAME})
