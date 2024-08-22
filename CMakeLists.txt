@@ -783,14 +783,6 @@ function(cutlass_add_executable_tests NAME TARGET)
     endforeach()
   endif()
 
-#  if (CUTLASS_INSTALL_TESTS)
-
-#    set(_INLINE_PER_TEST_CODE)
-
-#    file(READ "${PROJECT_SOURCE_DIR}/cmake/CTestTestfile.test.configure.cmake" _INLINE_PER_TEST_CODE_TEMPLATE)
-
-#  endif()
-
   set(TEST_GROUP_NAME ${NAME})
 
   foreach(CMD_OPTIONS_VAR IN LISTS __TEST_COMMAND_OPTIONS)
@@ -854,20 +846,20 @@ function(cutlass_add_executable_tests NAME TARGET)
  
   set(CUTLASS_CTEST_GENERATED_FILES ${CUTLASS_CTEST_GENERATED_FILES};ctest/${TEST_NAME}/CTestTestfile.${TEST_NAME}.cmake CACHE INTERNAL "")
 
-    if (CUTLASS_INSTALL_TESTS)
+#    if (CUTLASS_INSTALL_TESTS)
 
-    file(GENERATE 
-      OUTPUT "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake" 
-      INPUT "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake.in" 
-      )
+#    file(GENERATE 
+#      OUTPUT "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake" 
+#      INPUT "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake.in" 
+#      )
 
-    install(
-      FILES "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake"
-      DESTINATION ${CUTLASS_TEST_INSTALL_PREFIX}/ctest/${TEST_NAME}
-      RENAME CTestTestfile.${TEST_NAME}.cmake
-      )
+#    install(
+#      FILES "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake"
+#      DESTINATION ${CUTLASS_TEST_INSTALL_PREFIX}/ctest/${TEST_NAME}
+#      RENAME CTestTestfile.${TEST_NAME}.cmake
+#      )
 
-    endif()
+#    endif()
 
 endfunction()
 
