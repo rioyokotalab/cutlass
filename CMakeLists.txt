@@ -68,7 +68,7 @@ target_include_directories(
   $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CUTLASS_INCLUDE_DIR}>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
-  $<BUILD_INTERFACE:${cute_SOURCE_DIR}/include>
+#  $<BUILD_INTERFACE:${cute_SOURCE_DIR}/include>
   )
 
 # Mark CTK headers as system to supress warnings from them
