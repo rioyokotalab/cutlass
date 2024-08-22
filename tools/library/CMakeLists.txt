@@ -26,18 +26,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-cmake_policy(SET CMP0112 NEW)
-
 include(GNUInstallDirs)
 
-#set(CUTLASS_BUILD_MONO_LIBRARY OFF CACHE BOOL 
-#  "Determines whether the cutlass library is generated as a single file or multiple files.")
-
-################################################################################
-
 add_library(cutlass_library_includes INTERFACE)
-add_library(nvidia::cutlass::library::includes ALIAS cutlass_library_includes)
-set_target_properties(cutlass_library_includes PROPERTIES EXPORT_NAME library::includes)
+#add_library(nvidia::cutlass::library::includes ALIAS cutlass_library_includes)
+#set_target_properties(cutlass_library_includes PROPERTIES EXPORT_NAME library::includes)
 
 target_include_directories(
   cutlass_library_includes
