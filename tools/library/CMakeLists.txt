@@ -120,87 +120,69 @@ function(cutlass_add_cutlass_library)
     PRIVATE cutlass_library_internal_interface
     )
 
-  if (CUTLASS_BUILD_MONO_LIBRARY AND __SUFFIX)
+  cutlass_add_library(
+    ${__NAME} 
+    SHARED
+    EXPORT_NAME ${__EXPORT_NAME}
+    ""
+    )
 
-    # If we're only building a single monolithic library then we
-    # simply link the generated object files to the default library. 
+  target_compile_features(${__NAME} INTERFACE cxx_std_17)
+    
+  set_target_properties(
+    ${__NAME}
+    PROPERTIES
+    OUTPUT_NAME ${__OUTPUT_NAME}
+    WINDOWS_EXPORT_ALL_SYMBOLS 1
+    )
+    
+  target_link_libraries(
+    ${__NAME}
+    PUBLIC cutlass_library_includes
+    PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
+    cuda_driver
+    )
+    
+  cutlass_add_library(
+    ${__NAME}_static
+    STATIC
+    EXPORT_NAME ${__EXPORT_NAME}_static
+    ""
+    )
 
-#    target_link_libraries(${DEFAULT_NAME} PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>)
-#    target_link_libraries(${DEFAULT_NAME}_static PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>)
-
+  target_compile_features(${__NAME}_static INTERFACE cxx_std_17)
+    
+  if (WIN32)
+    set(STATIC_OUTPUT_NAME ${__OUTPUT_NAME}.static)
   else()
-
-    cutlass_add_library(
-      ${__NAME} 
-      SHARED
-      EXPORT_NAME ${__EXPORT_NAME}
-      ""
-      )
-
-    target_compile_features(${__NAME} INTERFACE cxx_std_17)
+    set(STATIC_OUTPUT_NAME ${__OUTPUT_NAME})
+  endif()
     
-    set_target_properties(
-      ${__NAME}
-      PROPERTIES
-      OUTPUT_NAME ${__OUTPUT_NAME}
-      WINDOWS_EXPORT_ALL_SYMBOLS 1
-      )
+  set_target_properties(
+    ${__NAME}_static
+    PROPERTIES
+    OUTPUT_NAME ${STATIC_OUTPUT_NAME}
+    WINDOWS_EXPORT_ALL_SYMBOLS 1
+    )
     
-    target_link_libraries(
-      ${__NAME}
-      PUBLIC cutlass_library_includes
-      PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
-      cuda_driver
-      )
+  target_link_libraries(
+    ${__NAME}_static
+    PUBLIC cutlass_library_includes
+    PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
+    cuda_driver
+    )
     
-    cutlass_add_library(
-      ${__NAME}_static
-      STATIC
-      EXPORT_NAME ${__EXPORT_NAME}_static
-      ""
-      )
-
-    target_compile_features(${__NAME}_static INTERFACE cxx_std_17)
+  install(
+    TARGETS ${__NAME} ${__NAME}_static
+    EXPORT NvidiaCutlass
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
     
-    if (WIN32)
-      set(STATIC_OUTPUT_NAME ${__OUTPUT_NAME}.static)
-    else()
-      set(STATIC_OUTPUT_NAME ${__OUTPUT_NAME})
-    endif()
-    
-    set_target_properties(
-      ${__NAME}_static
-      PROPERTIES
-      OUTPUT_NAME ${STATIC_OUTPUT_NAME}
-      WINDOWS_EXPORT_ALL_SYMBOLS 1
-      )
-    
-    target_link_libraries(
-      ${__NAME}_static
-      PUBLIC cutlass_library_includes
-      PRIVATE $<BUILD_INTERFACE:${__NAME}_objs>
-      cuda_driver
-      )
-    
-    install(
-      TARGETS ${__NAME} ${__NAME}_static
-      EXPORT NvidiaCutlass
-      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-      )
-    
-    if (__SUFFIX)
-    
-      # The partial libraries generated will be registered as linked libraries
-      # to the main cutlass library so users automatically get the necessary link
-      # commands to pull in all kernels by default.
-    
-      target_link_libraries(${DEFAULT_NAME} PUBLIC ${__NAME})
-      target_link_libraries(${DEFAULT_NAME}_static PUBLIC ${__NAME}_static)
-    
-    endif()
-
+  if (__SUFFIX)
+    target_link_libraries(${DEFAULT_NAME} PUBLIC ${__NAME})
+    target_link_libraries(${DEFAULT_NAME}_static PUBLIC ${__NAME}_static)
   endif()
 
 endfunction()
