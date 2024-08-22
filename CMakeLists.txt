@@ -44,45 +44,23 @@ function(cutlass_apply_standard_compile_options TARGET)
   target_compile_options(${TARGET} PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr;-DCUTLASS_TEST_LEVEL=0;-DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1;-Xcompiler=-Wconversion;-Xcompiler=-fno-strict-aliasing;-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1>)
 endfunction()
 
-###################################################################################################
-
 add_library(CUTLASS INTERFACE)
 add_library(nvidia::cutlass::cutlass ALIAS CUTLASS)
-set_target_properties(CUTLASS PROPERTIES EXPORT_NAME cutlass)
-
 set(CUTLASS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE PATH "CUTLASS Header Library")
-
 set(CUTLASS_GENERATOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/library CACHE INTERNAL "Location of generator scripts")
-
 set(CUTLASS_TOOLS_UTIL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/util/include CACHE INTERNAL "")
-
 include_directories(${CUTLASS_INCLUDE_DIR})
 
-#target_compile_features(CUTLASS INTERFACE cxx_std_11)
+find_package(Git QUIET)
+execute_process(
+  COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+  RESULT_VARIABLE CUTLASS_REVISION_RESULT
+  OUTPUT_VARIABLE CUTLASS_REVISION
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+message(STATUS "CUTLASS Revision: ${CUTLASS_REVISION}")
 
-if (NOT DEFINED CUTLASS_REVISION)
-
-  find_package(Git QUIET)
-
-  execute_process(
-    COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
-    RESULT_VARIABLE CUTLASS_REVISION_RESULT
-    OUTPUT_VARIABLE CUTLASS_REVISION
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-  if (CUTLASS_REVISION_RESULT)
-    message(STATUS "CUTLASS Revision: Unable to detect, Git returned code ${CUTLASS_REVISION_RESULT}.")
-  else()
-    message(STATUS "CUTLASS Revision: ${CUTLASS_REVISION}")
-  endif()
-
-endif()
-
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/version_extended.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/include/cutlass/version_extended.h
-  @ONLY)
+###################################################################################################
 
 target_include_directories(
   CUTLASS
