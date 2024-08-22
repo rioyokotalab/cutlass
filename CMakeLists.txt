@@ -40,9 +40,6 @@ message(STATUS "Default Install Location: ${CMAKE_INSTALL_PREFIX}")
 
 find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 
-set(CUTLASS_NVCC_ARCHS 90a CACHE STRING "The SM architectures requested.")
-set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
-
 include(GNUInstallDirs)
 
 link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64/stubs)
@@ -324,7 +321,7 @@ function(cutlass_apply_cuda_gencode_flags TARGET)
   set(multiValueArgs SM_ARCHS)
   cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-  set(ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS_ENABLED})
+  set(ARCHS_ENABLED 90a)
 
   set(NVCC_FLAGS)
   set(CLANG_FLAGS)

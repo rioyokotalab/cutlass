@@ -496,9 +496,6 @@ class Manifest:
       self.kernel_filter = self.args.kernels
       self.curr_build_dir = args.curr_build_dir
 
-      # A common user error is to use commas instead of semicolons.
-      if ',' in args.architectures:
-        raise RuntimeError("The list of architectures (CMake option CUTLASS_NVCC_ARCHS) must be semicolon-delimited.\nDon't use commas to separate the architectures; use semicolons.\nYou specified the list as: " + args.architectures)
       architectures = args.architectures.split(';') if len(args.architectures) else ['50',]
 
       arch_conditional_cc = ['90a']
