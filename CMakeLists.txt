@@ -46,15 +46,7 @@ endfunction()
 
 ###################################################################################################
 
-#file(GLOB_RECURSE CUTLASS_INCLUDE RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/cutlass/*.h)
-
-###################################################################################################
-#
-# Define build targets
-#
-###################################################################################################
-
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include REGULAR_EXPRESSION ".*\.h")
+#source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include REGULAR_EXPRESSION ".*\.h")
 
 add_library(CUTLASS INTERFACE)
 add_library(nvidia::cutlass::cutlass ALIAS CUTLASS)
