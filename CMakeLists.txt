@@ -40,7 +40,7 @@ message(STATUS "Default Install Location: ${CMAKE_INSTALL_PREFIX}")
 
 find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 
-set(CUTLASS_NVCC_ARCHS 70 72 75 80 86 87 89 90 90a CACHE STRING "The SM architectures requested.")
+set(CUTLASS_NVCC_ARCHS 90a CACHE STRING "The SM architectures requested.")
 set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
 
 include(GNUInstallDirs)
@@ -53,8 +53,6 @@ link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64)
 # Configure CMake variables
 #
 ###################################################################################################
-
-message(STATUS "CUDA Compilation Architectures: ${CUTLASS_NVCC_ARCHS_ENABLED}")
 
 if (NOT (CMAKE_BUILD_TYPE OR CONFIGURATION_TYPES))
   # By default we want to build in Release mode to ensure that we're getting best performance.
@@ -326,11 +324,7 @@ function(cutlass_apply_cuda_gencode_flags TARGET)
   set(multiValueArgs SM_ARCHS)
   cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-  if (__SM_ARCHS)
-    set(ARCHS_ENABLED ${__SM_ARCHS})
-  else()
-    set(ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS_ENABLED})
-  endif()
+  set(ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS_ENABLED})
 
   set(NVCC_FLAGS)
   set(CLANG_FLAGS)

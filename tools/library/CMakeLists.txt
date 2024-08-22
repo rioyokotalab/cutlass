@@ -246,7 +246,7 @@ execute_process(
     --build-dir ${PROJECT_BINARY_DIR}
     --curr-build-dir ${CMAKE_CURRENT_BINARY_DIR}
     --generator-target library
-    --architectures "${CUTLASS_NVCC_ARCHS_ENABLED}"
+    --architectures "90a"
     --kernels "${CUTLASS_LIBRARY_KERNELS}"
     --ignore-kernels "${CUTLASS_LIBRARY_IGNORE_KERNELS}"
     --kernel-filter-file "${KERNEL_FILTER_FILE}"
