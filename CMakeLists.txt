@@ -42,7 +42,7 @@ find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 
 include(GNUInstallDirs)
 
-link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64/stubs)
+#link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64/stubs)
 link_directories(${CUDA_TOOLKIT_ROOT_DIR}/lib64)
 
 ###################################################################################################
