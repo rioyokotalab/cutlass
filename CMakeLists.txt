@@ -46,55 +46,9 @@ list(APPEND CUTLASS_CUDA_FLAGS -DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
 ###################################################################################################
 
 function(cutlass_apply_cuda_gencode_flags TARGET)
-  set(options)
-  set(oneValueArgs)
-  set(multiValueArgs SM_ARCHS)
-  cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
   set(NVCC_FLAGS)
-  set(CLANG_FLAGS)
-  set(__CMAKE_CUDA_ARCHS)
-  list(APPEND CLANG_FLAGS --cuda-gpu-arch=sm_90a)
-  set(CODES)
-  list(APPEND CODES sm_90a)
-  list(APPEND __CMAKE_CUDA_ARCHS 90a-real)
-  list(APPEND CODES compute_90a)
-  list(APPEND __CMAKE_CUDA_ARCHS 90a-virtual)
-  list(JOIN CODES "," CODES_STR)
-  list(APPEND NVCC_FLAGS -gencode=arch=compute_90a,code=[${CODES_STR}])
- 
-  if (NOT __SM_ARCHS)
-    if (CUDA_COMPILER MATCHES "[Cc]lang")
-      target_compile_options(
-        ${TARGET}
-        PRIVATE
-        $<$<COMPILE_LANGUAGE:CXX>:${CLANG_FLAGS}>
-        )
-    elseif(CMAKE_VERSION GREATER_EQUAL 3.18)
-      set_property(TARGET ${TARGET} PROPERTY CUDA_ARCHITECTURES ${__CMAKE_CUDA_ARCHS})
-    else()
-      target_compile_options(
-        ${TARGET}
-        PRIVATE
-        $<$<COMPILE_LANGUAGE:CUDA>:${NVCC_FLAGS}>
-        )
-    endif()
-  else()
-    list(JOIN CLANG_FLAGS " " CLANG_FLAGS_STR)
-    list(JOIN NVCC_FLAGS " " STR_NVCC_FLAGS)
-    if (CUDA_COMPILER MATCHES "[Cc]lang")
-      if(${TARGET} MATCHES ".*\.cpp")
-        set_source_files_properties(${TARGET} PROPERTIES COMPILE_FLAGS ${CLANG_FLAGS_STR})
-      endif()
-    elseif(CMAKE_VERSION GREATER_EQUAL 3.18)
-      set_source_files_properties(${TARGET} PROPERTIES CUDA_ARCHITECTURES ${STR_NVCC_FLAGS})
-    else()
-      if(${TARGET} MATCHES ".*\.cu")
-        set_source_files_properties(${TARGET} PROPERTIES COMPILE_FLAGS ${STR_NVCC_FLAGS})
-      endif()
-    endif()
-  endif()
-
+  list(APPEND NVCC_FLAGS -gencode=arch=compute_90a,code=sm_90a,compute_90a)
+  set_property(TARGET ${TARGET} PROPERTY CUDA_ARCHITECTURES 90a-real;90a-virtual)
 endfunction()
 
 # Cache the flags so they are available when the function below is called anywhere globally. 
