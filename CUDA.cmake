@@ -59,18 +59,6 @@ set_property(
   ${CUDA_DRIVER_LIBRARY}
   )
 
-#include_directories(SYSTEM ${CUDA_INCLUDE_DIRS})
-
-function(cutlass_correct_source_file_language_property)
-  if(CUDA_COMPILER MATCHES "[Cc]lang")
-    foreach(File ${ARGN})
-      if(File MATCHES ".*\.cu$")
-        set_source_files_properties(${File} PROPERTIES LANGUAGE CXX)
-      endif()
-    endforeach()
-  endif()
-endfunction()
-
 if (MSVC OR CUTLASS_LIBRARY_KERNELS MATCHES "all")
   set(CUTLASS_UNITY_BUILD_ENABLED_INIT ON)
 else()
@@ -157,7 +145,6 @@ function(cutlass_add_library NAME)
 
   cutlass_unify_source_files(TARGET_SOURCE_ARGS ${__UNPARSED_ARGUMENTS})
 
-  cutlass_correct_source_file_language_property(${TARGET_SOURCE_ARGS})
   add_library(${NAME} ${TARGET_SOURCE_ARGS} "")
 
   cutlass_apply_standard_compile_options(${NAME})
@@ -204,7 +191,6 @@ function(cutlass_add_executable NAME)
 
   cutlass_unify_source_files(TARGET_SOURCE_ARGS ${__UNPARSED_ARGUMENTS})
 
-  cutlass_correct_source_file_language_property(${TARGET_SOURCE_ARGS})
   add_executable(${NAME} ${TARGET_SOURCE_ARGS})
 
   cutlass_apply_standard_compile_options(${NAME})
@@ -228,7 +214,6 @@ function(cutlass_target_sources NAME)
   cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   cutlass_unify_source_files(TARGET_SOURCE_ARGS ${__UNPARSED_ARGUMENTS})
-  cutlass_correct_source_file_language_property(${TARGET_SOURCE_ARGS})
   target_sources(${NAME} ${TARGET_SOURCE_ARGS})
 
 endfunction()
