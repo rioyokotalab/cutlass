@@ -34,20 +34,12 @@ function(cutlass_apply_standard_compile_options TARGET)
   target_compile_options(${TARGET} PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:--expt-relaxed-constexpr;-DCUTLASS_TEST_LEVEL=0;-DCUTLASS_TEST_ENABLE_CACHED_RESULTS=1;-Xcompiler=-Wconversion;-Xcompiler=-fno-strict-aliasing;-DCUTLASS_ENABLE_TENSOR_CORE_MMA=1>)
 endfunction()
 
-if(CUDA_COMPILER MATCHES "[Cc]lang")
-  set(CUTLASS_NATIVE_CUDA_INIT ON)
-elseif(CMAKE_VERSION VERSION_LESS 3.12.4)
-  set(CUTLASS_NATIVE_CUDA_INIT OFF)
-else()
-  set(CUTLASS_NATIVE_CUDA_INIT ON)
-endif()
+set(CUTLASS_NATIVE_CUDA ON CACHE BOOL "Utilize the CMake native CUDA flow")
 
-set(CUTLASS_NATIVE_CUDA ${CUTLASS_NATIVE_CUDA_INIT} CACHE BOOL "Utilize the CMake native CUDA flow")
-
-if(NOT DEFINED ENV{CUDACXX} AND NOT DEFINED ENV{CUDA_BIN_PATH} AND DEFINED ENV{CUDA_PATH})
+#if(NOT DEFINED ENV{CUDACXX} AND NOT DEFINED ENV{CUDA_BIN_PATH} AND DEFINED ENV{CUDA_PATH})
   # For backward compatibility, allow use of CUDA_PATH.
-  set(ENV{CUDACXX} $ENV{CUDA_PATH}/bin/nvcc)
-endif()
+#  set(ENV{CUDACXX} $ENV{CUDA_PATH}/bin/nvcc)
+#endif()
 
 if(CUTLASS_NATIVE_CUDA)
 
