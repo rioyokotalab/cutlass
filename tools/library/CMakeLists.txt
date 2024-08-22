@@ -244,8 +244,8 @@ execute_process(
     --curr-build-dir ${CMAKE_CURRENT_BINARY_DIR}
     --generator-target library
     --architectures "90a"
-    --kernels "${CUTLASS_LIBRARY_KERNELS}"
-    --ignore-kernels "${CUTLASS_LIBRARY_IGNORE_KERNELS}"
+    --kernels "cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8"
+    --ignore-kernels ""
     --kernel-filter-file ""
     --selected-kernel-list "${CUTLASS_LIBRARY_GENERATED_KERNEL_LIST_FILE}"
     --cuda-version "${CUTLASS_GENERATOR_CUDA_COMPILER_VERSION}"
