@@ -150,7 +150,7 @@ function(cutlass_add_cutlass_library)
     ""
     )
 
-  target_compile_features(${__NAME}_static INTERFACE cxx_std_17)
+#  target_compile_features(${__NAME}_static INTERFACE cxx_std_17)
     
   target_link_libraries(
     ${__NAME}_static
