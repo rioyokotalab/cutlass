@@ -33,54 +33,23 @@ message(STATUS "CMake Version: ${CMAKE_VERSION}")
 project(CUTLASS VERSION 3.5.0 LANGUAGES CXX)
 include(${CMAKE_CURRENT_SOURCE_DIR}/CUDA.cmake)
 
-#find_package(Doxygen QUIET)
-
-################################################################################
-
-#
-# CUTLASS 3.x requires C++17
-#
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-
-if(CUTLASS_NATIVE_CUDA)
-  set(CMAKE_CUDA_STANDARD 17)
-  set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS --expt-relaxed-constexpr)
-else()
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS --std=c++17)
-endif()
+list(APPEND CUTLASS_CUDA_NVCC_FLAGS --expt-relaxed-constexpr)
   
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX install CACHE PATH "Default installation location." FORCE)
-endif()
-
+set(CMAKE_INSTALL_PREFIX install CACHE PATH "Default installation location." FORCE)
 message(STATUS "Default Install Location: ${CMAKE_INSTALL_PREFIX}")
-
-set(CUTLASS_TEST_LEVEL "0" CACHE STRING "Level of tests to compile.")
-# 0 - Sanity, 1 - Release-Quality, 2 - Exhaustive
 
 find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 
-################################################################################
-set(CUTLASS_ENABLE_HEADERS_ONLY OFF CACHE BOOL "Enable only the header library")
-
-if(CUTLASS_ENABLE_HEADERS_ONLY)
-  set(CUTLASS_ENABLE_EXAMPLES_INIT OFF)
-  set(CUTLASS_ENABLE_TOOLS_INIT ON)
-  set(CUTLASS_ENABLE_LIBRARY_INIT OFF)
-  set(CUTLASS_ENABLE_TESTS_INIT OFF)
+set(CUTLASS_ENABLE_EXAMPLES_INIT ON)
+set(CUTLASS_ENABLE_TOOLS_INIT ON)
+set(CUTLASS_ENABLE_LIBRARY_INIT ON)
+if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
+  set(CUTLASS_ENABLE_TESTS_INIT ON)
 else()
-  set(CUTLASS_ENABLE_EXAMPLES_INIT ON)
-  set(CUTLASS_ENABLE_TOOLS_INIT ON)
-  set(CUTLASS_ENABLE_LIBRARY_INIT ON)
-  if(${CMAKE_PROJECT_NAME} STREQUAL ${PROJECT_NAME})
-    set(CUTLASS_ENABLE_TESTS_INIT ON)
-  else()
-    set(CUTLASS_ENABLE_TESTS_INIT OFF)
-  endif()
+  set(CUTLASS_ENABLE_TESTS_INIT OFF)
 endif()
+
+message(STATUS "CUTLASS_ENABLE_TESTS_INIT: ${CUTLASS_ENABLE_TESTS_INIT}")
 
 set(CUTLASS_TEST_UNIT_ENABLE_WARNINGS OFF CACHE BOOL "Enable warnings on waived unit tests.")
 
@@ -206,9 +175,8 @@ set(CUTLASS_LIBRARY_IGNORE_KERNELS "" CACHE STRING "Comma delimited list of kern
 
 set(CUTLASS_TEST_ENABLE_CACHED_RESULTS ON CACHE BOOL "Enable caching and reuse of test results in unit tests")
 
-set_property(CACHE CUTLASS_TEST_LEVEL PROPERTY STRINGS 0 1 2)
-list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_LEVEL=${CUTLASS_TEST_LEVEL})
-list(APPEND CUTLASS_CUDA_CLANG_FLAGS -DCUTLASS_TEST_LEVEL=${CUTLASS_TEST_LEVEL})
+list(APPEND CUTLASS_CUDA_NVCC_FLAGS -DCUTLASS_TEST_LEVEL=0)
+list(APPEND CUTLASS_CUDA_CLANG_FLAGS -DCUTLASS_TEST_LEVEL=0)
 
 if (CUTLASS_TEST_ENABLE_CACHED_RESULTS)
   message(STATUS "Enable caching of reference results in conv unit tests")
@@ -598,23 +566,6 @@ install(
   EXPORT NvidiaCutlass
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   )
-
-################################################################################
-
-# Doxygen is available. Generate documentation
-#if(NOT WIN32)
-  # Add common library search paths so executables and libraries can load and run
-  # without LD_LIBRARY_PATH being set.
-#  link_libraries(
-#    "-Wl,-rpath,'$ORIGIN'"
-#    "-Wl,-rpath,'$ORIGIN/../lib64'"
-#    "-Wl,-rpath,'$ORIGIN/../lib'"
-#    "-Wl,-rpath,'${CUDA_TOOLKIT_ROOT_DIR}/lib64'"
-#    "-Wl,-rpath,'${CUDA_TOOLKIT_ROOT_DIR}/lib'"
-#    )
-#endif()
-
-################################################################################
 
 include(CTest)
 enable_testing()
