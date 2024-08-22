@@ -27,20 +27,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 cmake_policy(SET CMP0112 NEW)
-
 add_subdirectory(util)
-
-if (CUTLASS_ENABLE_LIBRARY)
-  add_subdirectory(library)
-endif()
-
-if (CUTLASS_ENABLE_PROFILER)
-  if (NOT CUTLASS_ENABLE_LIBRARY)
-    message(SEND_ERROR "Build conflict: The CUTLASS profiler requires the CUTLASS library.")
-    message(SEND_ERROR "  CUTLASS_ENABLE_PROFILER = ${CUTLASS_ENABLE_PROFILER}")
-    message(SEND_ERROR "  CUTLASS_ENABLE_LIBRARY = ${CUTLASS_ENABLE_LIBRARY}")
-  else()
-    add_subdirectory(profiler)
-  endif()
-endif()
+add_subdirectory(library)
+add_subdirectory(profiler)
 

@@ -40,9 +40,6 @@ message(STATUS "Default Install Location: ${CMAKE_INSTALL_PREFIX}")
 
 find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 
-set(CUTLASS_ENABLE_LIBRARY ON CACHE BOOL "Enable CUTLASS Library")
-set(CUTLASS_ENABLE_PROFILER ON CACHE BOOL "Enable CUTLASS Profiler")
-
 set(CUTLASS_NVCC_ARCHS 70 72 75 80 86 87 89 90 90a CACHE STRING "The SM architectures requested.")
 set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
 
