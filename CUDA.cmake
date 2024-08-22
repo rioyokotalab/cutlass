@@ -63,62 +63,14 @@ set(CUTLASS_UNITY_BUILD_ENABLED OFF CACHE BOOL "Enable combined source compilati
 set(CUTLASS_UNITY_BUILD_BATCH_SIZE 16 CACHE STRING "Batch size for unified source files")
 
 function(cutlass_unify_source_files TARGET_ARGS_VAR)
-
   set(options)
   set(oneValueArgs BATCH_SOURCES BATCH_SIZE)
   set(multiValueArgs)
   cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-  if (NOT DEFINED __BATCH_SOURCES)
-#    set(__BATCH_SOURCES ON)
-  endif()
-
-  if (__BATCH_SOURCES AND NOT DEFINED __BATCH_SIZE)
-#    set(__BATCH_SIZE ${CUTLASS_UNITY_BUILD_BATCH_SIZE})
-  endif()
-
-  if (CUTLASS_UNITY_BUILD_ENABLED AND __BATCH_SOURCES AND __BATCH_SIZE GREATER 1)
-
-    set(CUDA_FILE_ARGS)
-    set(TARGET_SOURCE_ARGS)
-    
-    foreach(ARG ${__UNPARSED_ARGUMENTS})
-      if(${ARG} MATCHES ".*\.cu$")
-        list(APPEND CUDA_FILE_ARGS ${ARG})
-      else()
-        list(APPEND TARGET_SOURCE_ARGS ${ARG})
-      endif()
-    endforeach()
-    
-    list(LENGTH CUDA_FILE_ARGS NUM_CUDA_FILE_ARGS)
-    while(NUM_CUDA_FILE_ARGS GREATER 0)
-      list(SUBLIST CUDA_FILE_ARGS 0 ${__BATCH_SIZE} CUDA_FILE_BATCH)
-      string(SHA256 CUDA_FILE_BATCH_HASH "${CUDA_FILE_BATCH}")
-      string(SUBSTRING ${CUDA_FILE_BATCH_HASH} 0 12 CUDA_FILE_BATCH_HASH)
-      set(BATCH_FILE ${CMAKE_CURRENT_BINARY_DIR}/${NAME}.unity.${CUDA_FILE_BATCH_HASH}.cu)
-      message(STATUS "Generating ${BATCH_FILE}")
-      file(WRITE ${BATCH_FILE} "// Unity File - Auto Generated!\n")
-      foreach(CUDA_FILE ${CUDA_FILE_BATCH})
-        get_filename_component(CUDA_FILE_ABS_PATH ${CUDA_FILE} ABSOLUTE)
-        file(APPEND ${BATCH_FILE} "#include \"${CUDA_FILE_ABS_PATH}\"\n")
-      endforeach()
-      list(APPEND TARGET_SOURCE_ARGS ${BATCH_FILE})
-      if (NUM_CUDA_FILE_ARGS LESS_EQUAL __BATCH_SIZE)
-        break()
-      endif()
-      list(SUBLIST CUDA_FILE_ARGS ${__BATCH_SIZE} -1 CUDA_FILE_ARGS)
-      list(LENGTH CUDA_FILE_ARGS NUM_CUDA_FILE_ARGS)
-    endwhile()
-
-  else()
-
-    set(TARGET_SOURCE_ARGS ${__UNPARSED_ARGUMENTS})
-
-  endif()
-
+  set(TARGET_SOURCE_ARGS ${__UNPARSED_ARGUMENTS})
   set(${TARGET_ARGS_VAR} ${TARGET_SOURCE_ARGS} PARENT_SCOPE)
-
 endfunction()
+
 function(cutlass_add_library NAME)
 
   set(options SKIP_GENCODE_FLAGS)
