@@ -29,52 +29,43 @@
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 cmake_policy(SET CMP0112 NEW)
 
-#if(cutlass_LOADED)
-#  return()
-#else()
-#  set(cutlass_LOADED ON)
-#  set(CUTLASS_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "CUTLASS Repository Directory")
-#endif()
-
-#message(STATUS "CUTLASS_DIR: ${CUTLASS_DIR}")
-
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
-set(IMPLICIT_CMAKE_CXX_STANDARD OFF CACHE BOOL "Do not explicitly specify -std=c++17 if set")
+#set(IMPLICIT_CMAKE_CXX_STANDARD OFF CACHE BOOL "Do not explicitly specify -std=c++17 if set")
 
 # To reduce duplicate version locations, parse the version out of the
 # main versions.h file and reuse it here.
 
-file(READ ${CMAKE_CURRENT_SOURCE_DIR}/include/cutlass/version.h VERSION_FILE_CONTENTS)
-string(REGEX MATCH "#define CUTLASS_MAJOR ([0-9]+)" _CUTLASS_VERSION_MAJOR "${VERSION_FILE_CONTENTS}")
-set(_CUTLASS_VERSION_MAJOR ${CMAKE_MATCH_1})
-string(REGEX MATCH "#define CUTLASS_MINOR ([0-9]+)" _CUTLASS_VERSION_MINOR "${VERSION_FILE_CONTENTS}")
-set(_CUTLASS_VERSION_MINOR ${CMAKE_MATCH_1})
-string(REGEX MATCH "#define CUTLASS_PATCH ([0-9]+)" _CUTLASS_VERSION_PATCH "${VERSION_FILE_CONTENTS}")
-set(_CUTLASS_VERSION_PATCH ${CMAKE_MATCH_1})
+#file(READ ${CMAKE_CURRENT_SOURCE_DIR}/include/cutlass/version.h VERSION_FILE_CONTENTS)
+#string(REGEX MATCH "#define CUTLASS_MAJOR ([0-9]+)" _CUTLASS_VERSION_MAJOR "${VERSION_FILE_CONTENTS}")
+#set(_CUTLASS_VERSION_MAJOR ${CMAKE_MATCH_1})
+#string(REGEX MATCH "#define CUTLASS_MINOR ([0-9]+)" _CUTLASS_VERSION_MINOR "${VERSION_FILE_CONTENTS}")
+#set(_CUTLASS_VERSION_MINOR ${CMAKE_MATCH_1})
+#string(REGEX MATCH "#define CUTLASS_PATCH ([0-9]+)" _CUTLASS_VERSION_PATCH "${VERSION_FILE_CONTENTS}")
+#set(_CUTLASS_VERSION_PATCH ${CMAKE_MATCH_1})
 
-message(STATUS "CUTLASS ${_CUTLASS_VERSION_MAJOR}.${_CUTLASS_VERSION_MINOR}.${_CUTLASS_VERSION_PATCH}")
+#message(STATUS "CUTLASS ${_CUTLASS_VERSION_MAJOR}.${_CUTLASS_VERSION_MINOR}.${_CUTLASS_VERSION_PATCH}")
 
 ## CUTLASS PROJECT #############################################################
 
-project(CUTLASS VERSION ${_CUTLASS_VERSION_MAJOR}.${_CUTLASS_VERSION_MINOR}.${_CUTLASS_VERSION_PATCH} LANGUAGES CXX)
+project(CUTLASS VERSION 3.5.0 LANGUAGES CXX)
 
 ################################################################################
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/CUDA.cmake)
 
-if (CUDA_VERSION VERSION_LESS 11.3)
-  message(WARNING "CUTLASS ${CUTLASS_VERSION} requires CUDA 11.4 or higher, and strongly recommends CUDA 11.8 or higher.")
-elseif (CUDA_VERSION VERSION_LESS 11.4)
-  message(WARNING "CUTLASS ${CUTLASS_VERSION} support for CUDA ${CUDA_VERSION} is deprecated, please use CUDA 11.8 or higher.")
-endif()
+#if (CUDA_VERSION VERSION_LESS 11.3)
+#  message(WARNING "CUTLASS ${CUTLASS_VERSION} requires CUDA 11.4 or higher, and strongly recommends CUDA 11.8 or higher.")
+#elseif (CUDA_VERSION VERSION_LESS 11.4)
+#  message(WARNING "CUTLASS ${CUTLASS_VERSION} support for CUDA ${CUDA_VERSION} is deprecated, please use CUDA 11.8 or higher.")
+#endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.3)
-  message(FATAL_ERROR "GCC version must be at least 7.3!")
-endif()
+#if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.3)
+#  message(FATAL_ERROR "GCC version must be at least 7.3!")
+#endif()
 
-if (CUDA_COMPILER MATCHES "[Cc]lang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
-  message(FATAL_ERROR "Clang 7.0+ required for GPU compilation")
-endif()
+#if (CUDA_COMPILER MATCHES "[Cc]lang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7.0)
+#  message(FATAL_ERROR "Clang 7.0+ required for GPU compilation")
+#endif()
 find_package(Doxygen QUIET)
 
 ################################################################################
