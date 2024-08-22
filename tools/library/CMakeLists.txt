@@ -167,7 +167,7 @@ cutlass_add_cutlass_library(
 
 # For backward compatibility with the old name
 add_library(cutlass_lib ALIAS cutlass_library)
-add_library(cutlass_lib_static ALIAS cutlass_library_static)
+#add_library(cutlass_lib_static ALIAS cutlass_library_static)
 
 execute_process(
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../../python/cutlass_library
