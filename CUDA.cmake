@@ -59,21 +59,8 @@ set_property(
   ${CUDA_DRIVER_LIBRARY}
   )
 
-if (MSVC OR CUTLASS_LIBRARY_KERNELS MATCHES "all")
-  set(CUTLASS_UNITY_BUILD_ENABLED_INIT ON)
-else()
-  set(CUTLASS_UNITY_BUILD_ENABLED_INIT OFF)
-endif()
-
-set(CUTLASS_UNITY_BUILD_ENABLED ${CUTLASS_UNITY_BUILD_ENABLED_INIT} CACHE BOOL "Enable combined source compilation")
-
-if (MSVC)
-  set(CUTLASS_UNITY_BUILD_BATCH_SIZE_INIT 8)
-else()
-  set(CUTLASS_UNITY_BUILD_BATCH_SIZE_INIT 16)
-endif()
-
-set(CUTLASS_UNITY_BUILD_BATCH_SIZE ${CUTLASS_UNITY_BUILD_BATCH_SIZE_INIT} CACHE STRING "Batch size for unified source files")
+set(CUTLASS_UNITY_BUILD_ENABLED OFF CACHE BOOL "Enable combined source compilation")
+set(CUTLASS_UNITY_BUILD_BATCH_SIZE 16 CACHE STRING "Batch size for unified source files")
 
 function(cutlass_unify_source_files TARGET_ARGS_VAR)
 
@@ -81,10 +68,6 @@ function(cutlass_unify_source_files TARGET_ARGS_VAR)
   set(oneValueArgs BATCH_SOURCES BATCH_SIZE)
   set(multiValueArgs)
   cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-  if (NOT DEFINED TARGET_ARGS_VAR)
-    message(FATAL_ERROR "TARGET_ARGS_VAR parameter is required")
-  endif()
 
   if (NOT DEFINED __BATCH_SOURCES)
     set(__BATCH_SOURCES ON)
