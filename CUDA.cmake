@@ -38,26 +38,6 @@ set(CUTLASS_NATIVE_CUDA ON CACHE BOOL "Utilize the CMake native CUDA flow")
 
 enable_language(CUDA)
 get_filename_component(CUDA_TOOLKIT_ROOT_DIR "${CMAKE_CUDA_COMPILER}/../.." ABSOLUTE)
-
-#find_library(
-#  CUDART_LIBRARY cudart
-#  PATHS
-#  ${CUDA_TOOLKIT_ROOT_DIR}
-#  PATH_SUFFIXES
-#  lib/x86_64-linux-gnu
-#  lib/x64
-#  lib64
-#  lib
-#  NO_DEFAULT_PATH
-#  )
-#message(STATUS "CUDART: ${CUDART_LIBRARY}")
-#add_library(cudart SHARED IMPORTED GLOBAL)
-#set_property(
-#  TARGET cudart
-#  PROPERTY IMPORTED_LOCATION
-#  ${CUDART_LIBRARY}
-#  )
-
 find_library(
   CUDA_DRIVER_LIBRARY cuda
   PATHS
@@ -71,37 +51,15 @@ find_library(
   lib/stubs
   NO_DEFAULT_PATH
   )
-
 message(STATUS "CUDA Driver: ${CUDA_DRIVER_LIBRARY}")
 add_library(cuda_driver SHARED IMPORTED GLOBAL)
-add_library(nvidia::cuda_driver ALIAS cuda_driver)
 set_property(
   TARGET cuda_driver
   PROPERTY IMPORTED_LOCATION
   ${CUDA_DRIVER_LIBRARY}
   )
 
-find_library(
-  NVRTC_LIBRARY nvrtc
-  PATHS
-  ${CUDA_TOOLKIT_ROOT_DIR}
-  PATH_SUFFIXES
-  lib/x64
-  lib64
-  lib
-  NO_DEFAULT_PATH
-  )
-
-message(STATUS "NVRTC: ${NVRTC_LIBRARY}")
-add_library(nvrtc SHARED IMPORTED GLOBAL)
-add_library(nvidia::nvrtc ALIAS nvrtc)
-set_property(
-  TARGET nvrtc
-  PROPERTY IMPORTED_LOCATION
-  ${NVRTC_LIBRARY}
-  )
-
-include_directories(SYSTEM ${CUDA_INCLUDE_DIRS})
+#include_directories(SYSTEM ${CUDA_INCLUDE_DIRS})
 
 function(cutlass_correct_source_file_language_property)
   if(CUDA_COMPILER MATCHES "[Cc]lang")
