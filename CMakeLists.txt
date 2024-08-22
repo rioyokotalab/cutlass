@@ -46,12 +46,8 @@ list(APPEND CUTLASS_CUDA_FLAGS -DCUTLASS_ENABLE_TENSOR_CORE_MMA=1)
 ###################################################################################################
 
 function(cutlass_apply_cuda_gencode_flags TARGET)
-  set(NVCC_FLAGS)
-  list(APPEND NVCC_FLAGS -gencode=arch=compute_90a,code=sm_90a,compute_90a)
   set_property(TARGET ${TARGET} PROPERTY CUDA_ARCHITECTURES 90a-real;90a-virtual)
 endfunction()
-
-# Cache the flags so they are available when the function below is called anywhere globally. 
 
 set(__CUTLASS_CUDA_FLAGS ${CUTLASS_CUDA_FLAGS} CACHE INTERNAL "")
 set(__CUTLASS_CUDA_FLAGS_RELEASE ${CUTLASS_CUDA_FLAGS_RELEASE} CACHE INTERNAL "")
