@@ -29,13 +29,14 @@
 cmake_minimum_required(VERSION 3.19 FATAL_ERROR)
 cmake_policy(SET CMP0112 NEW)
 
-if(cutlass_LOADED)
-  # If CUTLASS has been previously fetched and loaded, don't do it again.
-  return()
-else()
-  set(cutlass_LOADED ON)
-  set(CUTLASS_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "CUTLASS Repository Directory")
-endif()
+#if(cutlass_LOADED)
+#  return()
+#else()
+#  set(cutlass_LOADED ON)
+#  set(CUTLASS_DIR ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "CUTLASS Repository Directory")
+#endif()
+
+#message(STATUS "CUTLASS_DIR: ${CUTLASS_DIR}")
 
 message(STATUS "CMake Version: ${CMAKE_VERSION}")
 set(IMPLICIT_CMAKE_CXX_STANDARD OFF CACHE BOOL "Do not explicitly specify -std=c++17 if set")
@@ -191,24 +192,8 @@ else()
 endif()
 set(CUTLASS_LIBRARY_DEBUG_POSTFIX ${CUTLASS_LIBRARY_DEBUG_POSTFIX_INIT} CACHE STRING "Default postfix value for debug libraries")
 
-if(WIN32)
-  # On Windows we link against the shared (DLL) runtime. Change gtest settings to match this.
-  set(gtest_force_shared_crt ON CACHE BOOL "Use shared (DLL) run-time lib even when Google Test is built as static lib" FORCE)
-endif()
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCUTLASS_VERSIONS_GENERATED")
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -DCUTLASS_VERSIONS_GENERATED")
-
-if (WIN32)
-  # Enable more warnings.  Add "-Xcompiler=/WX" to enable warnings as errors.
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=/W3)
-
-  # Disable warning on Unicode characters
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=/wd4819)
-
-  # Disable excess x86 floating point precision that can lead to results being labeled incorrectly
-  list(APPEND CUTLASS_CUDA_NVCC_FLAGS -Xcompiler=/fp:strict)
-endif(WIN32)
 
 if (${CUTLASS_NVCC_VERBOSE})
   list(APPEND CUTLASS_CUDA_NVCC_FLAGS -v)
@@ -845,21 +830,6 @@ function(cutlass_add_executable_tests NAME TARGET)
   include(${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.cmake)
  
   set(CUTLASS_CTEST_GENERATED_FILES ${CUTLASS_CTEST_GENERATED_FILES};ctest/${TEST_NAME}/CTestTestfile.${TEST_NAME}.cmake CACHE INTERNAL "")
-
-#    if (CUTLASS_INSTALL_TESTS)
-
-#    file(GENERATE 
-#      OUTPUT "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake" 
-#      INPUT "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake.in" 
-#      )
-
-#    install(
-#      FILES "${TEST_GEN_DIR}/CTestTestfile.${TEST_NAME}.install.cmake"
-#      DESTINATION ${CUTLASS_TEST_INSTALL_PREFIX}/ctest/${TEST_NAME}
-#      RENAME CTestTestfile.${TEST_NAME}.cmake
-#      )
-
-#    endif()
 
 endfunction()
 
