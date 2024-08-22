@@ -40,43 +40,11 @@ message(STATUS "Default Install Location: ${CMAKE_INSTALL_PREFIX}")
 
 find_package(Python3 3.5 COMPONENTS Interpreter REQUIRED)
 
-set(CUTLASS_ENABLE_EXAMPLES ON CACHE BOOL "Enable CUTLASS Examples")
-set(CUTLASS_ENABLE_TOOLS ON CACHE BOOL "Enable CUTLASS Tools")
 set(CUTLASS_ENABLE_LIBRARY ON CACHE BOOL "Enable CUTLASS Library")
 set(CUTLASS_ENABLE_PROFILER ON CACHE BOOL "Enable CUTLASS Profiler")
-set(CUTLASS_ENABLE_PERFORMANCE ON CACHE BOOL "Enable CUTLASS Performance")
-set(CUTLASS_ENABLE_TESTS ON CACHE BOOL "Enable CUTLASS Tests")
-set(CUTLASS_ENABLE_GTEST_UNIT_TESTS ${CUTLASS_ENABLE_TESTS} CACHE BOOL "Enable CUTLASS GTest-based Unit Tests")
-################################################################################
 
-set(CUTLASS_NVCC_ARCHS_SUPPORTED "")
-if (CUDA_VERSION VERSION_GREATER_EQUAL 11.4 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 70 72 75 80 86 87)
-endif()
-if (CUDA_VERSION VERSION_GREATER_EQUAL 11.8 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 89 90)
-endif()
-if (CUDA_VERSION VERSION_GREATER_EQUAL 12.0 AND NOT CUDA_COMPILER MATCHES "[Cc]lang")
-  list(APPEND CUTLASS_NVCC_ARCHS_SUPPORTED 90a)
-endif()
-set(CUTLASS_NVCC_ARCHS ${CUTLASS_NVCC_ARCHS_SUPPORTED} CACHE STRING "The SM architectures requested.")
+set(CUTLASS_NVCC_ARCHS 70 72 75 80 86 87 89 90 90a CACHE STRING "The SM architectures requested.")
 set(CUTLASS_NVCC_ARCHS_ENABLED ${CUTLASS_NVCC_ARCHS} CACHE STRING "The SM architectures to build code for.")
-
-# Find unsupported and deprecated compute capabilities
-if (CUTLASS_NVCC_ARCHS_SUPPORTED)
-  set(CUTLASS_NVCC_ARCHS_UNSUPPORTED ${CUTLASS_NVCC_ARCHS})
-  list(REMOVE_ITEM CUTLASS_NVCC_ARCHS_UNSUPPORTED ${CUTLASS_NVCC_ARCHS_SUPPORTED})
-  if (CUTLASS_NVCC_ARCHS_UNSUPPORTED)
-    message(WARNING "Using unsupported or deprecated compute capabilities ${CUTLASS_NVCC_ARCHS_UNSUPPORTED}. Support may be removed in future versions.")
-  endif()
-else()
-  message(WARNING "No supported compute capabilities for CUDA ${CUDA_VERSION}.")
-endif()
-
-# Special policy introduced in CMake 3.13
-if (POLICY CMP0076)
-  cmake_policy(SET CMP0076 NEW)
-endif()
 
 include(GNUInstallDirs)
 
@@ -728,12 +696,8 @@ function(cutlass_add_executable_tests NAME TARGET)
 
 endfunction()
 
-if (CUTLASS_ENABLE_TOOLS)
-  add_subdirectory(tools)
-  if (CUTLASS_ENABLE_PROFILER)
-    add_dependencies(test_all test_profiler)
-  endif()
-endif()
+add_subdirectory(tools)
+add_dependencies(test_all test_profiler)
 
 
 ################################################################################
