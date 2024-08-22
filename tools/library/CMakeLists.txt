@@ -127,15 +127,6 @@ function(cutlass_add_cutlass_library)
     ""
     )
 
-  target_compile_features(${__NAME} INTERFACE cxx_std_17)
-    
-  set_target_properties(
-    ${__NAME}
-    PROPERTIES
-    OUTPUT_NAME ${__OUTPUT_NAME}
-    WINDOWS_EXPORT_ALL_SYMBOLS 1
-    )
-    
   target_link_libraries(
     ${__NAME}
     PUBLIC cutlass_library_includes
@@ -150,8 +141,6 @@ function(cutlass_add_cutlass_library)
     ""
     )
 
-#  target_compile_features(${__NAME}_static INTERFACE cxx_std_17)
-    
   target_link_libraries(
     ${__NAME}_static
     PUBLIC cutlass_library_includes
