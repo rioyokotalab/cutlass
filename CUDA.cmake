@@ -70,11 +70,11 @@ function(cutlass_unify_source_files TARGET_ARGS_VAR)
   cmake_parse_arguments(_ "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   if (NOT DEFINED __BATCH_SOURCES)
-    set(__BATCH_SOURCES ON)
+#    set(__BATCH_SOURCES ON)
   endif()
 
   if (__BATCH_SOURCES AND NOT DEFINED __BATCH_SIZE)
-    set(__BATCH_SIZE ${CUTLASS_UNITY_BUILD_BATCH_SIZE})
+#    set(__BATCH_SIZE ${CUTLASS_UNITY_BUILD_BATCH_SIZE})
   endif()
 
   if (CUTLASS_UNITY_BUILD_ENABLED AND __BATCH_SOURCES AND __BATCH_SIZE GREATER 1)
