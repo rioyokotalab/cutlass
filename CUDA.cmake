@@ -39,50 +39,24 @@ set(CUTLASS_NATIVE_CUDA ON CACHE BOOL "Utilize the CMake native CUDA flow")
 enable_language(CUDA)
 get_filename_component(CUDA_TOOLKIT_ROOT_DIR "${CMAKE_CUDA_COMPILER}/../.." ABSOLUTE)
 
-find_library(
-  CUDART_LIBRARY cudart
-  PATHS
-  ${CUDA_TOOLKIT_ROOT_DIR}
-  PATH_SUFFIXES
-  lib/x86_64-linux-gnu
-  lib/x64
-  lib64
-  lib
-  NO_DEFAULT_PATH
-  # We aren't going to search any system paths. We want to find the runtime 
-  # in the CUDA toolkit we're building against.
-  )
-
-if(NOT TARGET cudart AND CUDART_LIBRARY)
-
-  message(STATUS "CUDART: ${CUDART_LIBRARY}")
-
-  if(WIN32)
-    add_library(cudart STATIC IMPORTED GLOBAL)
-    # Even though we're linking against a .dll, in Windows you statically link against
-    # the .lib file found under lib/x64. The .dll will be loaded at runtime automatically
-    # from the PATH search.
-  else()
-    add_library(cudart SHARED IMPORTED GLOBAL)
-  endif()  
-
-  add_library(nvidia::cudart ALIAS cudart)
-  
-  set_property(
-    TARGET cudart
-    PROPERTY IMPORTED_LOCATION
-    ${CUDART_LIBRARY}
-    )
-
-elseif(TARGET cudart)
-
-  message(STATUS "CUDART: Already Found")
-
-else()
-
-  message(STATUS "CUDART: Not Found")
-
-endif()
+#find_library(
+#  CUDART_LIBRARY cudart
+#  PATHS
+#  ${CUDA_TOOLKIT_ROOT_DIR}
+#  PATH_SUFFIXES
+#  lib/x86_64-linux-gnu
+#  lib/x64
+#  lib64
+#  lib
+#  NO_DEFAULT_PATH
+#  )
+#message(STATUS "CUDART: ${CUDART_LIBRARY}")
+#add_library(cudart SHARED IMPORTED GLOBAL)
+#set_property(
+#  TARGET cudart
+#  PROPERTY IMPORTED_LOCATION
+#  ${CUDART_LIBRARY}
+#  )
 
 find_library(
   CUDA_DRIVER_LIBRARY cuda
@@ -96,40 +70,16 @@ find_library(
   lib64/stubs
   lib/stubs
   NO_DEFAULT_PATH
-  # We aren't going to search any system paths. We want to find the runtime 
-  # in the CUDA toolkit we're building against.
   )
 
-if(NOT TARGET cuda_driver AND CUDA_DRIVER_LIBRARY)
-
-  message(STATUS "CUDA Driver: ${CUDA_DRIVER_LIBRARY}")
-
-  if(WIN32)
-    add_library(cuda_driver STATIC IMPORTED GLOBAL)
-    # Even though we're linking against a .dll, in Windows you statically link against
-    # the .lib file found under lib/x64. The .dll will be loaded at runtime automatically
-    # from the PATH search.
-  else()
-    add_library(cuda_driver SHARED IMPORTED GLOBAL)
-  endif()  
-
-  add_library(nvidia::cuda_driver ALIAS cuda_driver)
-  
-  set_property(
-    TARGET cuda_driver
-    PROPERTY IMPORTED_LOCATION
-    ${CUDA_DRIVER_LIBRARY}
-    )
-
-elseif(TARGET cuda_driver)
-
-  message(STATUS "CUDA Driver: Already Found")
-
-else()
-
-  message(STATUS "CUDA Driver: Not Found")
-
-endif()
+message(STATUS "CUDA Driver: ${CUDA_DRIVER_LIBRARY}")
+add_library(cuda_driver SHARED IMPORTED GLOBAL)
+add_library(nvidia::cuda_driver ALIAS cuda_driver)
+set_property(
+  TARGET cuda_driver
+  PROPERTY IMPORTED_LOCATION
+  ${CUDA_DRIVER_LIBRARY}
+  )
 
 find_library(
   NVRTC_LIBRARY nvrtc
@@ -140,44 +90,18 @@ find_library(
   lib64
   lib
   NO_DEFAULT_PATH
-  # We aren't going to search any system paths. We want to find the runtime 
-  # in the CUDA toolkit we're building against.
   )
 
-if(NOT TARGET nvrtc AND NVRTC_LIBRARY)
-
-  message(STATUS "NVRTC: ${NVRTC_LIBRARY}")
-
-  if(WIN32)
-    add_library(nvrtc STATIC IMPORTED GLOBAL)
-    # Even though we're linking against a .dll, in Windows you statically link against
-    # the .lib file found under lib/x64. The .dll will be loaded at runtime automatically
-    # from the PATH search.
-  else()
-    add_library(nvrtc SHARED IMPORTED GLOBAL)
-  endif()  
-  
-  add_library(nvidia::nvrtc ALIAS nvrtc)
-  
-  set_property(
-    TARGET nvrtc
-    PROPERTY IMPORTED_LOCATION
-    ${NVRTC_LIBRARY}
-    )
-
-elseif(TARGET nvrtc)
-
-  message(STATUS "NVRTC: Already Found")
-
-else()
-
-  message(STATUS "NVRTC: Not Found")
-
-endif()
+message(STATUS "NVRTC: ${NVRTC_LIBRARY}")
+add_library(nvrtc SHARED IMPORTED GLOBAL)
+add_library(nvidia::nvrtc ALIAS nvrtc)
+set_property(
+  TARGET nvrtc
+  PROPERTY IMPORTED_LOCATION
+  ${NVRTC_LIBRARY}
+  )
 
 include_directories(SYSTEM ${CUDA_INCLUDE_DIRS})
-# Some platforms (e.g. Visual Studio) don't add the CUDA include directories to the system include
-# paths by default, so we add it explicitly here.
 
 function(cutlass_correct_source_file_language_property)
   if(CUDA_COMPILER MATCHES "[Cc]lang")
