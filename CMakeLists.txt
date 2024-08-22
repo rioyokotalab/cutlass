@@ -770,25 +770,25 @@ function(cutlass_add_executable_tests NAME TARGET)
 
   endif()
 
-  if (NOT __DISABLE_EXECUTABLE_INSTALL_RULE AND CUTLASS_INSTALL_TESTS)
+#  if (NOT __DISABLE_EXECUTABLE_INSTALL_RULE AND CUTLASS_INSTALL_TESTS)
   
     # file(RELATIVE_PATH CMAKE_CURRENT_BINARY_RELATIVE_DIR ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
   
-    install(
-      TARGETS ${TARGET}
-      RUNTIME DESTINATION ${CUTLASS_TEST_INSTALL_BINDIR}
-      )
+#    install(
+#      TARGETS ${TARGET}
+#      RUNTIME DESTINATION ${CUTLASS_TEST_INSTALL_BINDIR}
+#      )
 
-    if (__RESULT_CACHE_FILE)
+#    if (__RESULT_CACHE_FILE)
 
-     install(
-       FILES ${__RESULT_CACHE_FILE}
-       DESTINATION ${CUTLASS_TEST_INSTALL_BINDIR}/
-       )
+#     install(
+#       FILES ${__RESULT_CACHE_FILE}
+#       DESTINATION ${CUTLASS_TEST_INSTALL_BINDIR}/
+#       )
 
-    endif()
+#    endif()
   
-  endif()
+#  endif()
 
   if (NOT __TEST_COMMAND_OPTIONS)
     set(__TEST_COMMAND_OPTIONS " ")
