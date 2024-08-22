@@ -36,27 +36,8 @@ endfunction()
 
 set(CUTLASS_NATIVE_CUDA ON CACHE BOOL "Utilize the CMake native CUDA flow")
 
-if(CUTLASS_NATIVE_CUDA)
-
-  enable_language(CUDA)
-
-  if(NOT CUDA_VERSION)
-    set(CUDA_VERSION ${CMAKE_CUDA_COMPILER_VERSION})
-  endif()
-  if(NOT CUDA_TOOLKIT_ROOT_DIR)
-    get_filename_component(CUDA_TOOLKIT_ROOT_DIR "${CMAKE_CUDA_COMPILER}/../.." ABSOLUTE)
-  endif()
-
-else()
-
-  find_package(CUDA REQUIRED)
-  # We workaround missing variables with the native flow by also finding the CUDA toolkit the old way.
-
-  if(NOT CMAKE_CUDA_COMPILER_VERSION)
-    set(CMAKE_CUDA_COMPILER_VERSION ${CUDA_VERSION})
-  endif()
-
-endif()
+enable_language(CUDA)
+get_filename_component(CUDA_TOOLKIT_ROOT_DIR "${CMAKE_CUDA_COMPILER}/../.." ABSOLUTE)
 
 find_library(
   CUDART_LIBRARY cudart
