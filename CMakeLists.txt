@@ -770,26 +770,6 @@ function(cutlass_add_executable_tests NAME TARGET)
 
   endif()
 
-#  if (NOT __DISABLE_EXECUTABLE_INSTALL_RULE AND CUTLASS_INSTALL_TESTS)
-  
-    # file(RELATIVE_PATH CMAKE_CURRENT_BINARY_RELATIVE_DIR ${CMAKE_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-  
-#    install(
-#      TARGETS ${TARGET}
-#      RUNTIME DESTINATION ${CUTLASS_TEST_INSTALL_BINDIR}
-#      )
-
-#    if (__RESULT_CACHE_FILE)
-
-#     install(
-#       FILES ${__RESULT_CACHE_FILE}
-#       DESTINATION ${CUTLASS_TEST_INSTALL_BINDIR}/
-#       )
-
-#    endif()
-  
-#  endif()
-
   if (NOT __TEST_COMMAND_OPTIONS)
     set(__TEST_COMMAND_OPTIONS " ")
   endif()
@@ -803,13 +783,13 @@ function(cutlass_add_executable_tests NAME TARGET)
     endforeach()
   endif()
 
-  if (CUTLASS_INSTALL_TESTS)
+#  if (CUTLASS_INSTALL_TESTS)
 
-    set(_INLINE_PER_TEST_CODE)
+#    set(_INLINE_PER_TEST_CODE)
 
-    file(READ "${PROJECT_SOURCE_DIR}/cmake/CTestTestfile.test.configure.cmake" _INLINE_PER_TEST_CODE_TEMPLATE)
+#    file(READ "${PROJECT_SOURCE_DIR}/cmake/CTestTestfile.test.configure.cmake" _INLINE_PER_TEST_CODE_TEMPLATE)
 
-  endif()
+#  endif()
 
   set(TEST_GROUP_NAME ${NAME})
 
