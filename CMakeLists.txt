@@ -50,23 +50,13 @@ set(CUTLASS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE PATH "CUTLASS 
 set(CUTLASS_GENERATOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/library CACHE INTERNAL "Location of generator scripts")
 set(CUTLASS_TOOLS_UTIL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/util/include CACHE INTERNAL "")
 include_directories(${CUTLASS_INCLUDE_DIR})
-#install(
-#  TARGETS CUTLASS
-#  EXPORT NvidiaCutlass
-#  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-#  )
-
 include(${CMAKE_CURRENT_SOURCE_DIR}/cuBLAS.cmake)
-
 add_subdirectory(tools)
-
-################################################################################
-
 include(CMakePackageConfigHelpers)
 
-write_basic_package_version_file(
-  ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfigVersion.cmake 
-  COMPATIBILITY AnyNewerVersion)
+#write_basic_package_version_file(
+#  ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfigVersion.cmake 
+#  COMPATIBILITY AnyNewerVersion)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/cmake/NvidiaCutlassConfig.cmake.in
@@ -80,8 +70,6 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/NvidiaCutlassConfigVersion.cmake 
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/NvidiaCutlass/
   )
-
-################################################################################
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/NvidiaCutlassPackageConfig.cmake)
 
