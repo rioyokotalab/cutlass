@@ -899,28 +899,6 @@ if (CUTLASS_ENABLE_TOOLS)
 endif()
 
 
-
-if (CUTLASS_INSTALL_TESTS)
-
-  file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/ctest")
-
-  file(WRITE "${CMAKE_BINARY_DIR}/ctest/CTestTestfile.cmake" "# Generated File\n\n")
-  file(APPEND "${CMAKE_BINARY_DIR}/ctest/CTestTestfile.cmake" "cmake_policy(SET CMP0057 NEW) # Allow IN_LIST for if()\n\n")
-  file(APPEND "${CMAKE_BINARY_DIR}/ctest/CTestTestfile.cmake" "if (NOT DEFINED ENV{CUTLASS_TEST_SETS})\n")
-  file(APPEND "${CMAKE_BINARY_DIR}/ctest/CTestTestfile.cmake" "  set(ENV{CUTLASS_TEST_SETS} ${CUTLASS_DEFAULT_ACTIVE_TEST_SETS})\n")
-  file(APPEND "${CMAKE_BINARY_DIR}/ctest/CTestTestfile.cmake" "endif()\n\n")
-
-  foreach(GENERATED_FILE ${CUTLASS_CTEST_GENERATED_FILES})
-    file(APPEND "${CMAKE_BINARY_DIR}/ctest/CTestTestfile.cmake" "include(${GENERATED_FILE})\n")
-  endforeach()
-
-  install(
-    FILES "${CMAKE_BINARY_DIR}/ctest/CTestTestfile.cmake"
-    DESTINATION "${CUTLASS_TEST_INSTALL_PREFIX}/"
-    )
-
-endif()
-
 ################################################################################
 
 include(CMakePackageConfigHelpers)
