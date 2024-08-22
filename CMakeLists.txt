@@ -46,8 +46,6 @@ endfunction()
 
 ###################################################################################################
 
-#source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/include REGULAR_EXPRESSION ".*\.h")
-
 add_library(CUTLASS INTERFACE)
 add_library(nvidia::cutlass::cutlass ALIAS CUTLASS)
 set_target_properties(CUTLASS PROPERTIES EXPORT_NAME cutlass)
@@ -56,12 +54,11 @@ set(CUTLASS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE PATH "CUTLASS 
 
 set(CUTLASS_GENERATOR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/library CACHE INTERNAL "Location of generator scripts")
 
-# The following utility directory is needed even if the tools build is disabled, so it exists here.
 set(CUTLASS_TOOLS_UTIL_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tools/util/include CACHE INTERNAL "")
 
 include_directories(${CUTLASS_INCLUDE_DIR})
 
-target_compile_features(CUTLASS INTERFACE cxx_std_11)
+#target_compile_features(CUTLASS INTERFACE cxx_std_11)
 
 if (NOT DEFINED CUTLASS_REVISION)
 
