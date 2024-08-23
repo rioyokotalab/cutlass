@@ -22,7 +22,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-using cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8 =
+using kernel =
   typename cutlass::gemm::kernel::DefaultGemmUniversal<
     cutlass::half_t, cutlass::layout::ColumnMajor, cutlass::ComplexTransform::kNone, 8,    // transposed B operand
     cutlass::half_t, cutlass::layout::RowMajor, cutlass::ComplexTransform::kNone, 8,    // transposed A operand
@@ -55,8 +55,8 @@ namespace library {
 
 void initialize_all(std::vector<std::unique_ptr<Operation>> &operations) {
   operations.emplace_back(new GemmUniversalOperation<
-      cutlass::gemm::device::GemmUniversalAdapter<cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8>
-    >("cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8"));
+      cutlass::gemm::device::GemmUniversalAdapter<kernel>
+    >("kernel"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
