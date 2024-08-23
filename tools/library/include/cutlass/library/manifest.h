@@ -58,7 +58,7 @@ class Manifest;
 void initialize_all(std::vector<std::unique_ptr<Operation>> &operations);         
 
 // init and insert all reduction op in manifest object (manually instantiated in library/reduction)
-void initialize_all_reduction_op(Manifest &manifest);
+//void initialize_all_reduction_op(Manifest &manifest);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -83,12 +83,6 @@ public:
 
   /// Returns an iterator to the first operation
   OperationVector const &operations() const;
-
-  /// Returns a const iterator
-  //OperationVector::const_iterator begin() const;
-
-  /// Returns a const iterator
-  //OperationVector::const_iterator end() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -41,11 +41,9 @@ namespace library {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Singleton instance stores a Manifest and Operation table
 class Singleton {
 public:
 
-  /// Operation table referencing the Manifest
   OperationTable operation_table;
 
 public:
