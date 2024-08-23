@@ -50,42 +50,9 @@
 namespace cutlass {
 namespace library {
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Forward declaration 
-class Manifest;
-
-// init and insert all cutlass gemm operations in manifest object (procedurally generated using generator.py)
 void initialize_all(std::vector<std::unique_ptr<Operation>> &operations);         
 
-// init and insert all reduction op in manifest object (manually instantiated in library/reduction)
-//void initialize_all_reduction_op(Manifest &manifest);
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// List of operations
 using OperationVector = std::vector<std::unique_ptr<Operation>>;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Manifest of CUTLASS Library
-class Manifest {
-public:
-  Provider provider_;
-  OperationVector operations_;
-
-  Manifest (Provider provider = library::Provider::kCUTLASS) : provider_(provider) { }
-
-  /// Used for initialization
-  void reserve(size_t operation_count);
-
-  /// Graceful shutdown
-  Status release();
-
-  /// Returns an iterator to the first operation
-  OperationVector const &operations() const;
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 
 } // namespace library
 } // namespace cutlass
