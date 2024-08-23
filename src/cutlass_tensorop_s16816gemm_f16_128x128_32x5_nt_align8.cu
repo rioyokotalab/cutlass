@@ -7,7 +7,6 @@
 
 #include "cutlass/cutlass.h"
 #include "cutlass/library/library.h"
-#include "cutlass/library/manifest.h"
 #include "library_internal.h"
 #include "gemm_operation.h"
 #include "gemm_operation_3x.hpp"
