@@ -69,15 +69,10 @@ using OperationVector = std::vector<std::unique_ptr<Operation>>;
 
 /// Manifest of CUTLASS Library
 class Manifest {
-private:
-
-  /// Operation provider 
+public:
   Provider provider_;
-
-  /// Global list of operations
   OperationVector operations_;
 
-public:
   Manifest (Provider provider = library::Provider::kCUTLASS) : provider_(provider) { }
 
   /// Used for initialization

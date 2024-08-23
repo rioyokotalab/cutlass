@@ -44,46 +44,32 @@ namespace library {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 void OperationTable::append(Manifest const &manifest) {
-
-  // Insert operations into appropriate data structure
   for (auto const & operation : manifest) {
     OperationDescription const &desc = operation->description();
-    // insert all gemm operation into operation table
-    if (desc.kind == OperationKind::kGemm) {
-      GemmDescription const &gemm_desc = static_cast<GemmDescription const &>(desc);
-    
-
-      GemmFunctionalKey functional_key(
-        gemm_desc.provider,
-        gemm_desc.gemm_kind,
-        gemm_desc.tile_description.math_instruction.element_accumulator,
-        gemm_desc.element_epilogue,
-        gemm_desc.A.element,
-        gemm_desc.A.layout,
-        gemm_desc.transform_A,
-        gemm_desc.B.element,
-        gemm_desc.B.layout,
-        gemm_desc.transform_B,
-        gemm_desc.C.element,
-        gemm_desc.C.layout,
-        gemm_desc.D.element,
-        gemm_desc.D.layout
-      );
-
-      Operation const *op = operation.get();
-
-      int cc = gemm_desc.tile_description.minimum_compute_capability;
-        
-      int alignment = std::max(std::max(
-        gemm_desc.A.alignment, gemm_desc.B.alignment), gemm_desc.C.alignment);
-
-      GemmPreferenceKey preference_key(cc, alignment);
-
-      gemm_operations[functional_key][preference_key].push_back(op);
-    }
-
+    GemmDescription const &gemm_desc = static_cast<GemmDescription const &>(desc);
+    GemmFunctionalKey functional_key(
+      gemm_desc.provider,
+      gemm_desc.gemm_kind,
+      gemm_desc.tile_description.math_instruction.element_accumulator,
+      gemm_desc.element_epilogue,
+      gemm_desc.A.element,
+      gemm_desc.A.layout,
+      gemm_desc.transform_A,
+      gemm_desc.B.element,
+      gemm_desc.B.layout,
+      gemm_desc.transform_B,
+      gemm_desc.C.element,
+      gemm_desc.C.layout,
+      gemm_desc.D.element,
+      gemm_desc.D.layout
+    );
+    Operation const *op = operation.get();
+    int cc = gemm_desc.tile_description.minimum_compute_capability;
+    int alignment = std::max(std::max(
+      gemm_desc.A.alignment, gemm_desc.B.alignment), gemm_desc.C.alignment);
+    GemmPreferenceKey preference_key(cc, alignment);
+    gemm_operations[functional_key][preference_key].push_back(op);
   }
-
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
