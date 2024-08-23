@@ -85,10 +85,10 @@ public:
   OperationVector const &operations() const;
 
   /// Returns a const iterator
-  OperationVector::const_iterator begin() const;
+  //OperationVector::const_iterator begin() const;
 
   /// Returns a const iterator
-  OperationVector::const_iterator end() const;
+  //OperationVector::const_iterator end() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

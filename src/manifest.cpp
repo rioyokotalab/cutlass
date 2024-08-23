@@ -62,18 +62,6 @@ OperationVector const & Manifest::operations() const {
   return operations_;
 }
 
-/// Returns a const iterator
-OperationVector::const_iterator Manifest::begin() const {
-  return operations_.begin();
-}
-
-/// Returns a const iterator
-OperationVector::const_iterator Manifest::end() const {
-  return operations_.end();
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 } // namespace library
 } // namespace cutlass
 
