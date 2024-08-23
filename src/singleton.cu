@@ -31,7 +31,6 @@
 
 #include <memory>
 #include "cutlass/library/library.h"
-#include "cutlass/library/manifest.h"
 #include "cutlass/library/operation_table.h"
 #include "cutlass/library/singleton.h"
 

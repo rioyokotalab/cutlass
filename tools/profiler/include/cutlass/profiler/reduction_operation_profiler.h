@@ -39,7 +39,6 @@
 
 #include "cutlass/library/library.h"
 #include "cutlass/library/util.h"
-#include "cutlass/library/manifest.h"
 
 #include "options.h"
 #include "device_context.h"
