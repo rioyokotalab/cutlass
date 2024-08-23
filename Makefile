@@ -22,3 +22,4 @@ main: $(OBJECT)
 	./a.out
 clean:
 	$(RM) src/*.o a.out
+
