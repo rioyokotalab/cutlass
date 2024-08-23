@@ -40,8 +40,11 @@
 #include <unordered_map>
 #include <algorithm>
 
+#include <list>
+#include <memory>
+#include <map>
+#include "library.h"
 #include "cutlass/library/library.h"
-#include "cutlass/library/manifest.h"
 #include "cutlass/library/util.h"
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
