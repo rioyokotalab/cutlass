@@ -60,7 +60,8 @@ namespace library {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-void initialize_all_gemm_operations(Manifest &manifest) {
+void initialize_all(Manifest &manifest) {
+  manifest.reserve(1);
   manifest.append(new GemmUniversalOperation<
       cutlass::gemm::device::GemmUniversalAdapter<cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8>
     >("cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8"));
