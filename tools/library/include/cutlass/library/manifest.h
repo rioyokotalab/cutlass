@@ -80,9 +80,6 @@ private:
 public:
   Manifest (Provider provider = library::Provider::kCUTLASS) : provider_(provider) { }
 
-  /// Top-level initialization
-  Status initialize();
-
   /// Used for initialization
   void reserve(size_t operation_count);
 

@@ -47,20 +47,6 @@ namespace library {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/// Top-level initialization
-Status Manifest::initialize() {
-
-  if (!operations_.empty()) {
-    operations_.clear();
-  }
-
-  // initialize procedurally generated cutlass op in manifest object
-  initialize_all(*this);
-
-  return Status::kSuccess;
-}
-
-/// Used for initialization
 void Manifest::reserve(size_t operation_count) {
   operations_.reserve(operation_count);
 }

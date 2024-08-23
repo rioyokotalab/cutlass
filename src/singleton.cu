@@ -43,10 +43,6 @@ namespace library {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 Singleton::Singleton() {
-
-  manifest.initialize();
-
-  //operation_table.append(manifest);
 }
 
 Singleton const & Singleton::get() {
