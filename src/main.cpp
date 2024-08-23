@@ -30,12 +30,10 @@
  **************************************************************************************************/
 #include <iostream>
 #include "cutlass/profiler/options.h"
-#include "cutlass/library/singleton.h"
 #include "cutlass/profiler/gpu_timer.h"
 #include "cutlass/trace.h"
-
+#include "cutlass/library/operation_table.h"
 #include "cutlass/library/library.h"
-
 #include "cutlass/profiler/device_context.h"
 #include "cutlass/profiler/problem_space.h"
 // Profiler includes
