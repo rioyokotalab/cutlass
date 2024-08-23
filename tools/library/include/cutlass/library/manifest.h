@@ -55,7 +55,7 @@ namespace library {
 class Manifest;
 
 // init and insert all cutlass gemm operations in manifest object (procedurally generated using generator.py)
-void initialize_all(Manifest &manifest);         
+void initialize_all(std::vector<std::unique_ptr<Operation>> &operations);         
 
 // init and insert all reduction op in manifest object (manually instantiated in library/reduction)
 void initialize_all_reduction_op(Manifest &manifest);
@@ -80,11 +80,6 @@ public:
 
   /// Graceful shutdown
   Status release();
-
-  /// Appends an operation and takes ownership
-//  void append(Operation *operation_ptr) {\
-//    operations_.emplace_back(operation_ptr);
-//  }
 
   /// Returns an iterator to the first operation
   OperationVector const &operations() const;

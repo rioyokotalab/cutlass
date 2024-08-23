@@ -54,8 +54,8 @@ namespace library {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-void initialize_all(Manifest &manifest) {
-  manifest.operations_.emplace_back(new GemmUniversalOperation<
+void initialize_all(std::vector<std::unique_ptr<Operation>> &operations) {
+  operations.emplace_back(new GemmUniversalOperation<
       cutlass::gemm::device::GemmUniversalAdapter<cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8>
     >("cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8"));
 }
