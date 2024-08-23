@@ -44,6 +44,7 @@ namespace library {
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 void OperationTable::append(Manifest const &manifest) {
+  /*
   for (auto const & operation : manifest) {
     OperationDescription const &desc = operation->description();
     GemmDescription const &gemm_desc = static_cast<GemmDescription const &>(desc);
@@ -70,6 +71,7 @@ void OperationTable::append(Manifest const &manifest) {
     GemmPreferenceKey preference_key(cc, alignment);
     gemm_operations[functional_key][preference_key].push_back(op);
   }
+  */
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
