@@ -46,7 +46,7 @@ Singleton::Singleton() {
 
   manifest.initialize();
 
-  operation_table.append(manifest);
+  //operation_table.append(manifest);
 }
 
 Singleton const & Singleton::get() {

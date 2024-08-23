@@ -23,8 +23,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Gemm operator cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8
-using cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8_base =
+using cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8 =
   typename cutlass::gemm::kernel::DefaultGemmUniversal<
     cutlass::half_t, cutlass::layout::ColumnMajor, cutlass::ComplexTransform::kNone, 8,    // transposed B operand
     cutlass::half_t, cutlass::layout::RowMajor, cutlass::ComplexTransform::kNone, 8,    // transposed A operand
@@ -47,11 +46,6 @@ using cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8_base =
     5,
     cutlass::arch::OpMultiplyAdd
 >::GemmKernel;
-
-// Define named type
-struct cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8 :
-  public cutlass_tensorop_s16816gemm_f16_128x128_32x5_nt_align8_base { };
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
