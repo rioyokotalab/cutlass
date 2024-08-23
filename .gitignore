@@ -2,3 +2,5 @@
 __pycache__/
 cutlass_library.egg-info/
 build/
+*.o
+*.out
