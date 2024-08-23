@@ -104,7 +104,7 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   profiler::ProblemSpace::Problem problem = problem_it.at();
   library::Manifest manifest;
-  manifest.initialize();
+  initialize_all(manifest);
   auto operation_ptr = manifest.begin();
   const library::Operation *operation = operation_ptr->get();
   device_context.free(); //??why
