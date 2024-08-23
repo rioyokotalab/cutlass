@@ -521,10 +521,6 @@ public:
   // provider (kCUTLASS)
   ReductionOperationFunctionalMap reduction_operations;
 
-public:
-
-  void append(Manifest const &manifest);
-
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
