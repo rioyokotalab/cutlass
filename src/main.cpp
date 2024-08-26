@@ -104,8 +104,6 @@ int main(int argc, char const *arg[]) {
    library::GemmUniversalArguments arguments;
    std::vector<uint8_t> host_workspace;
    cutlass::profiler::DeviceAllocation device_workspace;
-   library::ReductionConfiguration reduction_configuration;
-   library::ReductionArguments reduction_arguments;
    std::vector<uint8_t> reduction_host_workspace;
    int m = 3456;  
    int n = 4096;

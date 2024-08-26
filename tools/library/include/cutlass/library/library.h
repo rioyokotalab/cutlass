@@ -731,58 +731,6 @@ struct ConvArguments {
   ScalarPointerMode pointer_mode{};
 };
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/// Configuration for Reduction operations
-//
-// OperationKind: Reduction
-//
-struct ReductionConfiguration {
-
-  /// Reduction problem size
-  MatrixCoord problem_size{};
-
-  /// Number of partitions to reduce
-  int partitions{0};
-
-  /// Number of elements between each partition
-  int64_t partition_stride{0};
-
-  /// leading dimension of 'w'orkspace operand
-  int64_t ldw{0};
-
-  /// leading dimension of 's'ource operand
-  int64_t lds{0};
-
-  /// leading dimension of 'd'estination operand
-  int64_t ldd{0};
-};
-
-/// Arguments for Reduction
-struct ReductionArguments {
-
-  /// Pointer to workspace matrix
-  void const *workspace{nullptr};
-
-  /// Pointer to source matrix
-  void const *source{nullptr};
-
-  /// Pointer to destination matrix
-  void *destination{nullptr};
-
-  /// pointer to reference matrix
-  void *reference{nullptr};
-
-  /// Host or device pointer to alpha scalar
-  void const *alpha{nullptr};
-
-  /// Host or device pointer to beta scalar
-  void const *beta{nullptr};
-
-  /// Enumerant indicating whether alpha/beta point to host or device memory
-  ScalarPointerMode pointer_mode{};
-};
-
 } // namespace library
 } // namespace cutlass
 
