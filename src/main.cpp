@@ -39,13 +39,10 @@
 // Profiler includes
 using namespace cutlass;
 
-   // library::GemmUniversalArguments arguments;
-
 int main(int argc, char const *arg[]) {
   CommandLine cmdline(argc, arg);
   profiler::Options options(cmdline);
   profiler::DeviceContext device_context;
-  // auto profiler = new profiler::GemmOperationProfiler();
   profiler::ArgumentDescriptionVector tile_description_arguments{
     {profiler::ArgumentTypeID::kEnumerated, {"op_class", "opcode-class"}, "Class of math instruction (simt, tensorop, wmmatensorop, wmma)"},
     {profiler::ArgumentTypeID::kEnumerated, {"accum", "accumulator-type"}, "Math instruction accumulator data type"},
@@ -87,16 +84,6 @@ int main(int argc, char const *arg[]) {
 
   arguments_.insert(arguments_.end(), tile_description_arguments.begin(), tile_description_arguments.end());
 
-   // arguments.A = nullptr;
-   // arguments.B = nullptr;
-   // arguments.C = nullptr;
-   // arguments.D = nullptr;
-   // arguments.alpha = profiler->problem_.alpha.data();
-   // arguments.beta = profiler->problem_.beta.data();
-   // arguments.pointer_mode = library::ScalarPointerMode::kHost;
-   // arguments.raster_order = profiler->problem_.raster_order;
-
-  // profiler::ProblemSpace problem_space(profiler->arguments_, options.cmdline);
   profiler::ProblemSpace problem_space(arguments_, options.cmdline);
   profiler::ProblemSpace::Iterator problem_it = problem_space.begin();
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
@@ -108,13 +95,11 @@ int main(int argc, char const *arg[]) {
   const library::Operation *operation = operation_ptr->get();
   device_context.free(); //??why
   std::string operation_name(operation->description().name);
-///---------------------------------------------------------------------//
    profiler::DeviceAllocation *A{nullptr};
    profiler::DeviceAllocation *B{nullptr};
    profiler::DeviceAllocation *C{nullptr};
    profiler::DeviceAllocation *Computed{nullptr};
    profiler::DeviceAllocation *Reference{nullptr};
-  //int problem_count{1}; //maynot? check it
    library::GemmUniversalConfiguration configuration;
    library::GemmUniversalArguments arguments;
    std::vector<uint8_t> host_workspace;
@@ -122,7 +107,6 @@ int main(int argc, char const *arg[]) {
    library::ReductionConfiguration reduction_configuration;
    library::ReductionArguments reduction_arguments;
    std::vector<uint8_t> reduction_host_workspace;
-//initial
    int m = 3456;  
    int n = 4096;
    int k = 4096;
@@ -130,7 +114,6 @@ int main(int argc, char const *arg[]) {
    cutlass::library::SplitKMode  split_k_mode = library::SplitKMode::kSerial;//it was not used anywhere
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description());
-  // double bytes = profiler->bytes(operation_desc, profiler->problem_);//?why here is double
 
   int batch_count = 1;//problem_.batch_count = 1;
   int64_t bytes =
@@ -144,12 +127,10 @@ int main(int argc, char const *arg[]) {
   configuration.problem_size.k() = int(k);
   configuration.lda = cutlass::profiler::DeviceAllocation::get_packed_layout( //problem_.lda;
     operation_desc.A.layout, {int(m), int(k)}).front();
-  //gemm_workspace_.configuration.lda 
   configuration.ldb = cutlass::profiler::DeviceAllocation::get_packed_layout( //problem_.ldb;
     operation_desc.B.layout, {int(k), int(n)}).front();
   configuration.ldc = cutlass::profiler::DeviceAllocation::get_packed_layout(//problem_.ldc;
     operation_desc.C.layout, {int(m), int(n)}).front();
-//
   configuration.ldd = configuration.ldc;//problem_.ldc;
   configuration.batch_count = 1;// problem_.split_k_slices;
   arguments.A = nullptr;
@@ -158,42 +139,19 @@ int main(int argc, char const *arg[]) {
   arguments.D = nullptr;
   std::vector<uint8_t>alpha; 
   std::vector<uint8_t>beta;
-  //arguments.alpha = 1;//problem_.alpha.data();
-  // arguments.alpha = reinterpret_cast<void*>(1);
-  // arguments.beta = reinterpret_cast<void*>(0);
-  // arguments.alpha = reinterpret_cast<int32_t*>(1);
-  // arguments.beta = reinterpret_cast<int32_t*>(0);
-  // *reinterpret_cast<int32_t *>(arguments.alpha)=static_cast<int32_t>(1);
-  // *reinterpret_cast<int32_t *>(arguments.beta)=static_cast<int32_t>(0);
-  //= reinterpret_cast<void*>(1)
-  //arguments.beta = 0;//problem_.beta.data();
   cast_from_double(alpha, operation_desc.element_epilogue, 1);
   cast_from_double(beta, operation_desc.element_epilogue, 0);
   arguments.alpha = alpha.data(); 
   arguments.beta = beta.data();
   arguments.pointer_mode = library::ScalarPointerMode::kHost;
   arguments.raster_order = library::RasterOrder::kHeuristic;//problem_.raster_order;
-//
   int problem_count =
     1 + int((3 * int64_t(options.device.properties.l2CacheSize)) / bytes);
-    // printf("%d %d %d-------------\n", problem_count, int64_t(options.device.properties.l2CacheSize), bytes);
-    // printf("type: %d\n", static_cast<int>(operation_desc.A.element));
-    // printf("layout_id: %d\n", static_cast<int>(operation_desc.A.layout));
-    // printf("extent: ");
-    // for (const auto& e : {int(m), int(k)}) {
-    //     printf("%d ", e);
-    // }
-    // printf("\nstride: ");
-    // for (const auto& s :{int(configuration.lda)}) {
-    //     printf("%ld ", s);
-    // }
-    // printf("\nbatch_count: %d\n", batch_count * problem_count);
   A = device_context.allocate_tensor(
     "A",
     operation_desc.A.element,
     operation_desc.A.layout,
     {int(m), int(k)},
-    //{int(problem_.lda)},
     {int(configuration.lda)},
     batch_count * problem_count);
 
@@ -243,24 +201,12 @@ int main(int argc, char const *arg[]) {
 
   uint64_t workspace_size = operation->get_host_workspace_size(&configuration);
   host_workspace.resize(workspace_size, 0);
-  //printf("workspacesize:%d \n", workspace_size);
   workspace_size = operation->get_device_workspace_size(&configuration,&arguments); //Segmentation fault
-  // //this line out 0 in gemm_operation so i set it to 0;
-  ////workspace output in gemm operation workspace_size = 0;
-		// 					  printf("workspacesize:%d \n", workspace_size);
   device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
   operation->initialize(
     &configuration,
     host_workspace.data(),
     device_workspace.data());
-  //---------------------------------------------------------------------------//
-  // profiler->initialize_configuration(device_context, operation, problem_space, problem);
-  //
-  // profiler->initialize_workspace(options, device_context, operation, problem_space, problem);
-  //
-  // //------------------------profiler part --------------------------//
-   // double runtime = profiler->profile(options, device_context, operation, problem_space, problem); //todo:remove these things ,unused
-
   arguments.A = A->data();
   arguments.B = B->data();
   arguments.C = C->data();
@@ -270,8 +216,6 @@ int main(int argc, char const *arg[]) {
   arguments.batch_stride_B = B->batch_stride();
   arguments.batch_stride_C = C->batch_stride();
   arguments.batch_stride_D = Computed->batch_stride();
-  //
-  //printf("iteration:%d problem_count:%d batch_count:%d",options.profiling.warmup_iterations, problem_count, batch_count);
   for (int iteration = 0; iteration < options.profiling.warmup_iterations; ++iteration) {
     int problem_idx = (iteration % problem_count) * batch_count;
     arguments.A = A->batch_data(problem_idx);
@@ -283,7 +227,6 @@ int main(int argc, char const *arg[]) {
       host_workspace.data(),
       device_workspace.data());
   }
-  //
   cutlass::profiler::GpuTimer timer;
   timer.start();
   int Iterations = options.profiling.iterations;
@@ -316,7 +259,6 @@ int main(int argc, char const *arg[]) {
   std::cout << "  \\\n                 ";
   std::cout << " --alpha=" << library::lexical_cast(alpha, operation_desc.element_epilogue);
   std::cout << " --beta=" << library::lexical_cast(beta, operation_desc.element_epilogue);
-  // std::cout << " --split_k_mode=" << library::to_string(split_k_mode);  //not used 
   std::cout << " --split_k_slices=" << split_k_slices;
   std::cout << " --batch_count=" << batch_count;
   std::cout << " --raster_order=" << library::to_string(arguments.raster_order);
@@ -340,11 +282,7 @@ int main(int argc, char const *arg[]) {
   std::cout << " --min_cc=" << operation_desc.tile_description.minimum_compute_capability;
   std::cout << " --max_cc=" << operation_desc.tile_description.maximum_compute_capability;
   std::cout << "  \\\n                 ";
-//  double bytes = profiler->bytes(operation_desc, profiler->problem_);
-  //double flops = profiler->flops(profiler->problem_);
    double flops = (double)((double)m*n*k+m*n)*2*batch_count;
-  //printf("%d %d %d\n",m, n, k);
-  //printf("flops = %lf\n", flops);
   std::cout
     << "\n"
     << "         Runtime: " << runtime << "  ms\n"
