@@ -89,9 +89,8 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   profiler::ProblemSpace::Problem problem = problem_it.at();
   std::unique_ptr<library::Operation> operation;
-  initialize_all(operation);
+  initialize_all(operation); //in kernel.cu 
   device_context.free(); //??why
-  std::string operation_name(operation->description().name);
    profiler::DeviceAllocation *A{nullptr};
    profiler::DeviceAllocation *B{nullptr};
    profiler::DeviceAllocation *C{nullptr};
@@ -108,7 +107,7 @@ int main(int argc, char const *arg[]) {
    int split_k_slices{1};
    cutlass::library::SplitKMode  split_k_mode = library::SplitKMode::kSerial;//it was not used anywhere
   library::GemmDescription const &operation_desc =
-    static_cast<library::GemmDescription const &>(operation->description());
+    static_cast<library::GemmDescription const &>(operation->description()); //easy to use desc in gemmoperation
 
   int batch_count = 1;//problem_.batch_count = 1;
   int64_t bytes =
