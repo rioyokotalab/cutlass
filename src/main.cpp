@@ -88,13 +88,8 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Iterator problem_it = problem_space.begin();
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   profiler::ProblemSpace::Problem problem = problem_it.at();
-  // std::vector<std::unique_ptr<library::Operation>> operations;
-  // operations.reserve(1);
   std::unique_ptr<library::Operation> op1;
-
   initialize_all(op1);
-  // initialize_all(operations);
-  // auto operation_ptr = operations.begin();
   const library::Operation *operation = op1.get();
   device_context.free(); //??why
   std::string operation_name(operation->description().name);
