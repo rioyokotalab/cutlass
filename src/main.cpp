@@ -90,7 +90,6 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Problem problem = problem_it.at();
   std::unique_ptr<library::Operation> operation;
   initialize_all(operation);
-  // const library::Operation *operation = op1.get();
   device_context.free(); //??why
   std::string operation_name(operation->description().name);
    profiler::DeviceAllocation *A{nullptr};
