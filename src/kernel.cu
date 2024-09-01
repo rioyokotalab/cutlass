@@ -53,10 +53,19 @@ namespace library {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-void initialize_all(std::vector<std::unique_ptr<Operation>> &operations) {
-  operations.emplace_back(new GemmUniversalOperation<
+void initialize_all(std::unique_ptr<Operation> &operation) {
+  // operations.emplace_back(new GemmUniversalOperation<
+  //     cutlass::gemm::device::GemmUniversalAdapter<kernel>
+  //   >("kernel"));
+  // operation = std::make_unique<new GemmUniversalOperation<
+  //     cutlass::gemm::device::GemmUniversalAdapter<kernel>
+  //   >>("kernel");
+  operation = std::unique_ptr<GemmUniversalOperation<
       cutlass::gemm::device::GemmUniversalAdapter<kernel>
-    >("kernel"));
+  >>(new GemmUniversalOperation<
+      cutlass::gemm::device::GemmUniversalAdapter<kernel>
+  >("kernel"));
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

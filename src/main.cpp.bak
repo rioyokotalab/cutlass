@@ -36,6 +36,43 @@
 #include "cutlass/library/library.h"
 #include "cutlass/profiler/device_context.h"
 #include "cutlass/profiler/problem_space.h"
+
+#include "cutlass/cutlass.h"
+#include "cutlass/library/library.h"
+#include "library_internal.h"
+#include "gemm_operation.h"
+#include "gemm_operation_3x.hpp"
+#include "cutlass/arch/wmma.h"
+#include "cutlass/numeric_types.h"
+#include "cutlass/arch/arch.h"
+#include "cutlass/arch/mma.h"
+#include "cutlass/layout/matrix.h"
+#include "cutlass/gemm/device/gemm.h"
+#include "cutlass/gemm/device/gemm_universal_adapter.h"
+#include "cutlass/gemm/kernel/default_gemm_universal.h"
+using kernel =
+  typename cutlass::gemm::kernel::DefaultGemmUniversal<
+    cutlass::half_t, cutlass::layout::ColumnMajor, cutlass::ComplexTransform::kNone, 8,    // transposed B operand
+    cutlass::half_t, cutlass::layout::RowMajor, cutlass::ComplexTransform::kNone, 8,    // transposed A operand
+    float, cutlass::layout::RowMajor,
+    float,
+    cutlass::arch::OpClassTensorOp,
+    cutlass::arch::Sm80,
+    cutlass::gemm::GemmShape<128, 128, 32>,
+    cutlass::gemm::GemmShape<64, 64, 32>,
+    cutlass::gemm::GemmShape<16, 8, 16>,
+    
+    cutlass::epilogue::thread::LinearCombination<
+      float,
+      4,
+      float,
+      float
+    >
+,
+    cutlass::gemm::threadblock::GemmIdentityThreadblockSwizzle<8>,
+    5,
+    cutlass::arch::OpMultiplyAdd
+>::GemmKernel;
 // Profiler includes
 using namespace cutlass;
 
@@ -90,12 +127,10 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Problem problem = problem_it.at();
   // std::vector<std::unique_ptr<library::Operation>> operations;
   // operations.reserve(1);
-  std::unique_ptr<library::Operation> op1;
-
-  initialize_all(op1);
-  // initialize_all(operations);
+  // initialize_all(operations); //?
   // auto operation_ptr = operations.begin();
-  const library::Operation *operation = op1.get();
+  // const library::Operation *operation = operation_ptr->get();
+  const library::Operation *operation = (new GemmUniversalOperation<cutlass::gemm::device::GemmUniversalAdapter<kernel>>("kernel"));
   device_context.free(); //??why
   std::string operation_name(operation->description().name);
    profiler::DeviceAllocation *A{nullptr};
