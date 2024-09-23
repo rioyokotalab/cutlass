@@ -125,12 +125,12 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Problem problem = problem_it.at();
   std::unique_ptr<library::Operation> operation;
   
-  // operation = std::unique_ptr<library::GemmUniversalOperation<
-  //     cutlass::gemm::device::GemmUniversalAdapter<kernel>
-  // >>(new GemmUniversalOperation<
-  //     cutlass::gemm::device::GemmUniversalAdapter<kernel>
-  // >("kernel"));
-  initialize_all(operation); //in kernel.cu 
+  operation = std::unique_ptr<library::GemmUniversalOperation<
+      gemm::device::GemmUniversalAdapter<kernel>
+  >>(new library::GemmUniversalOperation<
+      gemm::device::GemmUniversalAdapter<kernel>
+  >("kernel"));
+  // initialize_all(operation); //in kernel.cu 
   device_context.free(); //??why
    profiler::DeviceAllocation *A{nullptr};
    profiler::DeviceAllocation *B{nullptr};
