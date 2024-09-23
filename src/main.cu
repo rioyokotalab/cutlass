@@ -36,9 +36,44 @@
 #include "cutlass/library/library.h"
 #include "cutlass/profiler/device_context.h"
 #include "cutlass/profiler/problem_space.h"
-// Profiler includes
-using namespace cutlass;
 
+#include "cutlass/cutlass.h"
+#include "library_internal.h"
+#include "gemm_operation.h"
+#include "gemm_operation_3x.hpp"
+#include "cutlass/arch/wmma.h"
+#include "cutlass/numeric_types.h"
+#include "cutlass/arch/arch.h"
+#include "cutlass/arch/mma.h"
+#include "cutlass/layout/matrix.h"
+#include "cutlass/gemm/device/gemm.h"
+#include "cutlass/gemm/device/gemm_universal_adapter.h"
+#include "cutlass/gemm/kernel/default_gemm_universal.h"
+using namespace cutlass;
+using kernel =
+  typename gemm::kernel::DefaultGemmUniversal<
+    half_t, layout::ColumnMajor, ComplexTransform::kNone, 8,    // transposed B operand
+    half_t, layout::RowMajor, ComplexTransform::kNone, 8,    // transposed A operand
+    float, layout::RowMajor,
+    float,
+    arch::OpClassTensorOp,
+    arch::Sm80,
+    gemm::GemmShape<128, 128, 32>,
+    gemm::GemmShape<64, 64, 32>,
+    gemm::GemmShape<16, 8, 16>,
+    
+    epilogue::thread::LinearCombination<
+      float,
+      4,
+      float,
+      float
+    >
+,
+    gemm::threadblock::GemmIdentityThreadblockSwizzle<8>,
+    5,
+    arch::OpMultiplyAdd
+>::GemmKernel;
+// Profiler includes
 int main(int argc, char const *arg[]) {
   CommandLine cmdline(argc, arg);
   profiler::Options options(cmdline);
@@ -89,13 +124,18 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   profiler::ProblemSpace::Problem problem = problem_it.at();
   std::unique_ptr<library::Operation> operation;
+  
+  // operation = std::unique_ptr<library::GemmUniversalOperation<
+  //     cutlass::gemm::device::GemmUniversalAdapter<kernel>
+  // >>(new GemmUniversalOperation<
+  //     cutlass::gemm::device::GemmUniversalAdapter<kernel>
+  // >("kernel"));
   initialize_all(operation); //in kernel.cu 
   device_context.free(); //??why
    profiler::DeviceAllocation *A{nullptr};
    profiler::DeviceAllocation *B{nullptr};
    profiler::DeviceAllocation *C{nullptr};
    profiler::DeviceAllocation *Computed{nullptr};
-   profiler::DeviceAllocation *Reference{nullptr};
    library::GemmUniversalConfiguration configuration;
    library::GemmUniversalArguments arguments;
    std::vector<uint8_t> host_workspace;
@@ -105,7 +145,6 @@ int main(int argc, char const *arg[]) {
    int n = 4096;
    int k = 4096;
    int split_k_slices{1};
-   cutlass::library::SplitKMode  split_k_mode = library::SplitKMode::kSerial;//it was not used anywhere
   library::GemmDescription const &operation_desc =
     static_cast<library::GemmDescription const &>(operation->description()); //easy to use desc in gemmoperation
 
@@ -173,13 +212,6 @@ int main(int argc, char const *arg[]) {
     {int(configuration.ldc)},
     batch_count * problem_count);
 
-  Reference = device_context.allocate_tensor(
-    "Reference",
-    operation_desc.D.element,
-    operation_desc.D.layout,
-    {int(m), int(n)},
-    {int(configuration.ldc)},
-    batch_count * problem_count);
 
   arguments.problem_size = {int(m), int(n), int(k)};
   arguments.batch_count = batch_count;
