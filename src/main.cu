@@ -40,7 +40,7 @@
 #include "cutlass/cutlass.h"
 #include "library_internal.h"
 #include "gemm_operation.h"
-#include "gemm_operation_3x.hpp"
+//#include "gemm_operation_3x.hpp"
 #include "cutlass/arch/wmma.h"
 #include "cutlass/numeric_types.h"
 #include "cutlass/arch/arch.h"
