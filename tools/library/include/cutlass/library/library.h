@@ -86,10 +86,7 @@ public:
 
   virtual OperationDescription const & description() const = 0;
 
-  /*virtual Status can_implement(
-    void const *configuration,
-    void const *arguments) const = 0;
-*/
+
   virtual uint64_t get_host_workspace_size(
     void const *configuration) const = 0;
 

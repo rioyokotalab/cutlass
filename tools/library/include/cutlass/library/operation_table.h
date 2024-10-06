@@ -52,7 +52,7 @@ namespace cutlass {
 namespace library {
 
 //void initialize_all(std::vector<std::unique_ptr<Operation>> &operations);
-void initialize_all(std::unique_ptr<Operation> &operation);
+//void initialize_all(std::unique_ptr<Operation> &operation);
 
 using OperationVector = std::vector<std::unique_ptr<Operation>>;
 /////////////////////////////////////////////////////////////////////////////////////////////////
