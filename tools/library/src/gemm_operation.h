@@ -52,7 +52,7 @@ namespace library {
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename Operator_>
-class GemmUniversalOperation : public Operation {
+class GemmUniversalOperation {
 public:
   // assuming all tensors use same type for StrideIndex 
 

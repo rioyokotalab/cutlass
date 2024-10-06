@@ -123,7 +123,7 @@ int main(int argc, char const *arg[]) {
   profiler::ProblemSpace::Iterator problem_it = problem_space.begin();
   profiler::ProblemSpace::Iterator problem_end = problem_space.end();
   profiler::ProblemSpace::Problem problem = problem_it.at();
-  std::unique_ptr<library::Operation> operation;
+  std::unique_ptr<library::GemmUniversalOperation<gemm::device::GemmUniversalAdapter<kernel> > > operation;
   
   operation = std::unique_ptr<library::GemmUniversalOperation<
       gemm::device::GemmUniversalAdapter<kernel>
