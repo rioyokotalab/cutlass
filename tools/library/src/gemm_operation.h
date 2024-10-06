@@ -197,34 +197,6 @@ protected:
 public:
 
   /// Returns success if the operation can proceed
-  virtual Status can_implement(
-    void const *configuration_ptr, 
-    void const *arguments_ptr) const {
-    
-	  printf("test\n");
-    GemmUniversalConfiguration const *configuration = 
-      static_cast<GemmUniversalConfiguration const *>(configuration_ptr);
-
-    GemmUniversalArguments const *arguments = 
-      static_cast<GemmUniversalArguments const *>(arguments_ptr);
-
-    OperatorArguments args;
-
-    Status status = construct_arguments_(args, configuration);
-
-    if (status != Status::kSuccess) {
-      return status;
-    }
-
-    status = update_arguments_(args, arguments);
-
-    if (status != Status::kSuccess) {
-      return status;
-    }
-
-    return Operator::can_implement(args);
-  }
-  
   /// Gets the host-side workspace
   virtual uint64_t get_host_workspace_size(
     void const *configuration) const {
