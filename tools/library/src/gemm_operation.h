@@ -48,11 +48,14 @@
 namespace cutlass {
 namespace library {
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 template <typename Operator_>
-class GemmOperationBase : public Operation {
+class GemmUniversalOperation : public Operation {
 public:
+  // assuming all tensors use same type for StrideIndex 
+
   using Operator = Operator_;
   using ElementA = typename Operator::ElementA;
   using LayoutA = typename Operator::LayoutA;
@@ -62,7 +65,6 @@ public:
   using LayoutC = typename Operator::LayoutC;
   using ElementD = ElementC;
   using LayoutD = LayoutC;
-  // assuming all tensors use same type for StrideIndex 
   using StrideIndex = typename Operator::LayoutA::Index;
   using ElementAccumulator = typename Operator::ElementAccumulator;
   using ElementCompute = typename Operator::EpilogueOutputOp::ElementCompute;
@@ -71,18 +73,19 @@ public:
 
 protected:
 
-  /// 
   GemmDescription description_;
 
 public:
 
   /// Constructor
-  GemmOperationBase(char const *name = "unknown_gemm") {
+
+  GemmUniversalOperation(char const *name = "unknown_gemm") {
 
     description_.name = name;
     description_.provider = Provider::kCUTLASS;
     description_.kind = OperationKind::kGemm;
-    description_.gemm_kind = GemmKind::kGemm;
+    //description_.gemm_kind = GemmKind::kGemm; //in operation base
+    description_.gemm_kind = GemmKind::kUniversal;
 
     description_.tile_description.threadblock_shape = make_Coord(
       Operator::ThreadblockShape::kM,
@@ -131,37 +134,6 @@ public:
   virtual OperationDescription const & description() const {
     return description_;
   }
-};
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-template <typename Operator_>
-class GemmUniversalOperation : public GemmOperationBase<Operator_> {
-public:
-
-  using Operator = Operator_;
-  using ElementA = typename Operator::ElementA;
-  using LayoutA = typename Operator::LayoutA;
-  using ElementB = typename Operator::ElementB;
-  using LayoutB = typename Operator::LayoutB;
-  using ElementC = typename Operator::ElementC;
-  using LayoutC = typename Operator::LayoutC;
-  using ElementD = ElementC;
-  using LayoutD = LayoutC;
-  using ElementAccumulator = typename Operator::ElementAccumulator;
-  using ElementCompute = typename Operator::EpilogueOutputOp::ElementCompute;
-
-  using OperatorArguments = typename Operator::Arguments;
-
-public:
-
-  /// Constructor
-  GemmUniversalOperation(char const *name = "unknown_gemm"): 
-    GemmOperationBase<Operator_>(name) {
-
-    this->description_.gemm_kind = GemmKind::kUniversal;
-  }
-
 protected:
 
   /// Constructs the arguments structure given the configuration and arguments
@@ -229,6 +201,7 @@ public:
     void const *configuration_ptr, 
     void const *arguments_ptr) const {
     
+	  printf("test\n");
     GemmUniversalConfiguration const *configuration = 
       static_cast<GemmUniversalConfiguration const *>(configuration_ptr);
 
