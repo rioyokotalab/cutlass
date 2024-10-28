@@ -247,7 +247,8 @@ struct DefaultGemmUniversal<
       typename DefaultGemmKernel::Mma,
       typename DefaultGemmKernel::Epilogue,
       SwizzleT>
-  {};
+  {
+  };
 
   /// Universal kernel with StreamkFeature member type
   template <class SwizzleT>
@@ -256,7 +257,8 @@ struct DefaultGemmUniversal<
       typename DefaultGemmKernel::Mma,
       typename DefaultGemmKernel::Epilogue,
       SwizzleT>
-  {};
+  {
+  };
 
   /// Select kernel by ThreadblockSwizzle's support for StreamkFeature
   using GemmKernel = SelectBase<ThreadblockSwizzle>;
@@ -372,7 +374,11 @@ struct DefaultGemmUniversal<
       typename DefaultGemmKernel::Mma,
       typename DefaultGemmKernel::Epilogue,
       SwizzleT>
-  {};
+  {
+  	SelectBase(){
+		printf("using first one\n");
+	} 
+  };
 
   /// Universal kernel with StreamkFeature member type
   template <class SwizzleT>
@@ -381,7 +387,11 @@ struct DefaultGemmUniversal<
       typename DefaultGemmKernel::Mma,
       typename DefaultGemmKernel::Epilogue,
       SwizzleT>
-  {};
+  {
+  	SelectBase(){
+		printf("using second one\n");
+	} 
+  };
 
   /// Select kernel by ThreadblockSwizzle's support for StreamkFeature
   using GemmKernel = SelectBase<ThreadblockSwizzle>;

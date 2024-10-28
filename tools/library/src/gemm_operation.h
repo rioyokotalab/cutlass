@@ -271,7 +271,7 @@ public:
       return status;
     }
     
-    Operator *op = static_cast<Operator *>(host_workspace);
+    Operator *op = static_cast<Operator *>(host_workspace); //new gemm::device::GemmUniversalAdapter<kernel>
 
     status = op->update(args);
 
