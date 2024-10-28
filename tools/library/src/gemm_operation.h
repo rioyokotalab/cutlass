@@ -368,12 +368,16 @@ public:
     if (status != Status::kSuccess) {
       return status;
     }
-
+    /*
+    init_device_props();
+    params_ = typename GemmKernel::Params(to_underlying_arguments(args), device_sms_, sm_occupancy_);
+    return params_.init_workspace(device_workspace, stream);*/
+    /*
     Operator *op = new (host_workspace) Operator;
 
     status = op->initialize(args, device_workspace, stream);
     
-    return status;
+    return status;*/
   }
 
   /// Runs the kernel
@@ -392,7 +396,21 @@ public:
     if (status != Status::kSuccess) {
       return status;
     }
-    
+    //update and run//
+    /*params_.update(to_underlying_arguments(args));
+    return Status::kSuccess;
+    dim3 block(GemmKernel::kThreadCount, 1, 1);
+    dim3 grid = params_.get_grid_dims();
+    size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
+
+    Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(params_);
+
+    cudaError_t result = cudaGetLastError();
+    if (result != cudaSuccess) {
+      CUTLASS_TRACE_HOST("  grid launch failed with error " << cudaGetErrorString(result));
+      return Status::kErrorInternal;
+    }
+    return Status::kSuccess;*/
     Operator *op = static_cast<Operator *>(host_workspace); //new gemm::device::GemmUniversalAdapter<kernel>
 
     status = op->update(args);
@@ -403,6 +421,7 @@ public:
     
     status = op->run(stream);
     
+
     return status;
   }
 };
