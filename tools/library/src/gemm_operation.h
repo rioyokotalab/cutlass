@@ -43,6 +43,21 @@
 #include "cutlass/library/library.h"
 #include "library_internal.h"
 
+// common
+#include "cutlass/device_kernel.h"
+#include "cutlass/detail/layout.hpp"
+#include "cutlass/detail/mma.hpp"
+#include "cutlass/cuda_host_adapter.hpp"
+
+#if !defined(__CUDACC_RTC__)
+#include "cutlass/cluster_launch.hpp"
+#include "cutlass/trace.h"
+#endif // !defined(__CUDACC_RTC__)
+
+#include "cutlass/gemm/kernel/gemm_transpose_operands.h"
+#include "cutlass/gemm/threadblock/threadblock_swizzle.h"
+#include "cutlass/epilogue/threadblock/epilogue_with_visitor_callbacks.h"
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace cutlass {
@@ -57,6 +72,7 @@ public:
   // assuming all tensors use same type for StrideIndex 
 
   using Operator = Operator_;
+  /*
   using ElementA = typename Operator::ElementA;
   using LayoutA = typename Operator::LayoutA;
   using ElementB = typename Operator::ElementB;
@@ -65,11 +81,79 @@ public:
   using LayoutC = typename Operator::LayoutC;
   using ElementD = ElementC;
   using LayoutD = LayoutC;
+  */
   using StrideIndex = typename Operator::LayoutA::Index;
-  using ElementAccumulator = typename Operator::ElementAccumulator;
+  //using ElementAccumulator = typename Operator::ElementAccumulator;
   using ElementCompute = typename Operator::EpilogueOutputOp::ElementCompute;
 
   using OperatorArguments = typename Operator::Arguments;
+  //-------------------------------------------Adapter-------------------------------//
+  //using GemmKernel = GemmKernel_;
+  using GemmKernel = typename Operator_::GemmKernel;
+
+  using ThreadblockShape = typename GemmKernel::Mma::Shape;
+  using WarpShape = typename GemmKernel::WarpShape;
+  using InstructionShape = typename GemmKernel::InstructionShape;
+
+  // warp-level, arch-level (instruction), math operator
+  using WarpMmaOperator = typename GemmKernel::Mma::Policy::Operator;
+  using ArchMmaOperator = typename WarpMmaOperator::ArchMmaOperator;
+  using MathOperator = typename WarpMmaOperator::MathOperator;
+
+  // Operator class and arch tag extract bottom-up
+  // set it for top-level gemm device-level template
+  using OperatorClass = typename WarpMmaOperator::OperatorClass;
+  using ArchTag = typename WarpMmaOperator::ArchTag;
+
+  // Type, layout, and complex transform deliberately exchanged with B
+  //using MapArguments = kernel::detail::MapArguments<
+  using MapArguments = cutlass::gemm::kernel::detail::MapArguments<
+    typename GemmKernel::ElementA,
+    typename GemmKernel::LayoutA,
+    GemmKernel::kTransformA,
+    GemmKernel::kAlignmentA,
+    typename GemmKernel::ElementB,
+    typename GemmKernel::LayoutB,
+    GemmKernel::kTransformB,
+    GemmKernel::kAlignmentB,
+    typename GemmKernel::LayoutC,
+    true
+  >;
+
+  using ElementA = typename MapArguments::ElementA;
+  using LayoutA = typename MapArguments::LayoutA;
+  static ComplexTransform const kTransformA = MapArguments::kTransformA;
+  static int const kAlignmentA = MapArguments::kAlignmentA;
+
+  using ElementB = typename MapArguments::ElementB;
+  using LayoutB = typename MapArguments::LayoutB;
+  static ComplexTransform const kTransformB = MapArguments::kTransformB;
+  static int const kAlignmentB = MapArguments::kAlignmentB;
+
+  using ElementC = typename GemmKernel::ElementC;
+  using LayoutC = typename MapArguments::LayoutC;
+  static int const kAlignmentC = GemmKernel::kAlignmentC;
+
+  // C and D same type for 2.x kernel
+  using ElementD = ElementC;
+  using LayoutD = LayoutC;
+  static int const kStages = GemmKernel::Mma::kStages;
+
+  using EpilogueOutputOp = typename GemmKernel::EpilogueOutputOp;
+  using ElementAccumulator = typename EpilogueOutputOp::ElementAccumulator;
+  using ThreadblockSwizzle = typename GemmKernel::ThreadblockSwizzle;
+  using Arguments = typename GemmKernel::Arguments;
+
+  typename GemmKernel::Params params_;
+
+  static constexpr size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
+
+  /// Device SM count
+  CUTLASS_THREAD_LOCAL static int device_sms_;
+
+  /// Kernel SM occupancy (in thread blocks)
+  CUTLASS_THREAD_LOCAL static int sm_occupancy_;
+  //----------------------------------------------Adapter finish---------------------------//
 
 protected:
 
@@ -195,6 +279,44 @@ protected:
   }
 
 public:
+
+  //----------------------------Adapter---------------------------------//
+  static Status init_device_props()
+  {
+    int current_ordinal;
+    cudaGetDevice(&current_ordinal);
+    cudaDeviceGetAttribute (&device_sms_, cudaDevAttrMultiProcessorCount, current_ordinal);
+
+    cudaFuncSetAttribute(
+      Kernel2<GemmKernel>,
+      cudaFuncAttributeMaxDynamicSharedMemorySize,
+      kSharedStorageSize);
+
+    cudaOccupancyMaxActiveBlocksPerMultiprocessorWithFlags(
+      &sm_occupancy_,
+      Kernel2<GemmKernel>,
+      GemmKernel::kThreadCount,
+      kSharedStorageSize,
+      cudaOccupancyDisableCachingOverride);
+
+    return Status::kSuccess;
+  }
+    /// Helper to construct a transposed equivalent for the underying GEMM operator
+  static Arguments to_underlying_arguments(Arguments const &args_) {
+    Arguments args(args_);
+    std::swap(args.problem_size.m(), args.problem_size.n());
+    std::swap(args.ptr_A, args.ptr_B);
+    std::swap(args.lda, args.ldb);
+    std::swap(args.stride_a, args.stride_b);
+    std::swap(args.batch_stride_A, args.batch_stride_B);
+    std::swap(args.ptr_gather_A_indices, args.ptr_gather_B_indices);
+    return args;
+  }
+//-----------------------------------------Adapter-------------------------------------//
+  /// Determines whether the GEMM can execute the given problem.
+  static Status can_implement(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
+    return GemmKernel::can_implement(to_underlying_arguments(args));
+  }
 
   /// Returns success if the operation can proceed
   /// Gets the host-side workspace
