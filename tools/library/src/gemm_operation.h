@@ -58,6 +58,8 @@
 #include "cutlass/gemm/threadblock/threadblock_swizzle.h"
 #include "cutlass/epilogue/threadblock/epilogue_with_visitor_callbacks.h"
 
+#include <typeinfo>
+#include <cxxabi.h>
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace cutlass {
@@ -72,8 +74,17 @@ public:
   // assuming all tensors use same type for StrideIndex 
 
   using Operator = Operator_;
+  using ElementA = typename cutlass::half_t;
+  using LayoutA = typename cutlass::layout::ColumnMajor;
+  using ElementB = typename cutlass::half_t;
+  using LayoutB = typename cutlass::layout::RowMajor;
+  using ElementC = float; 
+  using LayoutC = typename cutlass::layout::ColumnMajor; //??
+  using ElementD = ElementC;
+  using LayoutD = LayoutC;
+  //using LayoutC = typename cutlass::layout::RowMajor;
+  //using ElementA = typename Operator::ElementA;
   /*
-  using ElementA = typename Operator::ElementA;
   using LayoutA = typename Operator::LayoutA;
   using ElementB = typename Operator::ElementB;
   using LayoutB = typename Operator::LayoutB;
@@ -82,18 +93,20 @@ public:
   using ElementD = ElementC;
   using LayoutD = LayoutC;
   */
-  using StrideIndex = typename Operator::LayoutA::Index;
+  using StrideIndex = int;
   //using ElementAccumulator = typename Operator::ElementAccumulator;
-  using ElementCompute = typename Operator::EpilogueOutputOp::ElementCompute;
-
-  using OperatorArguments = typename Operator::Arguments;
+  //using ElementCompute = typename Operator::EpilogueOutputOp::ElementCompute;
+  using ElementCompute = float;
+  using OperatorArguments = typename Operator::Arguments; //TODO move argument struct here
   //-------------------------------------------Adapter-------------------------------//
   //using GemmKernel = GemmKernel_;
   using GemmKernel = typename Operator_::GemmKernel;
-
-  using ThreadblockShape = typename GemmKernel::Mma::Shape;
-  using WarpShape = typename GemmKernel::WarpShape;
-  using InstructionShape = typename GemmKernel::InstructionShape;
+  using ThreadblockShape = cutlass::gemm::GemmShape<128, 128, 32>;
+ // using ThreadblockShape = typename GemmKernel::Mma::Shape;
+  using WarpShape = gemm::GemmShape<64, 64, 32>;
+  //using WarpShape = typename GemmKernel::WarpShape;
+  using InstructionShape = gemm::GemmShape<16, 8, 16>;
+  //using InstructionShape = typename GemmKernel::InstructionShape;
 
   // warp-level, arch-level (instruction), math operator
   using WarpMmaOperator = typename GemmKernel::Mma::Policy::Operator;
@@ -120,23 +133,23 @@ public:
     true
   >;
 
-  using ElementA = typename MapArguments::ElementA;
-  using LayoutA = typename MapArguments::LayoutA;
+  //using ElementA = typename MapArguments::ElementA;
+  //using LayoutA = typename MapArguments::LayoutA;
   static ComplexTransform const kTransformA = MapArguments::kTransformA;
   static int const kAlignmentA = MapArguments::kAlignmentA;
 
-  using ElementB = typename MapArguments::ElementB;
-  using LayoutB = typename MapArguments::LayoutB;
+  //using ElementB = typename MapArguments::ElementB;
+  //using LayoutB = typename MapArguments::LayoutB;
   static ComplexTransform const kTransformB = MapArguments::kTransformB;
   static int const kAlignmentB = MapArguments::kAlignmentB;
 
-  using ElementC = typename GemmKernel::ElementC;
-  using LayoutC = typename MapArguments::LayoutC;
+  //using ElementC = typename GemmKernel::ElementC;
+  //using LayoutC = typename MapArguments::LayoutC;
   static int const kAlignmentC = GemmKernel::kAlignmentC;
 
   // C and D same type for 2.x kernel
-  using ElementD = ElementC;
-  using LayoutD = LayoutC;
+//  using ElementD = ElementC;
+//  using LayoutD = LayoutC;
   static int const kStages = GemmKernel::Mma::kStages;
 
   using EpilogueOutputOp = typename GemmKernel::EpilogueOutputOp;
@@ -359,6 +372,19 @@ public:
     void *device_workspace, 
     cudaStream_t stream = nullptr) const {
 
+        const char* typeName = typeid(ElementA).name();
+        
+        // decode abi::__cxa_demangle 
+        int status1;
+        char* realName = abi::__cxa_demangle(typeName, 0, 0, &status1);
+        
+        if (status1 == 0) {
+            std::cout << "type is: " << realName << std::endl;
+            free(realName); // release 
+        } 
+
+
+
     OperatorArguments args;
 
     Status status = construct_arguments_(
@@ -372,12 +398,11 @@ public:
     init_device_props();
     params_ = typename GemmKernel::Params(to_underlying_arguments(args), device_sms_, sm_occupancy_);
     return params_.init_workspace(device_workspace, stream);*/
-    /*
     Operator *op = new (host_workspace) Operator;
 
     status = op->initialize(args, device_workspace, stream);
     
-    return status;*/
+    return status;
   }
 
   /// Runs the kernel
