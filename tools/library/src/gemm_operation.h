@@ -151,7 +151,7 @@ public:
 //  using ElementD = ElementC;
 //  using LayoutD = LayoutC;
   static int const kStages = GemmKernel::Mma::kStages;
-
+  //static int const kStages = int;
   using EpilogueOutputOp = typename GemmKernel::EpilogueOutputOp;
   using ElementAccumulator = typename EpilogueOutputOp::ElementAccumulator;
   using ThreadblockSwizzle = typename GemmKernel::ThreadblockSwizzle;
@@ -238,6 +238,7 @@ protected:
     OperatorArguments &operator_args,
     GemmUniversalConfiguration const *configuration) {
 
+    printf("Run construct_arguments_\n");
     operator_args.mode = configuration->mode;
 
     operator_args.problem_size = configuration->problem_size;
@@ -372,7 +373,7 @@ public:
     void *device_workspace, 
     cudaStream_t stream = nullptr) const {
 
-        const char* typeName = typeid(ElementA).name();
+        const char* typeName = typeid(kStages).name();
         
         // decode abi::__cxa_demangle 
         int status1;

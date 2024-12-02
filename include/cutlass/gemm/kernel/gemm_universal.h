@@ -184,6 +184,7 @@ public:
       ptr_gather_A_indices(ptr_gather_A_indices), ptr_gather_B_indices(ptr_gather_B_indices),
       ptr_scatter_D_indices(ptr_scatter_D_indices)
     {
+	    printf("arguments1\n");
       lda = 0;
       ldb = 0;
       ldc = 0;
@@ -221,6 +222,7 @@ public:
       ptr_gather_A_indices(ptr_gather_A_indices), ptr_gather_B_indices(ptr_gather_B_indices),
       ptr_scatter_D_indices(ptr_scatter_D_indices)
     {
+	    printf("arguments2\n");
       stride_a = make_Coord(lda);
       stride_b = make_Coord(ldb);
       stride_c = make_Coord(ldc);
@@ -233,6 +235,7 @@ public:
     {
       Arguments args(*this);
 
+      printf("run transposed_problem\n");
       std::swap(args.problem_size.m(), args.problem_size.n());
       std::swap(args.ptr_A, args.ptr_B);
       std::swap(args.lda, args.ldb);
