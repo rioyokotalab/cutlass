@@ -29,6 +29,7 @@
  *
  **************************************************************************************************/
 #include <iostream>
+#include <cublas_v2.h>
 #include "cutlass/profiler/options.h"
 #include "cutlass/profiler/gpu_timer.h"
 #include "cutlass/trace.h"
@@ -314,4 +315,35 @@ int main(int argc, char const *arg[]) {
     << "         Runtime: " << runtime << "  ms\n"
     << "          Memory: " << (double)bytes / double(1 << 30) / runtime * 1000.0 << " GiB/s\n"
     << "            Math: " << flops / runtime / 1.0e6 << " GFLOP/s\n";
+
+  float alpha2 = -1.0;
+  float beta2 = 0.0;
+  cublasHandle_t cublas_handle;
+  cublasCreate(&cublas_handle);
+  cublasSgemmEx(cublas_handle,
+              CUBLAS_OP_N,
+              CUBLAS_OP_N,
+              m,
+              n,
+              k,
+              &alpha2,
+              A->data(),
+              CUDA_R_16F,
+              int(arguments.lda),
+              B->data(),
+              CUDA_R_16F,
+              int(arguments.ldb),
+              &beta2,
+              C->data(),
+              CUDA_R_32F,
+              int(arguments.ldc));
+  cudaDeviceSynchronize();
+  cublasDestroy(cublas_handle);
+  double error = 0;
+  for (int i=0; i<m*n; i++) {
+    float* ptr_C = (float*)C->data();
+    std::cout << ptr_C[0] << std::endl;
+    error += ptr_C[i];
+  }
+  std::cout << "           Error: " << error/m/n << std::endl;
 }

@@ -18,7 +18,7 @@ SOURCE	= $(shell find src -name '*.cpp' -or -name '*.cu')
 OBJECT	= $(SOURCE:%=%.o)
 
 main: $(OBJECT)
-	$(CUDA) $?
+	$(CUDA) $? -lcublas
 	./a.out
 clean:
 	$(RM) src/*.o a.out
