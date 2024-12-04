@@ -215,6 +215,12 @@ public:
     params_.ptr_B = const_cast<void *>(args.ptr_B);
     params_.ptr_C = const_cast<void *>(args.ptr_C);
     params_.ptr_D = args.ptr_D;
+    params_.batch_stride_A = args.batch_stride_A;
+    params_.batch_stride_B = args.batch_stride_B;
+    params_.batch_stride_C = args.batch_stride_C;
+    params_.ptr_gather_A_indices = const_cast<int *>(args.ptr_gather_A_indices);
+    params_.ptr_gather_B_indices = const_cast<int *>(args.ptr_gather_B_indices);
+    params_.ptr_scatter_D_indices = const_cast<int *>(args.ptr_scatter_D_indices);
     return params_.init_workspace(workspace, stream);
   }
 

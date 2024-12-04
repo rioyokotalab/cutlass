@@ -309,17 +309,7 @@ public:
       int sm_occupancy)       /// Kernel SM occupancy (in thread blocks)
     :
       ParamsBase(args, device_sms, sm_occupancy),
-      output_op(args.epilogue),
-      //ptr_A(const_cast<void *>(args.ptr_A)),
-      //ptr_B(const_cast<void *>(args.ptr_B)),
-      //ptr_C(const_cast<void *>(args.ptr_C)),
-      //ptr_D(args.ptr_D),
-      batch_stride_A(args.batch_stride_A),
-      batch_stride_B(args.batch_stride_B),
-      batch_stride_C(args.batch_stride_C),
-      ptr_gather_A_indices(const_cast<int *>(args.ptr_gather_A_indices)),
-      ptr_gather_B_indices(const_cast<int *>(args.ptr_gather_B_indices)),
-      ptr_scatter_D_indices(const_cast<int *>(args.ptr_scatter_D_indices))
+      output_op(args.epilogue)
     {
     }
 
