@@ -288,7 +288,13 @@ public:
     params_.problem_size = cutlass::gemm::GemmCoord(3456,4096,4096);
     params_.grid_tiled_shape = cutlass::gemm::GemmCoord(32,27,1);
     typename GemmKernel::Mma::IteratorA::Params params_A(make_Coord(long(4096)));
+    typename GemmKernel::Mma::IteratorB::Params params_B(make_Coord(long(3456)));
+    typename GemmKernel::Epilogue::OutputTileIterator::Params params_C(make_Coord(long(3456)));
+    typename GemmKernel::Epilogue::OutputTileIterator::Params params_D(make_Coord(long(3456)));
     params_.params_A = params_A;
+    params_.params_B = params_B;
+    params_.params_C = params_C;
+    params_.params_D = params_D;
     Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(params_);
 
     cudaError_t result = cudaGetLastError();
