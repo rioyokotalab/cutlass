@@ -225,7 +225,8 @@ public:
     params_.ptr_gather_A_indices = const_cast<int *>(args.ptr_gather_A_indices);
     params_.ptr_gather_B_indices = const_cast<int *>(args.ptr_gather_B_indices);
     params_.ptr_scatter_D_indices = const_cast<int *>(args.ptr_scatter_D_indices);
-    return params_.init_workspace(workspace, stream);
+    params_.semaphore = static_cast<int *>(workspace);
+    return Status::kSuccess;
   }
 
   /// Lightweight update given a subset of arguments.

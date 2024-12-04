@@ -122,18 +122,8 @@ struct UniversalParamsBase
   int *semaphore = nullptr;
 
 
-  //
-  // Host dispatch API
-  //
-
   /// Default constructor
   UniversalParamsBase() = default;
-
-  UniversalParamsBase(
-    UniversalArgumentsBase const &args, /// GEMM application arguments
-    int device_sms,                     /// Number of SMs on the device
-    int sm_occupancy)                   /// Kernel SM occupancy (in thread blocks)
-  {}
 
   /// Returns the workspace size (in bytes) needed for this problem geometry
   size_t get_workspace_size() const
@@ -155,36 +145,6 @@ struct UniversalParamsBase
     }
 
     return workspace_bytes;
-  }
-
-
-  /// Assign and initialize the specified workspace buffer.  Assumes
-  /// the memory allocated to workspace is at least as large as get_workspace_size().
-  Status init_workspace(
-    void *workspace,
-    cudaStream_t stream = nullptr)
-  {
-    semaphore = static_cast<int *>(workspace);
-    // Zero-initialize entire workspace
-    if (semaphore)
-    {
-      size_t workspace_bytes = get_workspace_size();
-
-      CUTLASS_TRACE_HOST("  Initialize " << workspace_bytes << " workspace bytes");
-
-      cudaError_t result = cudaMemsetAsync(
-        semaphore,
-        0,
-        workspace_bytes,
-        stream);
-
-      if (result != cudaSuccess) {
-        CUTLASS_TRACE_HOST("  cudaMemsetAsync() returned error " << cudaGetErrorString(result));
-        return Status::kErrorInternal;
-      }
-    }
-
-    return Status::kSuccess;
   }
 
 
