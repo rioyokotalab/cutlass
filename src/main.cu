@@ -227,7 +227,7 @@ int main(int argc, char const *arg[]) {
 
   uint64_t workspace_size = operation->get_host_workspace_size(&configuration);
   host_workspace.resize(workspace_size, 0);
-  workspace_size = operation->get_device_workspace_size(&configuration,&arguments); //Segmentation fault
+  workspace_size = 0; //operation->get_device_workspace_size(&configuration,&arguments); //Segmentation fault
   device_workspace.reset(library::NumericTypeID::kU8, workspace_size);
   operation->initialize(
     &configuration,

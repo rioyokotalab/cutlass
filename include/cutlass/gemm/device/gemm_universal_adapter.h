@@ -184,11 +184,11 @@ public:
   }
 
   /// Gets the workspace size
-  static size_t get_workspace_size(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
+  static size_t get_workspace_size2(Arguments const &args, CudaHostAdapter *cuda_adapter = nullptr) {
     GemmUniversalAdapter base;
     base.init_device_props();
     typename GemmKernel::Params params = typename GemmKernel::Params(to_underlying_arguments(args), base.device_sms_, base.sm_occupancy_);
-    return params.get_workspace_size();
+    return 0;
   }
 
   /// Initializes GEMM state from arguments.

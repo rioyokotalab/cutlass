@@ -125,36 +125,6 @@ struct UniversalParamsBase
   /// Default constructor
   UniversalParamsBase() = default;
 
-  /// Returns the workspace size (in bytes) needed for this problem geometry
-  size_t get_workspace_size() const
-  {
-    size_t workspace_bytes = 0;
-    if (mode == GemmUniversalMode::kGemmSplitKParallel)
-    {
-      // Split-K parallel always requires a temporary workspace
-      workspace_bytes =
-        sizeof(ElementC) *
-        size_t(batch_stride_D) *
-        size_t(grid_tiled_shape.k());
-    }
-    else if (mode == GemmUniversalMode::kGemm && grid_tiled_shape.k() > 1)
-    {
-      // Serial split-K only requires a temporary workspace if the number of partitions along the
-      // GEMM K dimension is greater than one.
-      workspace_bytes = sizeof(int) * size_t(grid_tiled_shape.m()) * size_t(grid_tiled_shape.n());
-    }
-
-    return workspace_bytes;
-  }
-
-
-  /// Returns the GEMM volume in thread block tiles
-  GemmCoord get_tiled_shape() const
-  {
-    return grid_tiled_shape;
-  }
-
-
 public:
   CUTLASS_HOST_DEVICE
   void init_grid_tiled_shape() {

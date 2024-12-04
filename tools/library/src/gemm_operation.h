@@ -360,7 +360,7 @@ public:
       return 0;
     }
 
-    uint64_t size = Operator::get_workspace_size(args);
+    uint64_t size = 0;
 
     return size;
   }
