@@ -155,22 +155,6 @@ struct UniversalParamsBase
   }
 
 
-  /// Returns the total number of thread blocks to launch
-  int get_grid_blocks() const
-  {
-    dim3 grid_dims = ThreadblockSwizzle().get_grid_shape(grid_tiled_shape);
-    return grid_dims.x * grid_dims.y * grid_dims.z;
-  }
-
-
-  /// Returns the grid extents in thread blocks to launch
-  /*
-  dim3 get_grid_dims() const
-  {
-    return ThreadblockSwizzle().get_grid_shape(grid_tiled_shape);
-  }
-  */
-
 public:
   CUTLASS_HOST_DEVICE
   void init_grid_tiled_shape() {
