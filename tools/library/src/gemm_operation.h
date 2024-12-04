@@ -238,7 +238,6 @@ protected:
     OperatorArguments &operator_args,
     GemmUniversalConfiguration const *configuration) {
 
-    printf("Run construct_arguments_\n");
     operator_args.mode = configuration->mode;
 
     operator_args.problem_size = configuration->problem_size;
@@ -380,7 +379,6 @@ public:
         char* realName = abi::__cxa_demangle(typeName, 0, 0, &status1);
         
         if (status1 == 0) {
-            std::cout << "type is: " << realName << std::endl;
             free(realName); // release 
         } 
 

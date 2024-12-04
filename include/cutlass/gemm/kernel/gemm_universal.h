@@ -309,10 +309,10 @@ public:
       int sm_occupancy)       /// Kernel SM occupancy (in thread blocks)
     :
       ParamsBase(args, device_sms, sm_occupancy),
-      params_A(args.lda ? make_Coord_with_padding<LayoutA::kStrideRank>(args.lda) : args.stride_a),
-      params_B(args.ldb ? make_Coord_with_padding<LayoutB::kStrideRank>(args.ldb) : args.stride_b),
-      params_C(args.ldc ? make_Coord_with_padding<LayoutC::kStrideRank>(args.ldc) : args.stride_c),
-      params_D(args.ldd ? make_Coord_with_padding<LayoutC::kStrideRank>(args.ldd) : args.stride_d),
+      params_A(make_Coord_with_padding<LayoutA::kStrideRank>(args.lda)),
+      params_B(make_Coord_with_padding<LayoutB::kStrideRank>(args.ldb)),
+      params_C(make_Coord_with_padding<LayoutC::kStrideRank>(args.ldc)),
+      params_D(make_Coord_with_padding<LayoutC::kStrideRank>(args.ldd)),
       output_op(args.epilogue),
       ptr_A(const_cast<void *>(args.ptr_A)),
       ptr_B(const_cast<void *>(args.ptr_B)),
@@ -324,7 +324,9 @@ public:
       ptr_gather_A_indices(const_cast<int *>(args.ptr_gather_A_indices)),
       ptr_gather_B_indices(const_cast<int *>(args.ptr_gather_B_indices)),
       ptr_scatter_D_indices(const_cast<int *>(args.ptr_scatter_D_indices))
-    {}
+    {
+      print_type(LayoutA::kStrideRank);
+    }
 
     /// Lightweight update given a subset of arguments.
     void update(Arguments const &args)

@@ -35,6 +35,8 @@
 
 #pragma once
 
+#include <typeinfo>
+#include <cxxabi.h>
 #include "cutlass/detail/helper_macros.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -152,6 +154,15 @@ int canonical_warp_group_idx() {
   #endif
 }
 
+void print_type(auto type) {
+  const char* typeName = typeid(type).name();
+  int status1;
+  char* realName = abi::__cxa_demangle(typeName, 0, 0, &status1);
+  if (status1 == 0) {
+    std::cout << "type is: " << realName << std::endl;
+    free(realName);
+  }
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }  // namespace cutlass
