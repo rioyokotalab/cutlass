@@ -302,16 +302,11 @@ public:
     /// Default constructor
     Params() = default;
 
-    /// Constructor
     Params(
       Arguments const &args,  /// GEMM application arguments
       int device_sms,         /// Number of SMs on the device
       int sm_occupancy)       /// Kernel SM occupancy (in thread blocks)
-    :
-      ParamsBase(args, device_sms, sm_occupancy),
-      output_op(args.epilogue)
-    {
-    }
+    {}
 
     /// Lightweight update given a subset of arguments.
     void update(Arguments const &args)

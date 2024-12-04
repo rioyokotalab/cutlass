@@ -129,20 +129,11 @@ struct UniversalParamsBase
   /// Default constructor
   UniversalParamsBase() = default;
 
-  /// Constructor
   UniversalParamsBase(
     UniversalArgumentsBase const &args, /// GEMM application arguments
     int device_sms,                     /// Number of SMs on the device
     int sm_occupancy)                   /// Kernel SM occupancy (in thread blocks)
-  :
-    problem_size(args.problem_size),
-    mode(args.mode),
-    batch_count(args.batch_count),
-    batch_stride_D(args.batch_stride_D),
-    semaphore(nullptr)
-  {
-    init_grid_tiled_shape();
-  }
+  {}
 
   /// Returns the workspace size (in bytes) needed for this problem geometry
   size_t get_workspace_size() const
@@ -218,7 +209,7 @@ struct UniversalParamsBase
     return ThreadblockSwizzle().get_grid_shape(grid_tiled_shape);
   }
 
-private:
+public:
   CUTLASS_HOST_DEVICE
   void init_grid_tiled_shape() {
     // Get GEMM volume in thread block tiles
@@ -248,9 +239,7 @@ private:
                                     cacheline_alignment_needed ? const_max(cacheline_elements_a, cacheline_elements_b) : 1);
 
       gemm_k_size = round_up(ceil_div(problem_size.k(), batch_count), kAlignK);
-      if (gemm_k_size) {
-        grid_tiled_shape.k() = ceil_div(problem_size.k(), gemm_k_size);
-      }
+      grid_tiled_shape.k() = ceil_div(problem_size.k(), gemm_k_size);
     }
   }
 };

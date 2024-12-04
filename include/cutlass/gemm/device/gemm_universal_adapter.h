@@ -200,8 +200,11 @@ public:
   ) {
 
     init_device_props();
-    params_ = typename GemmKernel::Params(to_underlying_arguments(args), device_sms_, sm_occupancy_);
+    params_ = typename GemmKernel::Params();
     params_.problem_size = cutlass::gemm::GemmCoord(3456,4096,4096);
+    params_.mode = args.mode;
+    params_.batch_count = args.batch_count;
+    params_.init_grid_tiled_shape();
     params_.grid_tiled_shape = cutlass::gemm::GemmCoord(32,27,1);
     typename GemmKernel::Mma::IteratorA::Params params_A(make_Coord(long(4096)));
     typename GemmKernel::Mma::IteratorB::Params params_B(make_Coord(long(3456)));
@@ -218,6 +221,7 @@ public:
     params_.batch_stride_A = args.batch_stride_A;
     params_.batch_stride_B = args.batch_stride_B;
     params_.batch_stride_C = args.batch_stride_C;
+    params_.batch_stride_D = args.batch_stride_D;
     params_.ptr_gather_A_indices = const_cast<int *>(args.ptr_gather_A_indices);
     params_.ptr_gather_B_indices = const_cast<int *>(args.ptr_gather_B_indices);
     params_.ptr_scatter_D_indices = const_cast<int *>(args.ptr_scatter_D_indices);
