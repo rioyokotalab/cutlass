@@ -287,7 +287,8 @@ public:
     size_t kSharedStorageSize = sizeof(typename GemmKernel::SharedStorage);
     params_.problem_size = cutlass::gemm::GemmCoord(3456,4096,4096);
     params_.grid_tiled_shape = cutlass::gemm::GemmCoord(32,27,1);
-    print_type(params_.params_A);
+    typename GemmKernel::Mma::IteratorA::Params params_A(make_Coord(long(4096)));
+    params_.params_A = params_A;
     Kernel2<GemmKernel><<<grid, block, kSharedStorageSize, stream>>>(params_);
 
     cudaError_t result = cudaGetLastError();
